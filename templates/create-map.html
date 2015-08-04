@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<form action='/create-map'>
+    <label>Tournament Name
+    <input type="text" name="tourn_name" required> </label>
+    <br>
+    <label>Stream (optional)
+    <input type="email" name="stream"> </label>
+    <br>
+    <input type="submit" value="Create">
+
+</form>
+
+
+
+{% endblock %}

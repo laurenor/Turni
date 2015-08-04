@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Turni - Your Online Esports Tournament Organizer</title>
+
+		<style>
+		li {
+			display: inline;
+		}
+		</style>
+
+	</head>
+	<body>
+
+		<ul>
+			<li><a href='/'><img src='/static/img/logo.png' alt='Turni Logo' height="25px"></a></li>
+			<li><a href='/about'>About</a></li>
+			<li><a href='/features'>Features</a></li>
+			<li><a href='/create-map'>Create Venue Map</a></li>
+			<li><a href='/register'>Login / Register</a></li>
+		</ul>
+		<h1>Turni</h1>
+
+
+	<!-- This is where the main content goes. -->
+	  {% block body %}
+	      BODY OF PAGE GOES HERE VIA INHERITANCE
+	  {% endblock %}
+	</body>
+</html>
