@@ -2,12 +2,17 @@
 
 {% block body %}
 
-<form action='/login', method='post'>
+<form action='/login' method='post'>
     <label>Challonge Username
     <input type="text" name="username" required> </label>
     <br>
     <label>Email
     <input type="email" name="email" required> </label>
+    <br>
+    <label>User Type
+    <input type="radio" name="user_type" value="Organizer">Organizer
+    <input type="radio" name="user_type" value="Participant">Participant
+	</label>
     <br>
     <label>Password
     <input type="password" name="password" required> </label>

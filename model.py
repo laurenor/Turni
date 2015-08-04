@@ -10,15 +10,38 @@ class User(db.Model):
     __tablename__ = 'users'
 
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    email = db.Column(db.String(64), nullable=True)
-    password = db.Column(db.String(64), nullable=True)
-    age = db.Column(db.Integer, nullable=True)
-    zipcode = db.Column(db.String(15), nullable=True)
-
+    username = db.Column(db.String(20), nullable=False) # how to make this unique?
+    email = db.Column(db.String(64), nullable=False)
+    password = db.Column(db.String(64), nullable=False)
+    user_type = db.Column(db.String(11), nullable=False)
 
     def __repr__(self):
         """Provide helpful representation when printed"""
-        return "<User user_id=%s email=%s>" % (self.user_id, self.email)
+        return "<User user_id=%s username=%s>" % (self.user_id, self.username)
+
+class Station(db.Model):
+
+    __tablename__ = 'stations'
+
+    station_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    match_id = db.Column(db.Integer, nullable=False)
+    tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.tournament_id'))
+    
+
+    def __repr__(self):
+        """Provide helpful representation when printed"""
+        return "<User user_id=%s username=%s>" % (self.user_id, self.username)
+
+class Tournament(db.Model):
+
+    __tablename__ = 'tournaments'
+
+    tournament_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    tournament_name = db.Column(db.String(20), nullable=False) 
+
+    def __repr__(self):
+        """Provide helpful representation when printed"""
+        return "<Tournament tournament_id=%s tournament_name=%s>" % (self.tournament_id, self.tournament_name)
 
 ##############################################################################
 # Helper functions
