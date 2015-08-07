@@ -1,17 +1,50 @@
 {% extends 'base.html' %}
 
 {% block body %}
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script>
+  $(function() {
+    $( document ).tooltip();
+  });
+</script>
 
-<form action='/create-map'>
-    <label>Tournament Name
-    <input type="text" name="tourn_name" required> </label>
+<form action='/map'>
+    <label for="challonge_name">
+    <input id="challonge" name="challonge_name" placeholder="Challonge username" title="Challonge username required for authentication" ></label>
     <br>
-    <label>Stream (optional)
-    <input type="email" name="stream"> </label>
+    <label for="challonge_email">
+    <input name="challonge_email" placeholder="Challonge email" title="Challonge email address required for authentication" > </label>
     <br>
+    <label>
+    <label>
+    <input type="text" name="url" placeholder="Tournament URL" required> </label>
+    <br>
+    <label>
+    <input type="text" name="stream" placeholder="Stream link (optional)"> </label>
+    <br>   
     <input type="submit" value="Create">
 
 </form>
+<br>
+<br>
+<form action="/idget" id="getid">
+    Get your tournament ID#:<br>
+    <input type="text" name="cname"><br>
+    <input type="submit" value="Submit">
+</form>
+<span id="tournid"></span>
+
+<script>
+    function getID(evt) {
+        $.get('/idget', function(results)) {
+            var challongeid = results;
+            $('#tournid').html(challongeid);
+        };
+    }
+
+    $('#getid').submit(getID);
+    </script>
 
 
 

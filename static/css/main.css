@@ -1,0 +1,25 @@
+#logout {
+	display: none;
+}
+
+li {
+	display: inline;
+}
+
+.ui-tooltip {
+	padding: 5px;
+	position: absolute;
+	z-index: 9999;
+	max-width: 200px;
+	-webkit-box-shadow: 0 0 5px #aaa;
+	box-shadow: 0 0 5px #aaa;
+}
+body .ui-tooltip {
+	border-width: 2px;
+	font-size: 12px;
+}
+
+.station_div {
+	width: 100px;
+	border: solid 3px;
+}

@@ -3,11 +3,16 @@
 	<head>
 		<title>Turni - Your Online Esports Tournament Organizer</title>
 
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+		<link rel="stylesheet" href="/static/css/main.css">
+
 		<style>
-		li {
-			display: inline;
-		}
+  		label {
+    		display: inline-block;
+    		
+  			}
 		</style>
+
 
 	</head>
 	<body>
@@ -19,13 +24,43 @@
 			<li><a href='/create-map'>Create Venue Map</a></li>
 			<li><a href='/user-login'>Login</a></li>
 			<li><a href='/user-register'>Register</a></li>
+			<li><a href='/logout' id="logout">Logout</a></li>
+			<li><span id="navbar_username"><b>Placeholder Username</b></span></li>
 		</ul>
-		<h1>Turni</h1>
 
+		{% with messages = get_flashed_messages() %}
+  			{% if messages %}
+    			<ul class=flashes>
+    			{% for message in messages %}
+      				<li>{{ message }}</li>
+    			{% endfor %}
+    			</ul>
+  			{% endif %}
+		{% endwith %}
+
+		<input type="button" id="button" value="test">
 
 	<!-- This is where the main content goes. -->
 	  {% block body %}
 	      BODY OF PAGE GOES HERE VIA INHERITANCE
 	  {% endblock %}
+
+	<script src="http://code.jquery.com/jquery.js"></script>
+	<script>
+	$('#button').on('click', showLogout)		
+		
+	function showLogout() {
+		$('#logout').show();
+	};
+
+
+	</script>
+	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  <script>
+  $(function() {
+    $( document ).tooltip();
+  });
+  </script>
 	</body>
 </html>

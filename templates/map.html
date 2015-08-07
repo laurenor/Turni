@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<p>Map output</p>
+<ul>
+	{% if challonge_name %}
+		<li>Username: {{ challonge_name }}</li>
+		<br>
+	{% endif %}
+	{% if challonge_email %}
+	<li>Email address: {{ challonge_email }}</li>
+	<br>
+	{% endif %}
+	<li>Tournament URL: {{ url }}</li>
+	<br>
+	{% if stream %}
+		<li><a href="{{ stream }}">Watch on stream</a></li>
+	{% endif %}
+<ul>
+
+<!-- Lists all players -->
+{% for player in all_players %}
+	{{ player }}, 
+{% endfor %}
+
+<ul>
+{% for match in match_list %}
+	<div class="station_div">{{ match }}</div><br>
+{% endfor %}
+</ul>
+
+
+<iframe src="http://challonge.com/{{ url }}/module" width="80%" height="500" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
+
+
+<script src="static/js/challonge_brackets.js"></script>
+
+
+
+
+</script>
+
+
+
+{% endblock %}

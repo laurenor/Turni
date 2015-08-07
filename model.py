@@ -3,17 +3,35 @@
 from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
+
 ##############################################################################
 # Model definitions
 class User(db.Model):
 
     __tablename__ = 'users'
 
-    user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    # need to change user_id to id
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     username = db.Column(db.String(20), nullable=False) # how to make this unique?
     email = db.Column(db.String(64), nullable=False)
     password = db.Column(db.String(64), nullable=False)
     user_type = db.Column(db.String(11), nullable=False)
+
+    # taken from http://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-v-user-logins
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        try:
+            return unicode(self.id)  # python 2
+        except NameError:
+            return str(self.id)  # python 3
 
     def __repr__(self):
         """Provide helpful representation when printed"""
@@ -43,6 +61,7 @@ class Tournament(db.Model):
         """Provide helpful representation when printed"""
         return "<Tournament tournament_id=%s tournament_name=%s>" % (self.tournament_id, self.tournament_name)
 
+
 ##############################################################################
 # Helper functions
 
@@ -50,7 +69,7 @@ def connect_to_db(app):
     """Connect the database to app."""
 
     # Configure to use our SQLite database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///turni.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/turnidb'
     db.app = app
     db.init_app(app)
 

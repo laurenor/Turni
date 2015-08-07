@@ -1,24 +1,24 @@
 {% extends 'base.html' %}
 
 {% block body %}
-
-<form action='/login' method='post'>
-    <label>Challonge Username
-    <input type="text" name="username" required> </label>
+<h1>Register</h1>
+<form action='/register' method='POST'>
+    <label>
+    <input type="text" name="username" placeholder="challonge username" required> </label>
     <br>
-    <label>Email
-    <input type="email" name="email" required> </label>
+    <label>
+    <input type="email" name="email" placeholder="email" required> </label>
     <br>
-    <label>User Type
-    <input type="radio" name="user_type" value="Organizer">Organizer
-    <input type="radio" name="user_type" value="Participant">Participant
+    <label>
+    Organizer <input type="radio" name="user_type" value="Organizer">
+    Pariticipant<input type="radio" name="user_type" value="Participant">
 	</label>
     <br>
-    <label>Password
-    <input type="password" name="password" required> </label>
+    <label>
+    <input type="password" name="password" placeholder="password" required> </label>
     <br>
-    <label>Password confirmation
-    <input type="password" name="confirm" required></label>
+    <label>
+    <input type="password" name="confirm" placeholder="verify password" required></label>
     <br>
     <input type="submit" value="Register">
 
