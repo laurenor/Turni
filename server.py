@@ -7,6 +7,7 @@ from model import User, Station, Tournament, connect_to_db, db
 from flask_debugtoolbar import DebugToolbarExtension
 from flask.ext.login import LoginManager, UserMixin, login_required
 import hashlib # for email hashing
+import pprint
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -58,7 +59,29 @@ for i in range(len(participant_data)-1):
 	player_name = participant_data[i]['participant']['name']
 	players[player_id] = player_name
 
-print "*** DICT OF PLAYERS **: ", players
+print "*** DICT OF PLAYERS **: ", pprint.pprint(players)
+
+
+# using lists
+player1_list = []
+player2_list = []
+for i in range(len(match_data)-1): 
+	if match_data[i]['match']['round'] == 1:
+		for j in range(len(participant_data)-1):
+			if participant_data[j]['participant']['id'] == match_data[i]['match']['player1_id']:
+				player1_list.append(participant_data[j]['participant']['name'])
+			elif participant_data[j]['participant']['id'] == match_data[i]['match']['player2_id']:
+				player2_list.append(participant_data[j]['participant']['name'])
+
+print "*** PLAYER 1 LIST ***: ", pprint.pprint(player1_list)
+print "*** PLAYER 2 LIST ***: ", pprint.pprint(player2_list)
+
+match_list = []
+for i in range(len(player1_list)-1):
+	match_list.append((player1_list[i], player2_list[i]))
+print "*** MATCHES ***: ", pprint.pprint(match_list)
+
+
 
 
 
@@ -166,12 +189,22 @@ def map():
 	stream = request.args.get('stream')
 
 
-	match_list = [] 
-
 	# places ids of the players in each match in divs
-	for i in range(len(match_data)-1):
-		if match_data[i]['match']['round'] == 1:
-			match_list.append((match_data[i]['match']['player1_id'], match_data[i]['match']['player2_id']))
+	# for i in range(len(match_data)-1):
+	# 	if match_data[i]['match']['round'] == 1:
+	# 		match_list.append((match_data[i]['match']['player1_id'], match_data[i]['match']['player2_id']))
+
+	# player1_list = []
+	# player2_list = []
+	# for i in range(len(match_data)-1): 
+	# 	if match_data[i]['match']['round'] == 1:
+	# 		for j in range(len(participant_data)-1):
+	# 			if participant_data[j]['participant']['id'] == match_data[i]['match']['player1_id']:
+	# 				player_list1.append(participant_data[j]['participant']['name'])
+
+	# print player1_list
+					
+
 
 	# adds all participants in tournament to the page
 	all_players = []
