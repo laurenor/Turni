@@ -33,17 +33,35 @@ challonge.set_credentials('lencat', 'CHALLONGE_API_KEY')
 
 r1 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu.json', auth=('lencat', 'pyO8FhTgIl4AYhb5vBgZvi2OUddXKMAsxUudYLXB'))
 tournament_data = r1.json()
-print "***tournament id: ", tournament_data['tournament']['url'] # >>1843758
+# print "***tournament id: ", tournament_data['tournament']['url'] 
 
 r2 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu/participants.json', auth=('lencat', 'pyO8FhTgIl4AYhb5vBgZvi2OUddXKMAsxUudYLXB'))
 participant_data = r2.json()
-print "***participant checked-in: ", participant_data[0]['participant']['checked_in'] # >>False
+# print "***participant checked-in: ", participant_data[0]['participant']['checked_in'] 
 
 # for i in range(len(participant_data)-1):
 # 	print participant_data[i]['id']
 
 r3 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu/matches.json', auth=('lencat', 'pyO8FhTgIl4AYhb5vBgZvi2OUddXKMAsxUudYLXB'))
 match_data = r3.json()
+
+# counts number of matches to determine how many stations there will be
+total_stations = 0
+for i in range(len(match_data)-1):
+	if match_data[i]['match']['round'] == 1:
+		total_stations += 1
+print '** AMT OF STATIONS **: ', total_stations
+
+players = {}
+for i in range(len(participant_data)-1):
+	player_id = participant_data[i]['participant']['id']
+	player_name = participant_data[i]['participant']['name']
+	players[player_id] = player_name
+
+print "*** DICT OF PLAYERS **: ", players
+
+
+
 
 
 @app.route('/')
@@ -147,27 +165,25 @@ def map():
 	url = request.args.get('url')
 	stream = request.args.get('stream')
 
-	match_list = []
 
-	for i in range(len(participant_data)-1):
-		player1_id = match_data[i]['match']['player1_id']
-		player2_id = match_data[i]['match']['player2_id']
-		participant = participant_data[i]['participant']['id']
-		if participant == player1_id:
-			player1_id = participant_data[i]['participant']['name']
-		elif participant == player2_id:
-			player2_id = participant_data[i]['participant']['name']
+	match_list = [] 
 
-		for i in range(len(match_data)-1):
-			if match_data[i]['match']['round'] == 1:
-				match_list.append((player1_id,player2_id))
-	print match_list
+	# places ids of the players in each match in divs
+	for i in range(len(match_data)-1):
+		if match_data[i]['match']['round'] == 1:
+			match_list.append((match_data[i]['match']['player1_id'], match_data[i]['match']['player2_id']))
 
+	# adds all participants in tournament to the page
 	all_players = []
 	for i in range(len(participant_data)-1):
 		player_id = participant_data[i]['participant']['name']
 		all_players.append(player_id)
-	print all_players
+
+	# counts number of matches to determine how many stations there will be
+	total_stations = 0
+	for i in range(len(match_data)-1):
+		if match_data[i]['match']['round'] == 1:
+			total_stations += 1
 
 
 
@@ -190,6 +206,6 @@ if __name__ == "__main__":
     connect_to_db(app)
 
     # Use the DebugToolbar
-    DebugToolbarExtension(app)
+    # DebugToolbarExtension(app)
 
     app.run()
