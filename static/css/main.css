@@ -1,5 +1,48 @@
+@font-face {
+    font-family: 'Titillium Regular'; /*a name to be used later*/
+    src: url('/static/fonts/TitilliumWeb-Regular.ttf'); /*URL to font*/
+}
+
+@font-face {
+    font-family: 'Titillium Bold'; /*a name to be used later*/
+    src: url('/static/fonts/TitilliumWeb-Bold.ttf'); /*URL to font*/
+}
+
+body {
+	font-family: 'Titillium Web', sans-serif;
+	padding: 0 10px 0 10px;
+}
+
+label {
+	display: inline-block;
+}
+
+nav a {
+	text-decoration: none;
+	padding-right: 20px;
+}
+
+#logo {
+	font-size: 40px;
+	font-weight: bold;
+	text-decoration: none;
+	color: black;
+}
+
 #logout {
 	display: none;
+}
+
+.left {
+	float: left;
+}
+
+.right {
+	float: right;
+}
+
+ul {
+	padding: 0;
 }
 
 li {
@@ -9,7 +52,7 @@ li {
 .ui-tooltip {
 	padding: 5px;
 	position: absolute;
-	z-index: 9999;
+	z-index: 1;
 	max-width: 200px;
 	-webkit-box-shadow: 0 0 5px #aaa;
 	box-shadow: 0 0 5px #aaa;
@@ -17,9 +60,36 @@ li {
 body .ui-tooltip {
 	border-width: 2px;
 	font-size: 12px;
+	font-family: 'Titillium Web', 'Titillium Regular', sans-serif;
 }
 
 .station_div {
 	width: 100px;
 	border: solid 3px;
+	text-align: center;
+	padding: 10px;
+}
+
+.draggable { 
+	width: 150px; 
+	height: 150px; 
+	padding: 0.5em; 
+}
+
+/* Signup form */
+form input#firstname,
+form input#lastname,
+form input#password {
+  width: 400px;
+  background-color: #fafafa;
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+  border: 1px solid #cccccc;
+  padding: 5px;
+  font-size: 1.1em;
+}
+ 
+form input#password {
+  margin-bottom: 10px;
 }

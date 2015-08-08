@@ -21,29 +21,27 @@ app.jinja_env.undefined = StrictUndefined
 # **** CHALLONGE API CALLS **** -- not using right now, because I will be at first
 # storing info from a completed tournament.
 
-app.CHALLONGE_API_KEY = os.environ.get('CHALLONGE_API_KEY')
+CHALLONGE_API_KEY = os.environ.get('CHALLONGE_API_KEY')
 challonge.set_credentials('lencat', 'CHALLONGE_API_KEY')
-
-
 
 ##############################################################################
 
 # match_data = open('json/match_data.json')
 # match = json.loads(match_data.read())
-# print match
+# print matchalphacpu
 
-r1 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu.json', auth=('lencat', 'pyO8FhTgIl4AYhb5vBgZvi2OUddXKMAsxUudYLXB'))
+r1 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu.json', auth=('lencat', CHALLONGE_API_KEY))
 tournament_data = r1.json()
 # print "***tournament id: ", tournament_data['tournament']['url'] 
 
-r2 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu/participants.json', auth=('lencat', 'pyO8FhTgIl4AYhb5vBgZvi2OUddXKMAsxUudYLXB'))
+r2 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu/participants.json', auth=('lencat', CHALLONGE_API_KEY))
 participant_data = r2.json()
 # print "***participant checked-in: ", participant_data[0]['participant']['checked_in'] 
 
 # for i in range(len(participant_data)-1):
 # 	print participant_data[i]['id']
 
-r3 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu/matches.json', auth=('lencat', 'pyO8FhTgIl4AYhb5vBgZvi2OUddXKMAsxUudYLXB'))
+r3 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu/matches.json', auth=('lencat', CHALLONGE_API_KEY))
 match_data = r3.json()
 
 # counts number of matches to determine how many stations there will be
@@ -69,16 +67,16 @@ for i in range(len(match_data)-1):
 	if match_data[i]['match']['round'] == 1:
 		for j in range(len(participant_data)-1):
 			if participant_data[j]['participant']['id'] == match_data[i]['match']['player1_id']:
-				player1_list.append(participant_data[j]['participant']['name'])
+				player1_list.append(str(participant_data[j]['participant']['name']))
 			elif participant_data[j]['participant']['id'] == match_data[i]['match']['player2_id']:
-				player2_list.append(participant_data[j]['participant']['name'])
+				player2_list.append(str(participant_data[j]['participant']['name']))
 
 print "*** PLAYER 1 LIST ***: ", pprint.pprint(player1_list)
 print "*** PLAYER 2 LIST ***: ", pprint.pprint(player2_list)
 
 match_list = []
 for i in range(len(player1_list)-1):
-	match_list.append((player1_list[i], player2_list[i]))
+	match_list.append(' vs. '.join(map(str,(player1_list[i], player2_list[i]))))
 print "*** MATCHES ***: ", pprint.pprint(match_list)
 
 
@@ -179,7 +177,7 @@ def user_profile(username):
 
 @app.route('/features')
 def features():
-	return 'coming soon'
+	return render_template('features.html')
 
 @app.route('/map')
 def map():
@@ -187,24 +185,7 @@ def map():
 	challonge_email = request.args.get('challonge_email')
 	url = request.args.get('url')
 	stream = request.args.get('stream')
-
-
-	# places ids of the players in each match in divs
-	# for i in range(len(match_data)-1):
-	# 	if match_data[i]['match']['round'] == 1:
-	# 		match_list.append((match_data[i]['match']['player1_id'], match_data[i]['match']['player2_id']))
-
-	# player1_list = []
-	# player2_list = []
-	# for i in range(len(match_data)-1): 
-	# 	if match_data[i]['match']['round'] == 1:
-	# 		for j in range(len(participant_data)-1):
-	# 			if participant_data[j]['participant']['id'] == match_data[i]['match']['player1_id']:
-	# 				player_list1.append(participant_data[j]['participant']['name'])
-
-	# print player1_list
-					
-
+	tourn_name = request.args.get('tourn_name')
 
 	# adds all participants in tournament to the page
 	all_players = []
@@ -221,14 +202,23 @@ def map():
 
 
 	if url == tournament_data['tournament']['url']: 
-		return render_template('map.html', all_players=all_players, challonge_name=challonge_name, challonge_email=challonge_email, url=url, stream=stream, match_list=match_list)
+		return render_template('map.html', 
+								all_players=all_players, 
+								tourn_name=tourn_name,
+								challonge_name=challonge_name, 
+								challonge_email=challonge_email, 
+								url=url, 
+								stream=stream, 
+								match_list=match_list)
 	# else:
 	# 	return render_template('map.html', challonge_name=challonge_name, challonge_email=challonge_email, url=url, stream=stream, match_list=match_list)	
 
-@app.route('/idget')
-def idget():
-	pass
+################################
 
+# FORMS http://code.tutsplus.com/tutorials/intro-to-flask-signing-in-and-out--net-29982
+
+
+################################
 
 
 if __name__ == "__main__":

@@ -2,31 +2,35 @@
 
 {% block body %}
 
-<p>Map output</p>
+<h1>Map of {% if tourn_name %} {{ tourn_name }} {% else %}Tournament{% endif %}</h1>
 <ul>
 	{% if challonge_name %}
-		<li>Username: {{ challonge_name }}</li>
+		<li><b>Username</b>: {{ challonge_name }}</li>
 		<br>
 	{% endif %}
 	{% if challonge_email %}
-	<li>Email address: {{ challonge_email }}</li>
-	<br>
+		<li><b>Email address</b>: {{ challonge_email }}</li>
+		<br>
 	{% endif %}
-	<li>Tournament URL: {{ url }}</li>
+	<li><b>Tournament URL</b>: {{ url }}</li>
 	<br>
 	{% if stream %}
 		<li><a href="{{ stream }}">Watch on stream</a></li>
 	{% endif %}
 <ul>
+	<br>
 
 <!-- Lists all players -->
 {% for player in all_players %}
-	{{ player }}, 
+	<span id="player_info">{{ player }}</span>, 
 {% endfor %}
+
+<br>
+<br>
 
 <ul>
 {% for match in match_list %}
-	<div class="station_div">{{ match }}</div><br>
+	<div class="station_div" title="{{ match }}" class="draggable">{{ match }}</div><br>
 {% endfor %}
 </ul>
 
@@ -35,11 +39,6 @@
 
 
 <script src="static/js/challonge_brackets.js"></script>
-
-
-
-
-</script>
 
 
 
