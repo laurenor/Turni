@@ -30,18 +30,18 @@ challonge.set_credentials('lencat', 'CHALLONGE_API_KEY')
 # match = json.loads(match_data.read())
 # print matchalphacpu
 
-r1 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu.json', auth=('lencat', CHALLONGE_API_KEY))
+r1 = requests.get('https://api.challonge.com/v1/tournaments/turni_test1.json', auth=('lencat', CHALLONGE_API_KEY))
 tournament_data = r1.json()
 # print "***tournament id: ", tournament_data['tournament']['url'] 
 
-r2 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu/participants.json', auth=('lencat', CHALLONGE_API_KEY))
+r2 = requests.get('https://api.challonge.com/v1/tournaments/turni_test1/participants.json', auth=('lencat', CHALLONGE_API_KEY))
 participant_data = r2.json()
 # print "***participant checked-in: ", participant_data[0]['participant']['checked_in'] 
 
 # for i in range(len(participant_data)-1):
 # 	print participant_data[i]['id']
 
-r3 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu/matches.json', auth=('lencat', CHALLONGE_API_KEY))
+r3 = requests.get('https://api.challonge.com/v1/tournaments/turni_test1/matches.json', auth=('lencat', CHALLONGE_API_KEY))
 match_data = r3.json()
 
 # counts number of matches to determine how many stations there will be
@@ -54,29 +54,37 @@ print '** AMT OF STATIONS **: ', total_stations
 players = {}
 for i in range(len(participant_data)-1):
 	player_id = participant_data[i]['participant']['id']
-	player_name = participant_data[i]['participant']['name']
+	player_name = participant_data[i]['participant']['username']
 	players[player_id] = player_name
 
 print "*** DICT OF PLAYERS **: ", pprint.pprint(players)
 
-
+######## FIXME: works with alphacpu
 # using lists
-player1_list = []
-player2_list = []
-for i in range(len(match_data)-1): 
-	if match_data[i]['match']['round'] == 1:
-		for j in range(len(participant_data)-1):
-			if participant_data[j]['participant']['id'] == match_data[i]['match']['player1_id']:
-				player1_list.append(str(participant_data[j]['participant']['name']))
-			elif participant_data[j]['participant']['id'] == match_data[i]['match']['player2_id']:
-				player2_list.append(str(participant_data[j]['participant']['name']))
+# player1_list = []
+# player2_list = []
+# for i in range(len(match_data)-1): 
+# 	# if match_data[i]['match']['round'] == 1:
+# 	for j in range(len(participant_data)-1):
+# 		if participant_data[j]['participant']['id'] == match_data[i]['match']['player1_id']:
+# 			player1_list.append(str(participant_data[j]['participant']['username']))
+# 		elif participant_data[j]['participant']['id'] == match_data[i]['match']['player2_id']:
+# 			player2_list.append(str(participant_data[j]['participant']['username']))
 
-print "*** PLAYER 1 LIST ***: ", pprint.pprint(player1_list)
-print "*** PLAYER 2 LIST ***: ", pprint.pprint(player2_list)
+# print "*** PLAYER 1 LIST ***: ", pprint.pprint(player1_list)
+# print "*** PLAYER 2 LIST ***: ", pprint.pprint(player2_list)
 
+# match_list = []
+# for i in range(len(player1_list)-1):
+# 	match_list.append(' vs. '.join(map(str,(player1_list[i], player2_list[i]))))
+# print "*** MATCHES ***: ", pprint.pprint(match_list)
+
+
+######## FIXME: doesn't list names; just IDs
 match_list = []
-for i in range(len(player1_list)-1):
-	match_list.append(' vs. '.join(map(str,(player1_list[i], player2_list[i]))))
+for i in range(len(match_data)-1):
+	if match_data[i]['match']['state'] == "open":
+		match_list.append(' vs. '.join(map(str,(match_data[i]['match']['player1_id'], match_data[i]['match']['player2_id']))))
 print "*** MATCHES ***: ", pprint.pprint(match_list)
 
 
@@ -190,7 +198,7 @@ def map():
 	# adds all participants in tournament to the page
 	all_players = []
 	for i in range(len(participant_data)-1):
-		player_id = participant_data[i]['participant']['name']
+		player_id = participant_data[i]['participant']['username']
 		all_players.append(player_id)
 
 	# counts number of matches to determine how many stations there will be
@@ -213,12 +221,6 @@ def map():
 	# else:
 	# 	return render_template('map.html', challonge_name=challonge_name, challonge_email=challonge_email, url=url, stream=stream, match_list=match_list)	
 
-################################
-
-# FORMS http://code.tutsplus.com/tutorials/intro-to-flask-signing-in-and-out--net-29982
-
-
-################################
 
 
 if __name__ == "__main__":

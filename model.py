@@ -11,31 +11,29 @@ class User(db.Model):
     __tablename__ = 'users'
 
     # need to change user_id to id
-    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     username = db.Column(db.String(20), nullable=False) # how to make this unique?
     email = db.Column(db.String(64), nullable=False)
     password = db.Column(db.String(64), nullable=False)
     user_type = db.Column(db.String(11), nullable=False)
-
-    # taken from http://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-v-user-logins
-    def is_authenticated(self):
-        return True
-
-    def is_active(self):
-        return True
-
-    def is_anonymous(self):
-        return False
-
-    def get_id(self):
-        try:
-            return unicode(self.id)  # python 2
-        except NameError:
-            return str(self.id)  # python 3
+    phone = db.Column(db.Integer)
 
     def __repr__(self):
         """Provide helpful representation when printed"""
         return "<User user_id=%s username=%s>" % (self.user_id, self.username)
+
+class Player(db.Model):
+
+    __tablename__ = 'players'
+
+    player_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    challonge_name = db.Column(db.String(20), nullable=False)
+    challonge_id = db.Column(db.Integer)
+    user_id = db.Column(db.String(20), db.ForeignKey('users.user_id'))
+
+    def __repr__(self):
+        """Provide helpful representation when printed"""
+        return "<Player player_id=%s tournament_name=%s>" % (self.tournament_id, self.tournament_name)
 
 class Station(db.Model):
 
@@ -43,12 +41,23 @@ class Station(db.Model):
 
     station_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     match_id = db.Column(db.Integer, nullable=False)
-    tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.tournament_id'))
-    
+    tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.tournament_id'))    
 
     def __repr__(self):
         """Provide helpful representation when printed"""
-        return "<User user_id=%s username=%s>" % (self.user_id, self.username)
+        return "<Station station_id=%s username=%s>" % (self.user_id, self.username)
+
+class StationPlayer(db.Model):
+
+    __tablename__ = 'stations_players'
+
+    station_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    match_id = db.Column(db.Integer, nullable=False)
+    tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.tournament_id'))    
+
+    def __repr__(self):
+        """Provide helpful representation when printed"""
+        return "<Station station_id=%s username=%s>" % (self.user_id, self.username)
 
 class Tournament(db.Model):
 
@@ -56,6 +65,7 @@ class Tournament(db.Model):
 
     tournament_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     tournament_name = db.Column(db.String(20), nullable=False) 
+    player_id = db.Column(db.Integer, db.ForeignKey('players.player_id'))
 
     def __repr__(self):
         """Provide helpful representation when printed"""

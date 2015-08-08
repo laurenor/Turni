@@ -2,6 +2,20 @@
 
 {% block body %}
 
+<style>
+.draggable { width: 150px; height: 150px; padding: 0.5em; }
+.resizable { width: 150px; height: 150px; padding: 0.5em; }
+.resizable h3 { text-align: center; margin: 0; }
+</style>
+<script>
+  $(function() {
+  $( ".draggable" ).draggable();
+  });
+  $(function() {
+    $( ".resizable" ).resizable();
+  });
+</script>
+
 <h1>Map of {% if tourn_name %} {{ tourn_name }} {% else %}Tournament{% endif %}</h1>
 <ul>
 	{% if challonge_name %}
@@ -30,9 +44,16 @@
 
 <ul>
 {% for match in match_list %}
-	<div class="station_div" title="{{ match }}" class="draggable">{{ match }}</div><br>
+	<div class="station_div draggable resizable ui-resizable ui-resizable-resizing ui-widget-content" title="{{ match }}" class="draggable">
+		<h3 class="ui-widget-header">Station</h3>
+		{{ match }}
+	</div><br>
 {% endfor %}
 </ul>
+
+<div id="resizable" class="ui-widget-content">
+  <h3 class="ui-widget-header">Resizable</h3>
+</div>
 
 
 <iframe src="http://challonge.com/{{ url }}/module" width="80%" height="500" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
