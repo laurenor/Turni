@@ -45,19 +45,19 @@ r3 = requests.get('https://api.challonge.com/v1/tournaments/turni_test1/matches.
 match_data = r3.json()
 
 # counts number of matches to determine how many stations there will be
-total_stations = 0
-for i in range(len(match_data)-1):
-	if match_data[i]['match']['round'] == 1:
-		total_stations += 1
-print '** AMT OF STATIONS **: ', total_stations
+# total_stations = 0
+# for i in range(len(match_data)-1):
+# 	if match_data[i]['match']['round'] == 1:
+# 		total_stations += 1
+# print '** AMT OF STATIONS **: ', total_stations
 
-players = {}
-for i in range(len(participant_data)-1):
-	player_id = participant_data[i]['participant']['id']
-	player_name = participant_data[i]['participant']['username']
-	players[player_id] = player_name
+# players = {}
+# for i in range(len(participant_data)-1):
+# 	player_id = participant_data[i]['participant']['id']
+# 	player_name = participant_data[i]['participant']['username']
+# 	players[player_id] = player_name
 
-print "*** DICT OF PLAYERS **: ", pprint.pprint(players)
+# print "*** DICT OF PLAYERS **: ", pprint.pprint(players)
 
 ######## FIXME: works with alphacpu
 # using lists
@@ -81,14 +81,12 @@ print "*** DICT OF PLAYERS **: ", pprint.pprint(players)
 
 
 ######## FIXME: doesn't list names; just IDs
+# used in /map
 match_list = []
 for i in range(len(match_data)-1):
 	if match_data[i]['match']['state'] == "open":
 		match_list.append(' vs. '.join(map(str,(match_data[i]['match']['player1_id'], match_data[i]['match']['player2_id']))))
 print "*** MATCHES ***: ", pprint.pprint(match_list)
-
-
-
 
 
 
@@ -209,15 +207,15 @@ def map():
 
 
 
-	if url == tournament_data['tournament']['url']: 
-		return render_template('map.html', 
-								all_players=all_players, 
-								tourn_name=tourn_name,
-								challonge_name=challonge_name, 
-								challonge_email=challonge_email, 
-								url=url, 
-								stream=stream, 
-								match_list=match_list)
+	# if url == tournament_data['tournament']['url']: 
+	return render_template('map.html', 
+							all_players=all_players, 
+							tourn_name=tourn_name,
+							challonge_name=challonge_name, 
+							challonge_email=challonge_email, 
+							url=url, 
+							stream=stream, 
+							match_list=match_list)
 	# else:
 	# 	return render_template('map.html', challonge_name=challonge_name, challonge_email=challonge_email, url=url, stream=stream, match_list=match_list)	
 

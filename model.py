@@ -29,7 +29,7 @@ class Player(db.Model):
     player_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     challonge_name = db.Column(db.String(20), nullable=False)
     challonge_id = db.Column(db.Integer)
-    user_id = db.Column(db.String(20), db.ForeignKey('users.user_id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
 
     def __repr__(self):
         """Provide helpful representation when printed"""
@@ -66,6 +66,7 @@ class Tournament(db.Model):
     tournament_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     tournament_name = db.Column(db.String(20), nullable=False) 
     player_id = db.Column(db.Integer, db.ForeignKey('players.player_id'))
+    max_stations = db.Column(db.Integer)
 
     def __repr__(self):
         """Provide helpful representation when printed"""
