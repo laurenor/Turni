@@ -3,7 +3,7 @@ import os
 from flask import Flask, flash, render_template, redirect, json, request, session, url_for, send_from_directory
 from jinja2 import StrictUndefined
 import challonge
-from model import User, Station, Tournament, connect_to_db, db
+from model import User, Player, Station, StationPlayer, Tournament, connect_to_db, db
 from flask_debugtoolbar import DebugToolbarExtension
 from flask.ext.login import LoginManager, UserMixin, login_required
 import hashlib # for email hashing
@@ -26,23 +26,16 @@ challonge.set_credentials('lencat', 'CHALLONGE_API_KEY')
 
 ##############################################################################
 
-# match_data = open('json/match_data.json')
-# match = json.loads(match_data.read())
-# print matchalphacpu
 
 r1 = requests.get('https://api.challonge.com/v1/tournaments/turni_test1.json', auth=('lencat', CHALLONGE_API_KEY))
 tournament_data = r1.json()
-# print "***tournament id: ", tournament_data['tournament']['url'] 
 
 r2 = requests.get('https://api.challonge.com/v1/tournaments/turni_test1/participants.json', auth=('lencat', CHALLONGE_API_KEY))
 participant_data = r2.json()
-# print "***participant checked-in: ", participant_data[0]['participant']['checked_in'] 
-
-# for i in range(len(participant_data)-1):
-# 	print participant_data[i]['id']
 
 r3 = requests.get('https://api.challonge.com/v1/tournaments/turni_test1/matches.json', auth=('lencat', CHALLONGE_API_KEY))
 match_data = r3.json()
+
 
 # counts number of matches to determine how many stations there will be
 # total_stations = 0
@@ -205,6 +198,17 @@ def map():
 		if match_data[i]['match']['round'] == 1:
 			total_stations += 1
 
+	for i in range(len(participant_data)-1):
+		player = Player.query.filter_by()
+		challonge_name = str(participant_data[i]['participant']['username'])
+		print "**Challonge name: ", challonge_name
+		challonge_id = int(participant_data[i]['participant']['id'])
+		print "**Challonge id: ", challonge_id
+		player = Player.query.filter_by(challonge_name=challonge_name, challonge_id=challonge_id)
+		if not player:
+			new_player = Player(challonge_name=challonge_name, challonge_id=challonge_id)
+			db.session.add(new_player)
+	db.session.commit()
 
 
 	# if url == tournament_data['tournament']['url']: 

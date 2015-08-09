@@ -27,9 +27,9 @@ class Player(db.Model):
     __tablename__ = 'players'
 
     player_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    challonge_name = db.Column(db.String(20), nullable=False)
-    challonge_id = db.Column(db.Integer)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    challonge_name = db.Column(db.String(20), nullable=False, unique=True)
+    challonge_id = db.Column(db.Integer, unique=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), unique=True)
 
     def __repr__(self):
         """Provide helpful representation when printed"""
