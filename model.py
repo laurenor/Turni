@@ -26,21 +26,19 @@ class Player(db.Model):
 
     __tablename__ = 'players'
 
-    player_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    challonge_id = db.Column(db.Integer, primary_key=True)
     challonge_name = db.Column(db.String(20), nullable=False, unique=True)
-    challonge_id = db.Column(db.Integer, unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), unique=True)
 
     def __repr__(self):
         """Provide helpful representation when printed"""
-        return "<Player player_id=%s challonge_name=%s>" % (self.player_id, self.challonge_name)
+        return "<Player challonge_id=%s challonge_name=%s>" % (self.challonge_id, self.challonge_name)
 
 class Station(db.Model):
 
     __tablename__ = 'stations'
 
-    station_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    match_id = db.Column(db.Integer, nullable=False)
+    station_id = db.Column(db.Integer, primary_key=True)
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.tournament_id'))    
 
     def __repr__(self):
@@ -53,7 +51,7 @@ class StationPlayer(db.Model):
 
     stationplayer_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     station_id = db.Column(db.Integer, db.ForeignKey('stations.station_id'))
-    player_id = db.Column(db.Integer, db.ForeignKey('players.player_id'))
+    challonge_id = db.Column(db.Integer, db.ForeignKey('players.challonge_id'))
 
     def __repr__(self):
         """Provide helpful representation when printed"""

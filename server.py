@@ -34,9 +34,9 @@ challonge.set_credentials('lencat', 'CHALLONGE_API_KEY')
 
 # players = {}
 # for i in range(len(participant_data)-1):
-# 	player_id = participant_data[i]['participant']['id']
+# 	challonge_id = participant_data[i]['participant']['id']
 # 	player_name = participant_data[i]['participant']['username']
-# 	players[player_id] = player_name
+# 	players[challonge_id] = player_name
 
 # print "*** DICT OF PLAYERS **: ", pprint.pprint(players)
 
@@ -172,7 +172,6 @@ def map():
 
 	r3 = requests.get('https://api.challonge.com/v1/tournaments/' + url + '/matches.json', auth=('lencat', CHALLONGE_API_KEY))
 	match_data = r3.json()
-	print match_data
 
 	# makes a list of matches
 	match_list = []
@@ -186,12 +185,12 @@ def map():
 	# adds all participants in tournament to the page
 	all_players = []
 	for i in range(len(participant_data)-1):
-		player_id = participant_data[i]['participant']['username']
-		if player_id is not None:
-			all_players.append(player_id)
+		challonge_id = participant_data[i]['participant']['username']
+		if challonge_id is not None:
+			all_players.append(challonge_id)
 		else:
-			player_id = participant_data[i]['participant']['name']
-			all_players.append(player_id)
+			challonge_id = participant_data[i]['participant']['name']
+			all_players.append(challonge_id)
 
 	# counts number of matches to determine how many stations there will be
 	total_stations = 0
@@ -199,32 +198,65 @@ def map():
 		if match_data[i]['match']['round'] == 1:
 			total_stations += 1
 
-	# adds player info to database
-	for i in range(len(participant_data)-1):
+	# adds player info to database (why isn't it adding all players to database?)
+	for i in range(len(participant_data)):
+		print i
 		challonge_name = str(participant_data[i]['participant']['username'])
 		print "**Challonge name: ", challonge_name
 		challonge_id = int(participant_data[i]['participant']['id'])
-		print "**Challonge id: ", challonge_id
-		player = Player.query.filter(challonge_name==challonge_name, challonge_id==challonge_id).all()
+		# print "**Challonge id: ", challonge_id
+		player = Player.query.filter_by(challonge_name=challonge_name, challonge_id=challonge_id).first()
 		print "**Player: ", player
 		if not player:
 			new_player = Player(challonge_name=challonge_name, challonge_id=challonge_id)
 			db.session.add(new_player)
+			print "**New player: ", new_player.challonge_name
+	db.session.commit()
 
 	# calculates max # of stations
 	max_stations = 0
 	for i in range(len(match_data)-1):
 		if match_data[i]['match']['state'] == 'open':
 			max_stations += 1
-	print max_stations
 
 	# adds new tournament info if tournament is not yet in database
-	tournament = Tournament.query.filter(tournament_name==tournament_name).one()
+	tournament = Tournament.query.filter(tournament_name==tournament_name).first()
 	if not tournament:
-		new_tournament = Tournament(tournament_name=tournament_name, max_stations=max_stations)
-		db.session.add(new_tournament)
+		tournament = Tournament(tournament_name=tournament_name, max_stations=max_stations)
+		db.session.add(tournament)
 	db.session.commit()
-	print tournament
+	print "*** IS TOURNAMENT HERE? :", tournament
+
+	# free stations list
+	print "*** TOURNAMENT ID: ", tournament.tournament_id
+	print "*** MAX STATIONS: ", tournament.max_stations
+
+	################# should be put into a function
+	
+	free_stations = []
+	for i in range(tournament.max_stations):
+		free_stations.append(i+1)
+	print "*** FREE STATIONS: ", free_stations
+
+	# adding station_id and tournament_id info to stations
+	for i in range(max_stations):
+		new_station = Station(station_id=i+1, tournament_id=tournament.tournament_id)
+		db.session.add(new_station)
+	db.session.commit()
+
+	################# 
+
+	# adding info on which stations players are at
+	for i in range(len(match_data)):
+		if match_data[i]['match']['state'] == 'open':
+			cur_free_station = free_stations.pop(0)
+			if cur_free_station:
+				new_station_player = StationPlayer(station_id=cur_free_station, challonge_id=match_data[i]['match']['player1_id'])
+				print new_station_player
+				new_station_player2 = StationPlayer(station_id=cur_free_station, challonge_id=match_data[i]['match']['player2_id'])
+				db.session.add(new_station_player)
+				db.session.add(new_station_player2)
+	db.session.commit()
 
 	return render_template('map.html', 
 							all_players=all_players, 
