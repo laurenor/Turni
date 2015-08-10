@@ -33,7 +33,7 @@ class Player(db.Model):
 
     def __repr__(self):
         """Provide helpful representation when printed"""
-        return "<Player player_id=%s tournament_name=%s>" % (self.tournament_id, self.tournament_name)
+        return "<Player player_id=%s challonge_name=%s>" % (self.player_id, self.challonge_name)
 
 class Station(db.Model):
 
@@ -45,19 +45,19 @@ class Station(db.Model):
 
     def __repr__(self):
         """Provide helpful representation when printed"""
-        return "<Station station_id=%s username=%s>" % (self.user_id, self.username)
+        return "<Station station_id=%s>" % (self.station_id)
 
 class StationPlayer(db.Model):
 
     __tablename__ = 'stations_players'
 
-    station_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    match_id = db.Column(db.Integer, nullable=False)
-    tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.tournament_id'))    
+    stationplayer_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    station_id = db.Column(db.Integer, db.ForeignKey('stations.station_id'))
+    player_id = db.Column(db.Integer, db.ForeignKey('players.player_id'))
 
     def __repr__(self):
         """Provide helpful representation when printed"""
-        return "<Station station_id=%s username=%s>" % (self.user_id, self.username)
+        return "<StationPlayer stationplayer_id=%s>" % (self.stationplayer_id)
 
 class Tournament(db.Model):
 
@@ -65,7 +65,6 @@ class Tournament(db.Model):
 
     tournament_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     tournament_name = db.Column(db.String(20), nullable=False) 
-    player_id = db.Column(db.Integer, db.ForeignKey('players.player_id'))
     max_stations = db.Column(db.Integer)
 
     def __repr__(self):

@@ -88,6 +88,13 @@ body .ui-tooltip {
 	margin: 0; 
 }
 
+.note {
+	font-size: 10px;
+	color: red;
+	padding: 0;
+	margin-top: -20px;
+}
+
 /* Signup form */
 form input#firstname,
 form input#lastname,

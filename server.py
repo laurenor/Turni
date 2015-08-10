@@ -18,24 +18,12 @@ app.jinja_env.undefined = StrictUndefined
 
 
 ##############################################################################
-# **** CHALLONGE API CALLS **** -- not using right now, because I will be at first
-# storing info from a completed tournament.
+# **** CHALLONGE API CALLS **** 
 
 CHALLONGE_API_KEY = os.environ.get('CHALLONGE_API_KEY')
 challonge.set_credentials('lencat', 'CHALLONGE_API_KEY')
 
 ##############################################################################
-
-
-r1 = requests.get('https://api.challonge.com/v1/tournaments/turni_test1.json', auth=('lencat', CHALLONGE_API_KEY))
-tournament_data = r1.json()
-
-r2 = requests.get('https://api.challonge.com/v1/tournaments/turni_test1/participants.json', auth=('lencat', CHALLONGE_API_KEY))
-participant_data = r2.json()
-
-r3 = requests.get('https://api.challonge.com/v1/tournaments/turni_test1/matches.json', auth=('lencat', CHALLONGE_API_KEY))
-match_data = r3.json()
-
 
 # counts number of matches to determine how many stations there will be
 # total_stations = 0
@@ -74,22 +62,12 @@ match_data = r3.json()
 
 
 ######## FIXME: doesn't list names; just IDs
-# used in /map
-match_list = []
-for i in range(len(match_data)-1):
-	if match_data[i]['match']['state'] == "open":
-		match_list.append(' vs. '.join(map(str,(match_data[i]['match']['player1_id'], match_data[i]['match']['player2_id']))))
-print "*** MATCHES ***: ", pprint.pprint(match_list)
-
 
 
 
 @app.route('/')
 def index():
 	"""Return index page"""
-
-	print '**session**', session
-	print tournament_data['tournament']['id']
 
 	return render_template('index.html')
 
@@ -184,13 +162,36 @@ def map():
 	challonge_email = request.args.get('challonge_email')
 	url = request.args.get('url')
 	stream = request.args.get('stream')
-	tourn_name = request.args.get('tourn_name')
+	tournament_name = request.args.get('tournament_name')
+
+	r1 = requests.get('https://api.challonge.com/v1/tournaments/' + url + '.json', auth=('lencat', CHALLONGE_API_KEY))
+	tournament_data = r1.json()
+
+	r2 = requests.get('https://api.challonge.com/v1/tournaments/' + url + '/participants.json', auth=('lencat', CHALLONGE_API_KEY))
+	participant_data = r2.json()
+
+	r3 = requests.get('https://api.challonge.com/v1/tournaments/' + url + '/matches.json', auth=('lencat', CHALLONGE_API_KEY))
+	match_data = r3.json()
+	print match_data
+
+	# makes a list of matches
+	match_list = []
+	for i in range(len(match_data)-1):
+		if match_data[i]['match']['state'] == "open":
+			match_list.append(' vs. '.join((str(match_data[i]['match']['player1_id']), (str(match_data[i]['match']['player2_id'])))))
+			# was originally (' vs. '.join(map(str,(match_data[i]['match']['player1_id']), (str(match_data[i]['match']['player2_id'])))))
+	print "*** MATCHES ***: ", pprint.pprint(match_list)
+
 
 	# adds all participants in tournament to the page
 	all_players = []
 	for i in range(len(participant_data)-1):
 		player_id = participant_data[i]['participant']['username']
-		all_players.append(player_id)
+		if player_id is not None:
+			all_players.append(player_id)
+		else:
+			player_id = participant_data[i]['participant']['name']
+			all_players.append(player_id)
 
 	# counts number of matches to determine how many stations there will be
 	total_stations = 0
@@ -198,36 +199,44 @@ def map():
 		if match_data[i]['match']['round'] == 1:
 			total_stations += 1
 
+	# adds player info to database
 	for i in range(len(participant_data)-1):
-		player = Player.query.filter_by()
 		challonge_name = str(participant_data[i]['participant']['username'])
 		print "**Challonge name: ", challonge_name
 		challonge_id = int(participant_data[i]['participant']['id'])
 		print "**Challonge id: ", challonge_id
-		player = Player.query.filter_by(challonge_name=challonge_name, challonge_id=challonge_id)
+		player = Player.query.filter(challonge_name==challonge_name, challonge_id==challonge_id).all()
+		print "**Player: ", player
 		if not player:
 			new_player = Player(challonge_name=challonge_name, challonge_id=challonge_id)
 			db.session.add(new_player)
+
+	# calculates max # of stations
+	max_stations = 0
+	for i in range(len(match_data)-1):
+		if match_data[i]['match']['state'] == 'open':
+			max_stations += 1
+	print max_stations
+
+	# adds new tournament info if tournament is not yet in database
+	tournament = Tournament.query.filter(tournament_name==tournament_name).one()
+	if not tournament:
+		new_tournament = Tournament(tournament_name=tournament_name, max_stations=max_stations)
+		db.session.add(new_tournament)
 	db.session.commit()
+	print tournament
 
-
-	# if url == tournament_data['tournament']['url']: 
 	return render_template('map.html', 
 							all_players=all_players, 
-							tourn_name=tourn_name,
+							tournament_name=tournament_name,
 							challonge_name=challonge_name, 
 							challonge_email=challonge_email, 
 							url=url, 
 							stream=stream, 
 							match_list=match_list)
-	# else:
-	# 	return render_template('map.html', challonge_name=challonge_name, challonge_email=challonge_email, url=url, stream=stream, match_list=match_list)	
-
 
 
 if __name__ == "__main__":
-    # We have to set debug=True here, since it has to be True at the point
-    # that we invoke the DebugToolbarExtension
     app.debug = True
 
     connect_to_db(app)

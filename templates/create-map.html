@@ -3,19 +3,19 @@
 {% block body %}
 
 <h2>Create Venue Map</h2>
+<p class='note'><i>Note: Venue maps cannot be created for completed tournaments</i></p>
 <form action='/map'>
     <label for="challonge_name">
-    <input id="challonge" name="challonge_name" placeholder="Challonge username" title="Challonge username required for authentication" ></label>
+    <input id="challonge" name="challonge_name" placeholder="Challonge username"></label>
     <br>
     <label for="challonge_email">
-    <input name="challonge_email" placeholder="Challonge email" title="Challonge email address required for authentication" > </label>
+    <input name="challonge_email" placeholder="Challonge email"> </label>
     <br>
     <label>
-    <label>
-    <input type="text" name="tourn_name" placeholder="Tournament Name" required> </label>
+    <input type="text" name="tournament_name" placeholder="Tournament Name" required> </label>
     <br>
     <label>
-    <input type="text" name="url" placeholder="Tournament URL" required> </label>
+    <input type="text" name="url" placeholder="Tournament URL" title="challonge.com/[url]" required> </label>
     <br>
     <label>
     <input type="text" name="stream" placeholder="Stream link (optional)"> </label>
