@@ -173,51 +173,18 @@ def map():
 	r3 = requests.get('https://api.challonge.com/v1/tournaments/' + url + '/matches.json', auth=('lencat', CHALLONGE_API_KEY))
 	match_data = r3.json()
 
-	# makes a list of matches
-	match_list = []
-	for i in range(len(match_data)-1):
-		if match_data[i]['match']['state'] == "open":
-			match_list.append(' vs. '.join((str(match_data[i]['match']['player1_id']), (str(match_data[i]['match']['player2_id'])))))
-			# was originally (' vs. '.join(map(str,(match_data[i]['match']['player1_id']), (str(match_data[i]['match']['player2_id'])))))
-	print "*** MATCHES ***: ", pprint.pprint(match_list)
+	# creates list of matches ('Player1 vs. Player2')
+	match_list = set_match_info(match_data)
 
+	# list of all players
+	all_players = get_all_players(participant_data)
+		
+	# adds player(s) to database, if player(s) not already in DB
+	Player.add_to_db(participant_data)
 
-	# adds all participants in tournament to the page
-	all_players = []
-	for i in range(len(participant_data)-1):
-		challonge_id = participant_data[i]['participant']['username']
-		if challonge_id is not None:
-			all_players.append(challonge_id)
-		else:
-			challonge_id = participant_data[i]['participant']['name']
-			all_players.append(challonge_id)
+	# FIXME: calculates max # of stations; should be helper function 
+	max_stations = set_max_stations(match_data)
 
-	# counts number of matches to determine how many stations there will be
-	total_stations = 0
-	for i in range(len(match_data)-1):
-		if match_data[i]['match']['round'] == 1:
-			total_stations += 1
-
-	# adds player info to database (why isn't it adding all players to database?)
-	for i in range(len(participant_data)):
-		print i
-		challonge_name = str(participant_data[i]['participant']['username'])
-		print "**Challonge name: ", challonge_name
-		challonge_id = int(participant_data[i]['participant']['id'])
-		# print "**Challonge id: ", challonge_id
-		player = Player.query.filter_by(challonge_name=challonge_name, challonge_id=challonge_id).first()
-		print "**Player: ", player
-		if not player:
-			new_player = Player(challonge_name=challonge_name, challonge_id=challonge_id)
-			db.session.add(new_player)
-			print "**New player: ", new_player.challonge_name
-	db.session.commit()
-
-	# calculates max # of stations
-	max_stations = 0
-	for i in range(len(match_data)-1):
-		if match_data[i]['match']['state'] == 'open':
-			max_stations += 1
 
 	# adds new tournament info if tournament is not yet in database
 	tournament = Tournament.query.filter(tournament_name==tournament_name).first()
@@ -225,38 +192,18 @@ def map():
 		tournament = Tournament(tournament_name=tournament_name, max_stations=max_stations)
 		db.session.add(tournament)
 	db.session.commit()
-	print "*** IS TOURNAMENT HERE? :", tournament
 
-	# free stations list
-	print "*** TOURNAMENT ID: ", tournament.tournament_id
-	print "*** MAX STATIONS: ", tournament.max_stations
+	open_stations = create_open_stations(tournament)
+	print open_stations
 
-	################# should be put into a function
-	
-	free_stations = []
-	for i in range(tournament.max_stations):
-		free_stations.append(i+1)
-	print "*** FREE STATIONS: ", free_stations
+	# adds station_id and tournament_id info to database
+	Station.add_to_db(max_stations, tournament)
 
-	# adding station_id and tournament_id info to stations
-	for i in range(max_stations):
-		new_station = Station(station_id=i+1, tournament_id=tournament.tournament_id)
-		db.session.add(new_station)
-	db.session.commit()
+	# adds info on which stations players are at to database
+	StationPlayer.add_to_db(match_data, open_stations)
 
-	################# 
+	update_open_stations(open_stations)
 
-	# adding info on which stations players are at
-	for i in range(len(match_data)):
-		if match_data[i]['match']['state'] == 'open':
-			cur_free_station = free_stations.pop(0)
-			if cur_free_station:
-				new_station_player = StationPlayer(station_id=cur_free_station, challonge_id=match_data[i]['match']['player1_id'])
-				print new_station_player
-				new_station_player2 = StationPlayer(station_id=cur_free_station, challonge_id=match_data[i]['match']['player2_id'])
-				db.session.add(new_station_player)
-				db.session.add(new_station_player2)
-	db.session.commit()
 
 	return render_template('map.html', 
 							all_players=all_players, 
@@ -265,8 +212,61 @@ def map():
 							challonge_email=challonge_email, 
 							url=url, 
 							stream=stream, 
-							match_list=match_list)
+							match_list=match_list,
+							max_stations = max_stations)
 
+###########################################
+# helper functions
+def get_all_players(participant_data):
+	"""Creates list of all players in tournament"""
+	all_players = []
+	for i in range(len(participant_data)-1):
+		challonge_id = participant_data[i]['participant']['username']
+		if challonge_id is not None:
+			all_players.append(challonge_id)
+		else:
+			challonge_id = participant_data[i]['participant']['name']
+			all_players.append(challonge_id)
+	return all_players
+
+def set_match_info(match_data):
+	"""Creates list of all matches in tournament"""
+	match_list = []
+	for i in range(len(match_data)-1):
+		if match_data[i]['match']['state'] == "open":
+			match_list.append(' vs. '.join((str(match_data[i]['match']['player1_id']), (str(match_data[i]['match']['player2_id'])))))
+	return match_list
+
+def set_max_stations(match_data):
+	"""Provides # of stations in venue"""
+	max_stations = 0
+	for i in range(len(match_data)-1):
+		if match_data[i]['match']['state'] == 'open':
+			max_stations += 1
+	return max_stations
+
+def create_open_stations(tournament):
+	"""Creates a list of free (open) stations in tournament"""
+	open_stations = []
+	for i in range(tournament.max_stations):
+		open_stations.append(i+1)
+	print "***OPEN STATIONS 1: ", open_stations
+	return open_stations
+
+def update_open_stations(open_stations):
+
+	tup_ids = db.session.query(StationPlayer.station_id).all()
+	list_ids = [i[0] for i in tup_ids]
+	# removing duplicates from list_ids
+	set_ids = set(list_ids)
+	list_ids = list(set_ids)
+
+	for num in open_stations:
+		if num in list_ids:
+			open_stations.pop(num)
+	print "***OPEN STATIONS 2: ", open_stations
+	return open_stations
+	
 
 if __name__ == "__main__":
     app.debug = True

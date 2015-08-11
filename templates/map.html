@@ -8,7 +8,7 @@
 .resizable h3 { text-align: center; margin: 0; }
 </style>
 
-<h1>Map of {% if tournament_name %} {{ tournament_name }} {% else %}Tournament{% endif %}</h1>
+<h2>Tournament Info</h2>
 <ul>
 	{% if challonge_name %}
 		<li><b>Username</b>: {{ challonge_name }}</li>
@@ -20,20 +20,24 @@
 	{% endif %}
 	<li><b>Tournament URL</b>: {{ url }}</li>
 	<br>
+	<li><b>Number of stations</b>: {{ max_stations }}</li>
+	<br>
 	{% if stream %}
 		<li><a href="{{ stream }}">Watch on stream</a></li>
+		<br>
 	{% endif %}
+	<b>Participants</b>:
+	{% for player in all_players %}
+		<li><span id="player_info">{{ player }}</span> </li> 
+	{% endfor %}
 <ul>
-	<br>
 
 <!-- Lists all players -->
-{% for player in all_players %}
-	<span id="player_info">{{ player }}</span>, 
-{% endfor %}
 
-<br>
-<br>
-
+<h2>Map of {% if tournament_name %} {{ tournament_name }} {% else %}Tournament{% endif %}</h2>
+	{% if max_stations == 0 %}
+	<p><span style="color:red"><a href="http://challonge.com/{{ url }}">Please start the tournament to create a venue map!</a></span></p>
+	{% endif %}
 <ul>
 {% for match in match_list %}
 	<div class="draggable resizable ui-widget-content">
@@ -43,7 +47,7 @@
 {% endfor %}
 </ul>
 
-
+<h2>Brackets</h2>
 <iframe src="http://challonge.com/{{ url }}/module" width="80%" height="500" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
 
 
