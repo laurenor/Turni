@@ -185,7 +185,7 @@ def features():
 	else:
 		return render_template('features.html')
 
-@app.route('/map')
+@app.route('/map', methods=['GET','POST'])
 def map():
 	if 'username' in session:
 		username = session['username']
