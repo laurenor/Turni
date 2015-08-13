@@ -3,16 +3,8 @@
 {% block body %}
 
 <h2>Create Venue Map</h2>
-<p class='note'><i>Note: Venue maps cannot be created for completed tournaments</i></p>
-<br>
-<p class='note'><i>Note: Venue maps cannot be created if tournament has not been started</i></p>
+<p class='note'><i>Note: Venue maps cannot be created for completed tournaments or tournaments that have not yet started.</i></p>
 <form action='/map'>
-    <label for="challonge_name">
-    <input id="challonge" name="challonge_name" placeholder="Challonge username"></label>
-    <br>
-    <label for="challonge_email">
-    <input name="challonge_email" placeholder="Challonge email"> </label>
-    <br>
     <label>
     <input type="text" name="tournament_name" placeholder="Tournament Name" required> </label>
     <br>

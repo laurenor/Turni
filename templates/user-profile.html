@@ -2,8 +2,21 @@
 
 {% block body %}
 
-<h2>{{user}}</h2>
+<h2>{{ username }}</h2>
 
+<table>
+	<tr>
+		<th>#</th>
+		<th>Tournament Name</th>
+	</tr>
+{% for tournament in tournaments %}
+	<tr>
+	{% for num in amt_of_tourns %}
+		<td>{{ num }}</td>
+	{% endfor %}
+		<td><a href="#">{{ tournament }}</a></td>
+{% endfor %}
+</table>
 
 
 {% endblock %}

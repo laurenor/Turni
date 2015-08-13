@@ -20,6 +20,7 @@ label {
 nav a {
 	text-decoration: none;
 	padding-right: 20px;
+	margin: 0;
 }
 
 #logo {
@@ -27,18 +28,6 @@ nav a {
 	font-weight: bold;
 	text-decoration: none;
 	color: black;
-}
-
-#logout {
-	display: none;
-}
-
-.left {
-	float: left;
-}
-
-.right {
-	float: right;
 }
 
 ul {
@@ -70,29 +59,20 @@ body .ui-tooltip {
 	padding: 10px;
 }
 
-.draggable { 
-	width: 150px; 
-	height: 150px; 
-	padding: 0.5em; 
-}
-
-.resizable { 
-	width: 150px; 
-	height: 150px; 
-	padding: 
-	0.5em; 
-}
-
-.resizable h3 { 
-	text-align: center; 
-	margin: 0; 
-}
-
 .note {
 	font-size: 10px;
 	color: red;
 	padding: 0;
 	margin-top: -20px;
+}
+
+table, th, td {
+	border: solid 1px black;
+}
+
+th, td {
+	border: solid 1px black;
+	padding: 10px;
 }
 
 /* Signup form */
@@ -111,4 +91,8 @@ form input#password {
  
 form input#password {
   margin-bottom: 10px;
+}
+
+.flashes {
+	color: green;
 }

@@ -3,34 +3,42 @@
 	<head>
 		<title>Turni - Your Online Esports Tournament Organizer</title>
 
-		<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+		<link rel="stylesheet" href="/static/css/smoothness.css">
 		<!-- <link href='http://fonts.googleapis.com/css?family=Permanent+Marker' rel='stylesheet' type='text/css'> -->
-		<link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,700'>
-		<link rel="stylesheet" href="http://code.jquery.com/resources/demos/style.css">
+		<link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,700' rel='stylesheet' type='text/css'>
+		<!-- <link rel="stylesheet" href="http://code.jquery.com/resources/demos/style.css"> -->
 		<link rel="stylesheet" href="/static/css/main.css">
+		<script src="/static/js/jquery.js"></script>
+		<script src="/static/js/jquery-1.10.2.js"></script>
+		<script src="/static/js/jquery-ui.js"></script>
 
 
 	</head>
 	<body>
+		<!-- certain list items appear / don't appear depending on user login state -->
 		<nav>
 			<ul>
-				<li><a href='/'><span id='logo'>turni</span></a></li>
-				
+				<li><a href='/'><span id='logo'>turni</span></a></li>			
 				<li><a href='/about'>About</a></li>
 				<li><a href='/features'>Features</a></li>
+				{% if 'username' not in session %}
+				<li><a href='/login'>Login</a></li>
+				<li><a href='/register'>Register</a></li>
+				{% endif %}
+				{% if 'username' in session %}
 				<li><a href='/create-map'>Create Venue Map</a></li>
-				<li><a href='/user-login'>Login</a></li>
-				<li><a href='/user-register'>Register</a></li>
-				<li><a href='/logout' id="logout">Logout</a></li>
-				
+				<li><a href='/logout'>Logout</a></li>
+				<li><a href='/profile/{{ username }}'>user: <b>{{ username }}</b></a></li>
+				{% endif %}
+
 			</ul>
 		</nav>
 
 		{% with messages = get_flashed_messages() %}
   			{% if messages %}
-    			<ul class=flashes>
+    			<ul>
     			{% for message in messages %}
-      				<li>{{ message }}</li>
+      				<li class='flashes'>{{ message }}</li>
     			{% endfor %}
     			</ul>
   			{% endif %}
@@ -42,25 +50,12 @@
 	      BODY OF PAGE GOES HERE VIA INHERITANCE
 	  {% endblock %}
 
-	<script src="http://code.jquery.com/jquery.js"></script>
-	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-	<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-
 
 	<script>
 	  $(function() {
 	    $( document ).tooltip();
 	  });
 	</script>
-    <script>
-    $(function() {
-      $( ".draggable" ).draggable();
-    });
-    </script>
-    <script>
-    $(function() {
-      $( ".resizable" ).resizable();
-    });
-    </script>
+
 	</body>
 </html>

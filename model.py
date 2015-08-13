@@ -16,7 +16,7 @@ class User(db.Model):
     email = db.Column(db.String(64), nullable=False)
     password = db.Column(db.String(64), nullable=False)
     user_type = db.Column(db.String(11), nullable=False)
-    phone = db.Column(db.Integer)
+    phone = db.Column(db.String(11))
 
     def __repr__(self):
         """Provide helpful representation when printed"""
@@ -104,10 +104,20 @@ class Tournament(db.Model):
     tournament_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     tournament_name = db.Column(db.String(20), nullable=False) 
     max_stations = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
 
     def __repr__(self):
         """Provide helpful representation when printed"""
         return "<Tournament tournament_id=%s tournament_name=%s>" % (self.tournament_id, self.tournament_name)
+
+class SavedMap(db.Model):
+
+    __tablename__ = 'saved_maps'
+
+    map_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    html = db.Column(db.String(50000))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.tournament_id'))
 
 
 ##############################################################################

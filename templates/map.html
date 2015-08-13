@@ -3,21 +3,23 @@
 {% block body %}
 
 <style>
-.draggable { width: 150px; height: 150px; padding: 0.5em; }
-.resizable { width: 150px; height: 150px; padding: 0.5em; }
+.draggable { width: 100px; height: 100px; padding: 0.5em; display:inline-block;}
+.resizable { width: 100px; height: 100px; padding: 0.5em; }
 .resizable h3 { text-align: center; margin: 0; }
+#containment-wrapper { height:500px; width:800px; border:2px solid #ccc; padding: 10px; display:inline-block;}
+#table-selecter-wrapper { height:500px; width:200px; border:2px solid #ccc; padding: 10px; display:inline-block; margin-left: 10px;}
+
 </style>
+<script>
+$(function() {
+  $( ".draggable" ).draggable();
+  $( ".resizable" ).resizable();
+  $( ".draggable3" ).draggable({ containment: "#containment-wrapper", scroll: false });
+});
+</script>
 
 <h2>Tournament Info</h2>
 <ul>
-	{% if challonge_name %}
-		<li><b>Username</b>: {{ challonge_name }}</li>
-		<br>
-	{% endif %}
-	{% if challonge_email %}
-		<li><b>Email address</b>: {{ challonge_email }}</li>
-		<br>
-	{% endif %}
 	<li><b>Tournament URL</b>: {{ url }}</li>
 	<br>
 	<li><b>Number of stations</b>: {{ max_stations }}</li>
@@ -30,28 +32,55 @@
 	{% for player in all_players %}
 		<li><span id="player_info">{{ player }}</span> </li> 
 	{% endfor %}
-<ul>
+</ul>
 
 <!-- Lists all players -->
 
-<h2>Map of {% if tournament_name %} {{ tournament_name }} {% else %}Tournament{% endif %}</h2>
-	{% if max_stations == 0 %}
+<h2>Map of {% if tournament_name %} {{ tournament_name }} {% else %}Tournament{% endif %}</h2>  
+<button id="save">Save Map</button>
+<br>
+
+{% if max_stations == 0 %}
 	<p><span style="color:red"><a href="http://challonge.com/{{ url }}">Please start the tournament to create a venue map!</a></span></p>
-	{% endif %}
-<ul>
-{% for match in match_list %}
-	<div class="draggable resizable ui-widget-content">
-		<h3 class="ui-widget-header">Station</h3>
-		{{ match }}
-	</div><br>
-{% endfor %}
-</ul>
+{% endif %}
+
+
+<!-- Stations -->
+
+<div id="containment-wrapper">
+	{% for match in match_list %}
+		<div class="draggable resizable draggable3 ui-widget-content">
+			<h3 class="ui-widget-header">Station</h3>
+			{{ match }}
+		</div>
+	{% endfor %}
+</div><div id="table-selecter-wrapper">
+	<b>Choose Your Tables</b>
+	<p>SVG tables will be placed here later</p>
+</div>
+
 
 <h2>Brackets</h2>
 <iframe src="http://challonge.com/{{ url }}/module" width="80%" height="500" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
 
-
 <script src="static/js/challonge_brackets.js"></script>
+
+<script>
+	var body = document.getElementsByTagName("body")[0].outerHTML;
+	console.log(body)
+
+	function saveMap(evt) {
+		evt.preventDefault();
+		var body = document.getElementsByTagName("body")[0].outerHTML;
+
+		$.post("/save-map", body, function (result) {
+			alert(result);
+			}
+		);
+	};
+
+	$("#save").on("click", saveMap);
+</script>
 
 
 
