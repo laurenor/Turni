@@ -6,10 +6,11 @@
 .draggable { width: 100px; height: 100px; padding: 0.5em; display:inline-block;}
 .resizable { width: 100px; height: 100px; padding: 0.5em; }
 .resizable h3 { text-align: center; margin: 0; }
-#containment-wrapper { height:500px; width:800px; border:2px solid #ccc; padding: 10px; display:inline-block;}
-#table-selecter-wrapper { height:500px; width:200px; border:2px solid #ccc; padding: 10px; display:inline-block; margin-left: 10px;}
+#containment-wrapper { height:500px; width:1000px; border:2px solid #ccc; padding: 10px; display:inline-block;}
+#table-selecter-wrapper { height:200px; width:1000px; border:2px solid #ccc; padding: 10px; display:inline-block; margin-top:10px;}
 
 </style>
+
 <script>
 $(function() {
   $( ".draggable" ).draggable();
@@ -18,50 +19,50 @@ $(function() {
 });
 </script>
 
-<h2>Tournament Info</h2>
-<ul>
-	<li><b>Tournament URL</b>: {{ url }}</li>
-	<br>
-	<li><b>Number of stations</b>: {{ max_stations }}</li>
-	<br>
-	{% if stream %}
-		<li><a href="{{ stream }}">Watch on stream</a></li>
+		<h2>Tournament Info</h2>
+		<ul>
+			<li><b>Tournament URL</b>: {{ url }}</li>
+			<br>
+			<li><b>Number of stations</b>: {{ max_stations }}</li>
+			<br>
+			<b>Participants</b>:
+			{% for player in all_players %}
+				<li><span id="player_info">{{ player }}</span> </li> 
+			{% endfor %}
+			{% if stream %}
+				<li><a href="{{ stream }}">Watch on stream</a></li>
+				<br>
+			{% endif %}
+		</ul>
+
+		<!-- Lists all players -->
+
+		<h2>Map of {% if tournament_name %} {{ tournament_name }} {% else %}Tournament{% endif %}</h2>  
+		<button id="round1">Round 1</button><button id="round2">Round 2</button><button id="round3">Round 3</button><button id="round4">Round 4</button><button id="round5">Round 5</button>
 		<br>
-	{% endif %}
-	<b>Participants</b>:
-	{% for player in all_players %}
-		<li><span id="player_info">{{ player }}</span> </li> 
-	{% endfor %}
-</ul>
-
-<!-- Lists all players -->
-
-<h2>Map of {% if tournament_name %} {{ tournament_name }} {% else %}Tournament{% endif %}</h2>  
-<button id="save">Save Map</button>
-<br>
-
-{% if max_stations == 0 %}
-	<p><span style="color:red"><a href="http://challonge.com/{{ url }}">Please start the tournament to create a venue map!</a></span></p>
-{% endif %}
 
 
-<!-- Stations -->
+		<!-- Stations -->
 
-<div id="containment-wrapper">
-	{% for match in match_list %}
-		<div class="draggable resizable draggable3 ui-widget-content">
-			<h3 class="ui-widget-header">Station</h3>
-			{{ match }}
+		<div id="containment-wrapper">
+			{% for match in match_list %}
+				<div class="draggable resizable draggable3 ui-widget-content">
+					<h3 class="ui-widget-header">Station {{ match_list.index(match) + 1}}
+						</h3>
+						{{ match }}
+				</div>
+			{% endfor %}
 		</div>
-	{% endfor %}
-</div><div id="table-selecter-wrapper">
-	<b>Choose Your Tables</b>
-	<p>SVG tables will be placed here later</p>
+		<div id="table-selecter-wrapper">
+			<b>Choose Your Tables</b>
+			<p>SVG tables will be placed here later</p>
+		</div>
+
+
+		<h2>Brackets</h2>
+		<iframe src="http://challonge.com/{{ url }}/module" width="90%" height="500" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
+	</div>
 </div>
-
-
-<h2>Brackets</h2>
-<iframe src="http://challonge.com/{{ url }}/module" width="80%" height="500" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
 
 <script src="static/js/challonge_brackets.js"></script>
 

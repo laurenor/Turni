@@ -43,20 +43,6 @@ for i in range(len(participant_data)):
 
 print "*** DICT OF PLAYERS **: ", pprint.pprint(players)
 
-######## FIXME: works with alphacpu
-# using lists
-player1_list = []
-player2_list = []
-for i in range(len(match_data)-1): 
-	if match_data[i]['match']['round'] == 1:
-		for j in range(len(participant_data)-1):
-			if participant_data[j]['participant']['id'] == match_data[i]['match']['player1_id']:
-				player1_list.append(str(participant_data[j]['participant']['name']))
-			elif participant_data[j]['participant']['id'] == match_data[i]['match']['player2_id']:
-				player2_list.append(str(participant_data[j]['participant']['name']))
-print "***1", player1_list
-print "***2", player2_list
-
 match_list = []
 for i in range(len(match_data)-1):
 	if match_data[i]['match']['round'] == 1:
@@ -225,16 +211,6 @@ def map():
 		stream = request.form.get('stream')
 		tournament_name = request.form.get('tournament_name')
 
-		r1 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu.json', auth=('lencat', CHALLONGE_API_KEY))
-		tournament_data = r1.json()
-
-		# need for player names
-		r2 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu/participants.json', auth=('lencat', CHALLONGE_API_KEY))
-		participant_data = r2.json()
-
-		r3 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu/matches.json', auth=('lencat', CHALLONGE_API_KEY))
-		match_data = r3.json()
-
 		# puts all player names on page
 		all_players = get_all_players(participant_data)
 
@@ -248,9 +224,9 @@ def map():
 			db.session.add(tournament)
 		db.session.commit()
 
+		open_stations = create_open_stations(tournament)
 
-
-		for i in range(len(match_data)-1):
+		for i in range(len(match_data)):
 			match_id = match_data[i]['match']['id']
 			round_num = match_data[i]['match']['round']
 			player_1 = match_data[i]['match']['player1_id']
@@ -260,8 +236,7 @@ def map():
 			match = Match(tournament_id=tournament_id, match_id=match_id, round_num=round_num, player_1=player_1, player_2=player_2)
 			db.session.add(match)
 		db.session.commit()
-
-
+		print len(match_data)
 
 		return render_template('map.html', 
 							all_players=all_players, 
@@ -270,7 +245,8 @@ def map():
 							match_list=match_list,
 							max_stations=max_stations,
 							username=username,
-							url=url)
+							url=url,
+							open_stations=open_stations)
 
 		# else:
 		# 	user = User.query.filter_by(username=session['username']).first()
