@@ -3,7 +3,7 @@ import os
 from flask import Flask, flash, render_template, redirect, json, request, session, url_for, send_from_directory
 from jinja2 import StrictUndefined
 import challonge
-from model import User, Player, Station, StationPlayer, Tournament, connect_to_db, db
+from model import User, Tournament, Match, connect_to_db, db
 from flask_debugtoolbar import DebugToolbarExtension
 from flask.ext.login import LoginManager, UserMixin, login_required
 import hashlib # for email hashing
@@ -25,43 +25,73 @@ challonge.set_credentials('lencat', 'CHALLONGE_API_KEY')
 
 ##############################################################################
 
-# counts number of matches to determine how many stations there will be
-# total_stations = 0
-# for i in range(len(match_data)-1):
-# 	if match_data[i]['match']['round'] == 1:
-# 		total_stations += 1
-# print '** AMT OF STATIONS **: ', total_stations
 
-# players = {}
-# for i in range(len(participant_data)-1):
-# 	challonge_id = participant_data[i]['participant']['id']
-# 	player_name = participant_data[i]['participant']['username']
-# 	players[challonge_id] = player_name
+r3 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu/matches.json', auth=('lencat', CHALLONGE_API_KEY))
+match_data = r3.json()
 
-# print "*** DICT OF PLAYERS **: ", pprint.pprint(players)
+r2 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu/participants.json', auth=('lencat', CHALLONGE_API_KEY))
+participant_data = r2.json()
+
+r3 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu/matches.json', auth=('lencat', CHALLONGE_API_KEY))
+match_data = r3.json()
+
+players = {}
+for i in range(len(participant_data)):
+	challonge_id = participant_data[i]['participant']['id']
+	player_name = participant_data[i]['participant']['name']
+	players[challonge_id] = player_name
+
+print "*** DICT OF PLAYERS **: ", pprint.pprint(players)
 
 ######## FIXME: works with alphacpu
 # using lists
-# player1_list = []
-# player2_list = []
-# for i in range(len(match_data)-1): 
-# 	# if match_data[i]['match']['round'] == 1:
-# 	for j in range(len(participant_data)-1):
-# 		if participant_data[j]['participant']['id'] == match_data[i]['match']['player1_id']:
-# 			player1_list.append(str(participant_data[j]['participant']['username']))
-# 		elif participant_data[j]['participant']['id'] == match_data[i]['match']['player2_id']:
-# 			player2_list.append(str(participant_data[j]['participant']['username']))
+player1_list = []
+player2_list = []
+for i in range(len(match_data)-1): 
+	if match_data[i]['match']['round'] == 1:
+		for j in range(len(participant_data)-1):
+			if participant_data[j]['participant']['id'] == match_data[i]['match']['player1_id']:
+				player1_list.append(str(participant_data[j]['participant']['name']))
+			elif participant_data[j]['participant']['id'] == match_data[i]['match']['player2_id']:
+				player2_list.append(str(participant_data[j]['participant']['name']))
+print "***1", player1_list
+print "***2", player2_list
 
-# print "*** PLAYER 1 LIST ***: ", pprint.pprint(player1_list)
-# print "*** PLAYER 2 LIST ***: ", pprint.pprint(player2_list)
+match_list = []
+for i in range(len(match_data)-1):
+	if match_data[i]['match']['round'] == 1:
+		mylist = [ match_data[i]['match']['player1_id'], match_data[i]['match']['player2_id'] ]
+		for i in range(len(mylist)):
+			for key in players:
+				if mylist[i] == key:
+					mylist[i] = players[key]
+		match_list.append(' vs. '.join(map(str, mylist)))
+print "***match list: ", match_list
 
-# match_list = []
-# for i in range(len(player1_list)-1):
-# 	match_list.append(' vs. '.join(map(str,(player1_list[i], player2_list[i]))))
-# print "*** MATCHES ***: ", pprint.pprint(match_list)
 
+rounds = []
+for i in range(len(match_data)-1):
+	if match_data[i]['match']['round'] not in rounds:
+		rounds.append(match_data[i]['match']['round'])
+print "ROUNDS: ", rounds
 
-######## FIXME: doesn't list names; just IDs
+round_count = {}
+for num in rounds:
+	for i in range(len(match_data)):
+		if (match_data[i]['match']['round'] == num) and (match_data[i]['match']['round'] not in round_count):
+			round_count[num] = 1
+		elif (match_data[i]['match']['round'] == num) and (match_data[i]['match']['round'] in round_count):
+			round_count[num] += 1
+	print "**round count: ", round_count 
+	highest = round_count[rounds[0]]
+	most_round = rounds[0]
+	if round_count[num] > highest :
+		highest = round_count[num]
+		most_round = num
+print "**Round with most matches: ", most_round
+
+# used in /map
+max_stations = highest
 
 
 
@@ -190,75 +220,78 @@ def map():
 	if 'username' in session:
 		username = session['username']
 
-		url = request.args.get('url')
-		stream = request.args.get('stream')
-		tournament_name = request.args.get('tournament_name')
+	if request.method == 'POST':
+		url = 'alphacpu'
+		stream = request.form.get('stream')
+		tournament_name = request.form.get('tournament_name')
 
-		r1 = requests.get('https://api.challonge.com/v1/tournaments/' + url + '.json', auth=('lencat', CHALLONGE_API_KEY))
+		r1 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu.json', auth=('lencat', CHALLONGE_API_KEY))
 		tournament_data = r1.json()
 
-		r2 = requests.get('https://api.challonge.com/v1/tournaments/' + url + '/participants.json', auth=('lencat', CHALLONGE_API_KEY))
+		# need for player names
+		r2 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu/participants.json', auth=('lencat', CHALLONGE_API_KEY))
 		participant_data = r2.json()
 
-		r3 = requests.get('https://api.challonge.com/v1/tournaments/' + url + '/matches.json', auth=('lencat', CHALLONGE_API_KEY))
+		r3 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu/matches.json', auth=('lencat', CHALLONGE_API_KEY))
 		match_data = r3.json()
 
-		# creates list of matches ('Player1 vs. Player2')
-		match_list = set_match_info(match_data)
-
-		# list of all players
+		# puts all player names on page
 		all_players = get_all_players(participant_data)
-			
-		# adds player(s) to database, if player(s) not already in DB
-		Player.add_to_db(participant_data)
-
-		# FIXME: calculates max # of stations; should be helper function 
-		max_stations = set_max_stations(match_data)
-
 
 		# adds new tournament info if tournament is not yet in database
+		user = User.query.filter_by(username=session['username']).first()
 		tournament = Tournament.query.filter(tournament_name==tournament_name).first()
+		print "***user!! :", user
 		if not tournament:
-			user = User.query.filter_by(username=session['username']).first()
-			print user
+			# user = User.query.filter_by(username=session['username']).first()
 			tournament = Tournament(tournament_name=tournament_name, max_stations=max_stations, user_id=user.user_id)
 			db.session.add(tournament)
 		db.session.commit()
 
-		open_stations = create_open_stations(tournament)
-		print open_stations
 
-		# adds station_id and tournament_id info to database
-		Station.add_to_db(max_stations, tournament)
 
-		# adds info on which stations players are at to database
-		StationPlayer.add_to_db(match_data, open_stations)
+		for i in range(len(match_data)-1):
+			match_id = match_data[i]['match']['id']
+			round_num = match_data[i]['match']['round']
+			player_1 = match_data[i]['match']['player1_id']
+			player_2 = match_data[i]['match']['player2_id']
+			tournament_id = tournament.tournament_id
 
-		update_open_stations(open_stations)
+			match = Match(tournament_id=tournament_id, match_id=match_id, round_num=round_num, player_1=player_1, player_2=player_2)
+			db.session.add(match)
+		db.session.commit()
+
+
 
 		return render_template('map.html', 
-								all_players=all_players, 
-								tournament_name=tournament_name, 
-								url=url, 
-								stream=stream, 
-								match_list=match_list,
-								max_stations=max_stations,
-								username=username)
+							all_players=all_players, 
+							tournament_name=tournament_name, 
+							stream=stream, 
+							match_list=match_list,
+							max_stations=max_stations,
+							username=username,
+							url=url)
 
-@app.route('/save-map', methods=['POST'])
-def save_map():
-	"""Add body content of map to database"""
+		# else:
+		# 	user = User.query.filter_by(username=session['username']).first()
 
-	body = request.form.get('body')
+		# 	all_players = 
+		# 	tournament_name = 
+		# 	url =
+		# 	stream = 
+		# 	match_list = 
+		# 	max_stations =
+		# 	username = 
 
-	user = User.query.filter_by(username=session['username']).first()
-	tournament = Tournament.query.filter_by(user_id=user.user_id).first()
-	savedmap = SavedMap(html=body, user_id=user.user_id, tournament_id=tournament.tournament_id)
+		# 	return render_template('map.html', 
+		# 							all_players=all_players, 
+		# 							tournament_name=tournament_name, 
+		# 							url=url, 
+		# 							stream=stream, 
+		# 							match_list=match_list,
+		# 							max_stations=max_stations,
+		# 							username=username)
 
-	db.session.add(map_save_state)
-	db.session.commit()
-
-	return 'Your map has been saved.'
 
 ###########################################
 # helper functions
@@ -278,17 +311,33 @@ def set_match_info(match_data):
 	"""Creates list of all matches in tournament"""
 	match_list = []
 	for i in range(len(match_data)-1):
-		if match_data[i]['match']['state'] == "open":
+		if match_data[i]['match']['round'] == "1":
+			print "***what is MD: ", match_data[i]['match']['round']
 			match_list.append(' vs. '.join((str(match_data[i]['match']['player1_id']), (str(match_data[i]['match']['player2_id'])))))
 	return match_list
 
+
 def set_max_stations(match_data):
-	"""Provides # of stations in venue"""
-	max_stations = 0
+	rounds = []
 	for i in range(len(match_data)-1):
-		if match_data[i]['match']['state'] == 'open':
-			max_stations += 1
-	return max_stations
+		if match_data[i]['match']['round'] not in rounds:
+			rounds.append(match_data[i]['match']['round'])
+	print "ROUNDS: ", rounds
+
+	round_count = {}
+	for num in rounds:
+		for i in range(len(match_data)):
+			if (match_data[i]['match']['round'] == num) and (match_data[i]['match']['round'] not in round_count):
+				round_count[num] = 1
+			elif (match_data[i]['match']['round'] == num) and (match_data[i]['match']['round'] in round_count):
+				round_count[num] += 1
+		print "**round count: ", round_count 
+		highest = round_count[rounds[0]]
+		most_round = rounds[0]
+		if round_count[num] > highest :
+			highest = round_count[num]
+			most_round = num
+	return highest
 
 def create_open_stations(tournament):
 	"""Creates a list of free (open) stations in tournament"""

@@ -65,22 +65,6 @@ $(function() {
 
 <script src="static/js/challonge_brackets.js"></script>
 
-<script>
-	var body = document.getElementsByTagName("body")[0];
-	console.log(body)
-
-	function saveMap(evt) {
-		evt.preventDefault();
-		var body = document.getElementsByTagName("body")[0].outerHTML;
-
-		$.post("/save-map", body, function (result) {
-			alert(result);
-			}
-		);
-	};
-
-	$("#save").on("click", saveMap);
-</script>
 
 
 

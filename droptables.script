@@ -1,6 +1,1 @@
-DROP TABLE stations_players;
-DROP TABLE saved_maps;
-DROP TABLE stations;
-DROP TABLE players;
-DROP TABLE tournaments;
-DROP TABLE users;
+DROP TABLE matches;
