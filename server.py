@@ -41,18 +41,27 @@ for i in range(len(participant_data)):
 	player_name = participant_data[i]['participant']['name']
 	players[challonge_id] = player_name
 
-print "*** DICT OF PLAYERS **: ", pprint.pprint(players)
+# print "*** DICT OF PLAYERS **: ", pprint.pprint(players)
 
-match_list = []
-for i in range(len(match_data)-1):
-	if match_data[i]['match']['round'] == 1:
-		mylist = [ match_data[i]['match']['player1_id'], match_data[i]['match']['player2_id'] ]
-		for i in range(len(mylist)):
-			for key in players:
-				if mylist[i] == key:
-					mylist[i] = players[key]
-		match_list.append(' vs. '.join(map(str, mylist)))
-print "***match list: ", match_list
+all_matches = []
+
+
+for j in range(6):
+	match_list = []
+	for i in range(len(match_data)):
+		if match_data[i]['match']['round'] == j+1:
+			mylist = [ match_data[i]['match']['player1_id'], match_data[i]['match']['player2_id'] ]
+			for i in range(len(mylist)):
+				for key in players:
+					if mylist[i] == key:
+						mylist[i] = players[key]
+			match_list.append(' vs. '.join(map(str, mylist)))
+	all_matches.append(match_list)
+	print "Round ", j+1, ": ", match_list
+
+print "***all_matches: ", all_matches
+
+
 
 
 rounds = []
@@ -267,6 +276,15 @@ def map():
 		# 							match_list=match_list,
 		# 							max_stations=max_stations,
 		# 							username=username)
+
+@app.route('/map2')
+def map2():
+
+	tables = 16
+	rounds = [['a vs b', 'c vs d', 'e vs f', 'g vs h'], ['a vs c', 'e vs g'], ['a vs e']]
+
+
+	return render_template('maps2.html', tables=json.dumps(tables), rounds=json.dumps(rounds), all_matches=json.dumps(all_matches))
 
 
 ###########################################
