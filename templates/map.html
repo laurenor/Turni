@@ -65,6 +65,37 @@ $(function() {
 </div>
 
 <script src="static/js/challonge_brackets.js"></script>
+<script>
+	var tables = {{ tables|safe }}
+	var rounds = {{ rounds|safe }}
+	var current_round = 0
+
+	function updateTables(current_round) {
+		for (var i=0; i<rounds[current_round].length; i++) {
+			$('#table'+i+' .match').text(rounds[current_round][i]);
+		};
+
+		for (var i=rounds[current_round].length; i<tables; i++) {
+			$('#table'+i+' .match').text('-----');
+		};
+	};
+
+	$('#round1').on('click', function() {
+		updateTables(0)
+	});
+
+	$('#round2').on('click', function() {
+		updateTables(1)
+	});	
+
+	$('#round3').on('click', function() {
+		updateTables(2)
+	});
+
+	updateTables(current_round)
+
+
+</script>
 
 
 

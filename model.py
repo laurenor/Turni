@@ -49,6 +49,18 @@ class Match(db.Model):
             """Provide helpful representation when printed"""
             return "<Match match_id=%s >" % (self.match_id)
 
+class Position(db.Model):
+
+    __tablename__ = 'positions'
+
+    table_id = db.Column(db.String(10), primary_key=True)
+    left = db.Column(db.String(10))
+    top = db.Column(db.String(10))
+
+    def __repr__(self):
+            """Provide helpful representation when printed"""
+            return "<Position station_id=%s >" % (self.station_id)
+
 
 
 ##############################################################################

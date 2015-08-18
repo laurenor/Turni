@@ -1,0 +1,288 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<!-- <!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery UI Draggable - Default functionality</title>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  <link rel="stylesheet" href="http://code.jquery.com/resources/demos/style.css">
+  <style>
+  .draggable { width: 150px; height: 150px; padding: 0.5em; }
+  .resizable { width: 150px; height: 150px; padding: 0.5em; }
+  .resizable h3 { text-align: center; margin: 0; }
+  </style>
+  <script>
+  $(function() {
+    $( ".draggable" ).draggable();
+  });
+  $(function() {
+    $( ".resizable" ).resizable();
+  });
+  </script>
+</head>
+<body>
+ 
+<div class="draggable resizable ui-resizable ui-resizable-resizing ui-widget-content">
+  <p>Drag me around 1</p>
+</div>
+
+<div class="draggable resizable ui-resizable ui-resizable-resizing ui-widget-content">
+  <p>Drag me around 2</p>
+</div>
+
+<div class="draggable resizable ui-widget-content">
+  <h3 class="ui-widget-header">Draggable + Resizable</h3>
+</div>
+ 
+ 
+</body>
+</html> -->
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++ comment +++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+
+
+<!-- <html>
+<head>
+<style type='text/css'>
+   html, body {height: 100%; margin: 0}
+   #content {width: 100%; height: 100%}
+   #left {width: 100px; height: 100%; float: left; background-color: red}
+   #right {margin-left: 100px; height: 100%; background-color: green}
+</style>
+</head>
+<body>
+<div id='content'>
+   <div id='left'>Testing</div>
+   <div id='right'>Testing</div>
+</div>
+</body>
+</html> -->
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++ comment +++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+
+ 
+<style>
+#table-type{
+  float:left;
+  margin-left:20px;
+  border:1px solid #333;
+  text-align:center;
+
+}
+.round{
+  width:80px;
+  height:80px;
+  border-radius:1000px;
+  background:#CCC;
+  border:3px solid #eee;
+  position: absolute;
+  /*top: 253px;  need to get this info from db -- maybe through JS? */
+  /*left: 87px;  need to get this info from db -- maybe through JS? */
+}
+.square{
+  width:80px;
+  height:80px;
+  background:#CCC;
+  border:3px solid #eee;
+  position: absolute;
+  /*top: 20px;  need to get this info from db -- maybe through JS? */
+  /*left: 50px;  need to get this info from db -- maybe through JS? */
+}
+.rounded{
+  width:80px;
+  height:80px;
+  border-radius:1000px;
+  background:#CCC;
+  border:3px solid #eee;
+}
+.squared{
+  width:80px;
+  height:80px;
+  background:#CCC;
+  border:3px solid #eee;
+}
+.round:hover{
+background:#84f784; 
+  
+}
+.square:hover{
+  background:#84f784;
+}
+
+p{
+  font-size:12px;
+  font-family:Helvetica;
+  color:#333;
+  
+  
+}
+#layout-area{
+  width:100%;
+  max-width:900px;
+  height:550px;
+  background:#333;
+  border:3px solid #CCC;
+  margin:auto;
+  position:relative;
+  margin-top:100px;
+
+}
+#types-of-tables{
+  width:1000px;
+  margin:auto;
+
+}
+ .ui-resizable-helper { 
+  border: 1px dotted gray; 
+
+}
+
+#table3 {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+}
+
+</style>
+
+
+</head>
+ 
+<body>
+ 
+ <button id='save'>Save Coordinates</button>
+  <div id="layout-area">
+
+    <div id="table1" class="square resize"> </div>
+    <div id="table2" class="square resize"> </div>
+    <div id="table3" class="round resize"> </div>
+    <div id="table4" class="round resize"> </div>
+    <div id="table5" class="square resize"> </div>
+  </div>
+  <div id="start">Waiting for dragging the image get started...</div>
+  <div id="start">Waiting for dragging the image get started...</div>
+  <div id="current">Waiting image getting dropped...</div>
+
+
+
+<script>
+  max_stations = 5
+  var positions = [];
+  function showPos() {
+    for (var i = 1; i <= max_stations; i++) {  
+      positions[i] = $('#table'+i).position();
+      $('#table'+i).text('Left: ' + positions[i].left + '; Right: ' + positions[i].top);
+    }
+    };
+
+
+  // function showPos() {
+  //   position2 = $('#table2').position();
+  //   $('#table2').text('Left: ' + position2.left + '; Right: ' + position2.top);
+  // };  
+
+  // function showPos() {
+  //   position3 = $('#table3').position();
+  //   $('#table3').text('Left: ' + position3.left + '; Right: ' + position3.top);
+  // };
+
+  // function showPos() {
+  //   position4 = $('#table4').position();
+  //   $('#table4').text('Left: ' + position4.left + '; Right: ' + position4.top);
+  // };
+
+  // function showPos() {
+  //   position5 = $('#table5').position();
+  //   $('#table5').text('Left: ' + position5.left + '; Right: ' + position5.top);
+  // };
+
+  // saving positions to DB
+
+  function saveToDb() {
+
+
+    // position1 = $('#table1').position();
+    // var positions = { left: position1.left, top: position1.top, table_id: $('#table1').attr('id') };
+    // $.post("/add-coords", positions, function (result) {
+    //   alert(result);
+    // }
+    // );
+
+    // loop to add all tables to database
+    pos = []
+    for (var i = 1; i <= max_stations; i++) {
+      pos[i] = $('#table'+i).position();
+      console.log(pos[i]);
+      var positions = { left: pos[i].left, top: pos[i].top, table_id: $('#table'+i).attr('id') };
+      $.post("/add-coords", positions, function (result) {
+        alert(result);
+      }
+      );
+    };
+
+
+  };
+
+  // $('#table').on('mouseover', showPos);
+  $('#save').on('click', saveToDb);
+
+</script>
+<script>
+  $( init );
+  function init() {
+    $('.square, .round').draggable({
+      containment: '#layout-area',  start: function(event, ui) {
+
+        // Show start dragged position of image.
+        var Startpos = $(this).position();
+        $("div#start").text("START: \nX: "+ Startpos.left + "\nY: " + Startpos.top);
+      },
+        drag: function(event, ui){
+            var Startpos = $(this).position();
+            var Parentpos = $(this).parent().position();
+            $("div#current").text("Current: \nX: "+ Startpos.left + "\nY: " + Startpos.top);
+            showPos();
+        },
+      // Find position where image is dropped.
+      stop: function(event, ui) {
+
+        // Show dropped position.
+        var Stoppos = $(this).position();
+        var Parentpos = $(this).parent().position();
+        // checking id and position in console
+        console.log("Table ID: " + $(this).attr('id'));
+        console.log("Left position: " + Stoppos.left)
+        console.log("Right position: " + Stoppos.top)
+        $("div#stop").text("CURRENT: \nX: "+ Stoppos.left + "\nY: " + Stoppos.top) ;
+      }
+
+  });
+  }
+
+      // $(document).ready(function() {
+      //     var params = {
+      //         // Callback fired on rotation start.
+      //         start: function(event, ui) {
+      //         },
+      //         // Callback fired during rotation.
+      //         rotate: function(event, ui) {
+      //         },
+      //         // Callback fired on rotation end.
+      //         stop: function(event, ui) {
+      //         },
+      //         drag: function(event, ui){
+      //         }
+      //     };
+      //     $('#table, #table1, #table2, #table3, #table4, #table5').rotatable(params);
+        
+      // });
+</script>
+
+{% endblock %}

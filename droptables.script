@@ -1,1 +1,4 @@
 DROP TABLE matches;
+DROP TABLE tournaments;
+DROP TABLE users;
+DROP TABLE positions;

@@ -3,7 +3,7 @@ import os
 from flask import Flask, flash, render_template, redirect, json, request, session, url_for, send_from_directory
 from jinja2 import StrictUndefined
 import challonge
-from model import User, Tournament, Match, connect_to_db, db
+from model import User, Tournament, Match, Position, connect_to_db, db
 from flask_debugtoolbar import DebugToolbarExtension
 from flask.ext.login import LoginManager, UserMixin, login_required
 import hashlib # for email hashing
@@ -285,6 +285,38 @@ def map2():
 
 
 	return render_template('maps2.html', tables=json.dumps(tables), rounds=json.dumps(rounds), all_matches=json.dumps(all_matches))
+
+@app.route('/untitled')
+def untitled():
+	"""testing page"""
+	username = "meowchi"
+
+
+
+	return render_template('untitled.html', username=username)
+
+@app.route('/add-coords', methods=['POST'])
+def add_coords():
+
+	from sqlalchemy import update
+
+	left = request.form.get('left')
+	top = request.form.get('top')
+	table_id = request.form.get('table_id')
+
+	position = Position.query.filter_by(table_id=table_id).first()
+
+	if not position:
+		coordinates = Position(table_id=table_id, left=left, top=top)
+		db.session.add(coordinates)
+	else:
+		position.table_id=table_id
+		position.left=left
+		position.top=top
+		
+	db.session.commit()
+
+	return "Your coordinates have been saved!"
 
 
 ###########################################

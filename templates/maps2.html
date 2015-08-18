@@ -5,6 +5,7 @@
 .resizable { width: 100px; height: 100px; padding: 0.5em; }
 .resizable h3 { text-align: center; margin: 0; }
 #containment-wrapper { height:500px; width:1000px; border:2px solid #ccc; padding: 10px; display:inline-block;}
+p { margin-left:10px;}
 </style>
   <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
   <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
@@ -14,6 +15,10 @@
 <button id="round1">Round 1</button><button id="round2">Round 2</button><button id="round3">Round 3</button><button id="round4">Round 4</button><button id="round5">Round 5</button><button id="round6">Round 6</button>
 
 <div id="containment-wrapper"></div>
+
+
+<p>Hello</p>
+<p></p>
 
 <script>
 $(function() {
@@ -72,13 +77,16 @@ $(function() {
 
 	function addTables(max_stations) {
 		for (var i = 0; i < max_stations ; i++) {
-			$('#containment-wrapper').append("<div class='draggable resizable draggable3 ui-widget-content' id='table" +i+ "'><h3 class='ui-widget-header'>Station " + (i+1) + "</h3><span class='match'></span></div>");
+			$('#containment-wrapper').append("<div class='draggable resizable draggable3 ui-widget-content' id='table" +i+ "'><h3 class='ui-widget-header'>Station " + (i+1) + "</h3><span class='match'></span><br><span class='pos"+i+"'></span></div>");
 		};
 
 	};
 
 	addTables(max_stations);
 
+	var p = $( "#table1:first");
+	var position = p.position();
+	$( "p:last" ).text( "left: " + position.left + ", top: " + position.top );
 
 </script>
 
