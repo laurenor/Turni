@@ -1,6 +1,6 @@
 import requests
 import os
-from flask import Flask, flash, render_template, redirect, json, request, session, url_for, send_from_directory
+from flask import Flask, flash, render_template, redirect, json, request, session, url_for, jsonify
 from jinja2 import StrictUndefined
 import challonge
 from model import User, Tournament, Match, Position, connect_to_db, db
@@ -316,7 +316,14 @@ def add_coords():
 		
 	db.session.commit()
 
-	return "Your coordinates have been saved!"
+	return "Your changes have been saved!"
+
+@app.route('/get-coords')
+def get_coords():
+	positions = db.session.query(Position.table_id, Position.left, Position.top).all();
+	posijson = json.dumps(positions)
+	return posijson
+
 
 
 ###########################################

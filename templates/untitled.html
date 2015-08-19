@@ -82,7 +82,7 @@
   border-radius:1000px;
   background:#CCC;
   border:3px solid #eee;
-  position: absolute;
+  /*position: absolute;*/
   /*top: 253px;  need to get this info from db -- maybe through JS? */
   /*left: 87px;  need to get this info from db -- maybe through JS? */
 }
@@ -90,8 +90,8 @@
   width:80px;
   height:80px;
   background:#CCC;
-  border:3px solid #eee;
-  position: absolute;
+  border:3px solid #eee;/*
+  position: absolute;*/
   /*top: 20px;  need to get this info from db -- maybe through JS? */
   /*left: 50px;  need to get this info from db -- maybe through JS? */
 }
@@ -144,11 +144,37 @@ p{
 
 }
 
-#table3 {
+/*#table1 {
   position: absolute;
   top: 100px;
   left: 100px;
 }
+
+#table2 {
+  position: absolute;
+  top: 100;
+  left: 200px;
+
+}
+
+#table3 {
+  position: absolute;
+  top: 100px;
+  left: 300px;
+
+}
+
+#table4 {
+  position: absolute;
+  top: 100;
+  left: 400;
+}
+
+#table5 {
+  position: absolute;
+  top: 100;
+  left: 500;
+}*/
 
 </style>
 
@@ -157,6 +183,7 @@ p{
  
 <body>
  
+ <div id="save_status"></div>
  <button id='save'>Save Coordinates</button>
   <div id="layout-area">
 
@@ -173,64 +200,55 @@ p{
 
 
 <script>
+  
+  function updateCoords() {
+    $.get('/get-coords', function (result) {
+      result = JSON.parse(result);
+      console.log(result);
+      for (var i = 0; i < max_stations; i++) {       
+        $('#table'+(i+1)).css({'position': 'absolute', 'left': result[i][1]+'px', 'top': result[i][2]+'px'});
+        console.log(result[i][1]+'px');
+        console.log(result[i][2]+'px');     
+
+      }
+
+    }
+    );
+  };
+
+  updateCoords();
+
   max_stations = 5
   var positions = [];
+  
   function showPos() {
+    // Shows dynamic coordinates of tables as they are dragged.
+
     for (var i = 1; i <= max_stations; i++) {  
       positions[i] = $('#table'+i).position();
-      $('#table'+i).text('Left: ' + positions[i].left + '; Right: ' + positions[i].top);
+      $('#table'+i).text('Left: ' + positions[i].left + '; Top: ' + positions[i].top);
     }
     };
 
 
-  // function showPos() {
-  //   position2 = $('#table2').position();
-  //   $('#table2').text('Left: ' + position2.left + '; Right: ' + position2.top);
-  // };  
-
-  // function showPos() {
-  //   position3 = $('#table3').position();
-  //   $('#table3').text('Left: ' + position3.left + '; Right: ' + position3.top);
-  // };
-
-  // function showPos() {
-  //   position4 = $('#table4').position();
-  //   $('#table4').text('Left: ' + position4.left + '; Right: ' + position4.top);
-  // };
-
-  // function showPos() {
-  //   position5 = $('#table5').position();
-  //   $('#table5').text('Left: ' + position5.left + '; Right: ' + position5.top);
-  // };
-
-  // saving positions to DB
 
   function saveToDb() {
+    // Adds/updates table coordinates to database.
 
-
-    // position1 = $('#table1').position();
-    // var positions = { left: position1.left, top: position1.top, table_id: $('#table1').attr('id') };
-    // $.post("/add-coords", positions, function (result) {
-    //   alert(result);
-    // }
-    // );
-
-    // loop to add all tables to database
     pos = []
     for (var i = 1; i <= max_stations; i++) {
       pos[i] = $('#table'+i).position();
       console.log(pos[i]);
       var positions = { left: pos[i].left, top: pos[i].top, table_id: $('#table'+i).attr('id') };
       $.post("/add-coords", positions, function (result) {
-        alert(result);
+          $('#save_status').text(result);
       }
       );
     };
 
-
   };
 
-  // $('#table').on('mouseover', showPos);
+
   $('#save').on('click', saveToDb);
 
 </script>
@@ -255,34 +273,11 @@ p{
 
         // Show dropped position.
         var Stoppos = $(this).position();
-        var Parentpos = $(this).parent().position();
-        // checking id and position in console
-        console.log("Table ID: " + $(this).attr('id'));
-        console.log("Left position: " + Stoppos.left)
-        console.log("Right position: " + Stoppos.top)
         $("div#stop").text("CURRENT: \nX: "+ Stoppos.left + "\nY: " + Stoppos.top) ;
       }
 
   });
   }
-
-      // $(document).ready(function() {
-      //     var params = {
-      //         // Callback fired on rotation start.
-      //         start: function(event, ui) {
-      //         },
-      //         // Callback fired during rotation.
-      //         rotate: function(event, ui) {
-      //         },
-      //         // Callback fired on rotation end.
-      //         stop: function(event, ui) {
-      //         },
-      //         drag: function(event, ui){
-      //         }
-      //     };
-      //     $('#table, #table1, #table2, #table3, #table4, #table5').rotatable(params);
-        
-      // });
 </script>
 
 {% endblock %}
