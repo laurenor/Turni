@@ -2,3 +2,4 @@ env/
 secrets.sh
 *.pyc
 lateruse
+ngrok
