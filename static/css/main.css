@@ -1,13 +1,3 @@
-@font-face {
-    font-family: 'Titillium Regular'; /*a name to be used later*/
-    src: url('/static/fonts/TitilliumWeb-Regular.ttf'); /*URL to font*/
-}
-
-@font-face {
-    font-family: 'Titillium Bold'; /*a name to be used later*/
-    src: url('/static/fonts/TitilliumWeb-Bold.ttf'); /*URL to font*/
-}
-
 body {
 	font-family: 'Titillium Web', sans-serif;
 	padding: 0 10px 0 10px;
@@ -75,24 +65,67 @@ th, td {
 	padding: 10px;
 }
 
-/* Signup form */
-form input#firstname,
-form input#lastname,
-form input#password {
-  width: 400px;
-  background-color: #fafafa;
-  -webkit-border-radius: 3px;
-     -moz-border-radius: 3px;
-          border-radius: 3px;
-  border: 1px solid #cccccc;
-  padding: 5px;
-  font-size: 1.1em;
-}
- 
-form input#password {
-  margin-bottom: 10px;
-}
-
 .flashes {
 	color: green;
 }
+
+.round{
+  width:80px;
+  height:80px;
+  border-radius:1000px;
+  background:#CCC;
+  border:3px solid #eee;
+}
+
+.square{
+  width:80px;
+  height:80px;
+  background:#CCC;
+  border:3px solid #eee;
+}
+
+.round:hover{
+background:#84f784; 
+  
+}
+.square:hover{
+  background:#84f784;
+}
+
+.draggable { 
+	width: 100px; 
+	height: 100px; 
+	padding: 0.5em; 
+	display:inline-block;
+	background: #ccc;
+	border:3px solid #eee;
+	text-align: center;
+}
+
+.draggable:hover {
+	background: #84f784
+}
+
+.resizable { 
+	width: 100px; 
+	height: 100px; 
+	padding: 0.5em; 
+}
+
+.resizable h3 { 
+	text-align: center; 
+	margin: 0; 
+}
+
+#containment-wrapper { 
+	height: 500px; 
+	width: 100%;
+	max-width: 1000px; 
+	border: 3px solid #ccc;
+	background: #333; 
+	padding: 10px; 
+	display: inline-block;
+	margin: auto;
+	position: relative;
+}
+

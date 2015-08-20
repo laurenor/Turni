@@ -11,14 +11,6 @@
 
 </style>
 
-<script>
-$(function() {
-  $( ".draggable" ).draggable();
-  $( ".resizable" ).resizable();
-  $( ".draggable3" ).draggable({ containment: "#containment-wrapper", scroll: false });
-});
-</script>
-
 		<h2>Tournament Info</h2>
 		<ul>
 			<li><b>Tournament URL</b>: {{ url }}</li>
@@ -38,7 +30,7 @@ $(function() {
 		<!-- Lists all players -->
 
 		<h2>Map of {% if tournament_name %} {{ tournament_name }} {% else %}Tournament{% endif %}</h2>  
-		<button id="round1">Round 1</button><button id="round2">Round 2</button><button id="round3">Round 3</button><button id="round4">Round 4</button><button id="round5">Round 5</button>
+		<button id="round1">Round 1</button><button id="round2">Round 2</button><button id="round3">Round 3</button><button id="round4">Round 4</button><button id="round5">Round 5</button><button id="round6">Round 6</button>
 		<br>
 
 
@@ -66,19 +58,30 @@ $(function() {
 
 <script src="static/js/challonge_brackets.js"></script>
 <script>
+$(function() {
+  $( ".draggable" ).draggable();
+  $( ".resizable" ).resizable();
+  $( ".draggable3" ).draggable({ containment: "#containment-wrapper", scroll: false });
+});
+</script>
+<script>
 	var tables = {{ tables|safe }}
+	console.log(tables)
 	var rounds = {{ rounds|safe }}
+	var matches = {{ all_matches|safe }}
+	console.log(rounds)
 	var current_round = 0
 
 	function updateTables(current_round) {
-		for (var i=0; i<rounds[current_round].length; i++) {
-			$('#table'+i+' .match').text(rounds[current_round][i]);
+		for (var i = 0; i < matches[current_round].length; i++) {
+			$('#table' + i + ' .match').text(matches[current_round][i]);
 		};
 
-		for (var i=rounds[current_round].length; i<tables; i++) {
-			$('#table'+i+' .match').text('-----');
+		for (var i = matches[current_round].length; i < tables; i++) {
+			$('#table' + i + ' .match').text('OPEN');
 		};
 	};
+
 
 	$('#round1').on('click', function() {
 		updateTables(0)
@@ -92,10 +95,38 @@ $(function() {
 		updateTables(2)
 	});
 
+	$('#round4').on('click', function() {
+		updateTables(3)
+	});
+
+	$('#round5').on('click', function() {
+		updateTables(4)
+	});
+
+	$('#round6').on('click', function() {
+		updateTables(5)
+	});
+
+
 	updateTables(current_round)
 
+	max_stations = 16
+
+	function addTables(max_stations) {
+		for (var i = 0; i < max_stations ; i++) {
+			$('#containment-wrapper').append("<div class='draggable resizable draggable3 ui-widget-content' id='table" +i+ "'><h3 class='ui-widget-header'>Station " + (i+1) + "</h3><span class='match'></span><br><span class='pos"+i+"'></span></div>");
+		};
+
+	};
+
+	addTables(max_stations);
+
+	var p = $( "#table1:first");
+	var position = p.position();
+	$( "p:last" ).text( "left: " + position.left + ", top: " + position.top );
 
 </script>
+
 
 
 

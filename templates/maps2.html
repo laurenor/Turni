@@ -1,25 +1,42 @@
-<!DOCTYPE html>
+{% extends 'base.html' %}
 
-<style>
-.draggable { width: 100px; height: 100px; padding: 0.5em; display:inline-block;}
-.resizable { width: 100px; height: 100px; padding: 0.5em; }
-.resizable h3 { text-align: center; margin: 0; }
-#containment-wrapper { height:500px; width:1000px; border:2px solid #ccc; padding: 10px; display:inline-block;}
-p { margin-left:10px;}
-</style>
-  <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-  <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-  <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+{% block body %}
 
+<h2>Tournament Info</h2>
+<ul>
+	<li><b>Tournament URL</b>: <a href="http://www.challonge.com/{{ url }}">{{ url }}</a></li>
+	<br>
+	<li><b>Number of stations</b>: {{ max_stations }}</li>
+	<br>
+	<b>Participants</b>:
+	{% for player in all_players %}
+		<li><span id="player_info">{{ player }}</span> </li> 
+	{% endfor %}
+	{% if stream %}
+<!-- 		<li><a href="{{ stream }}">Watch on stream</a></li>
+		<br> -->
+		<a class="embedly-card" href="http://www.twitch.tv/s2jfalcon">s2jfalcon</a>
+		<script async src="//cdn.embedly.com/widgets/platform.js" charset="UTF-8" width="50%"></script>
+		<br>
+	{% endif %}
+</ul>
 
+<!-- save coordinates button -->
+<div id="save_status"></div>
+<button id='save'>Save Coordinates</button>
+
+<!-- round buttons  -->
 <button id="round1">Round 1</button><button id="round2">Round 2</button><button id="round3">Round 3</button><button id="round4">Round 4</button><button id="round5">Round 5</button><button id="round6">Round 6</button>
 
 <div id="containment-wrapper"></div>
 
+<h2>Brackets</h2>
+<iframe src="http://challonge.com/{{ url }}/module" width="90%" height="500" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
 
-<p>Hello</p>
-<p></p>
 
+<script src="static/js/challonge_brackets.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script>
 $(function() {
   $( ".draggable" ).draggable();
@@ -28,11 +45,8 @@ $(function() {
 });
 </script>
 <script>
-	var tables = {{ tables|safe }}
-	console.log(tables)
-	var rounds = {{ rounds|safe }}
+	var tables = {{ max_stations|safe }}
 	var matches = {{ all_matches|safe }}
-	console.log(rounds)
 	var current_round = 0
 
 	function updateTables(current_round) {
@@ -77,7 +91,7 @@ $(function() {
 
 	function addTables(max_stations) {
 		for (var i = 0; i < max_stations ; i++) {
-			$('#containment-wrapper').append("<div class='draggable resizable draggable3 ui-widget-content' id='table" +i+ "'><h3 class='ui-widget-header'>Station " + (i+1) + "</h3><span class='match'></span><br><span class='pos"+i+"'></span></div>");
+			$('#containment-wrapper').append("<div class='draggable resizable draggable3 ui-widget-content' id='table" +i+ "'><h3>Station " + (i+1) + "</h3><span class='match'></span><br><span class='pos"+i+"'></span></div>");
 		};
 
 	};
@@ -91,4 +105,4 @@ $(function() {
 </script>
 
 
-
+{% endblock %}

@@ -67,117 +67,6 @@
 <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++ comment +++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
 
- 
-<style>
-#table-type{
-  float:left;
-  margin-left:20px;
-  border:1px solid #333;
-  text-align:center;
-
-}
-.round{
-  width:80px;
-  height:80px;
-  border-radius:1000px;
-  background:#CCC;
-  border:3px solid #eee;
-  /*position: absolute;*/
-  /*top: 253px;  need to get this info from db -- maybe through JS? */
-  /*left: 87px;  need to get this info from db -- maybe through JS? */
-}
-.square{
-  width:80px;
-  height:80px;
-  background:#CCC;
-  border:3px solid #eee;/*
-  position: absolute;*/
-  /*top: 20px;  need to get this info from db -- maybe through JS? */
-  /*left: 50px;  need to get this info from db -- maybe through JS? */
-}
-.rounded{
-  width:80px;
-  height:80px;
-  border-radius:1000px;
-  background:#CCC;
-  border:3px solid #eee;
-}
-.squared{
-  width:80px;
-  height:80px;
-  background:#CCC;
-  border:3px solid #eee;
-}
-.round:hover{
-background:#84f784; 
-  
-}
-.square:hover{
-  background:#84f784;
-}
-
-p{
-  font-size:12px;
-  font-family:Helvetica;
-  color:#333;
-  
-  
-}
-#layout-area{
-  width:100%;
-  max-width:900px;
-  height:550px;
-  background:#333;
-  border:3px solid #CCC;
-  margin:auto;
-  position:relative;
-  margin-top:100px;
-
-}
-#types-of-tables{
-  width:1000px;
-  margin:auto;
-
-}
- .ui-resizable-helper { 
-  border: 1px dotted gray; 
-
-}
-
-/*#table1 {
-  position: absolute;
-  top: 100px;
-  left: 100px;
-}
-
-#table2 {
-  position: absolute;
-  top: 100;
-  left: 200px;
-
-}
-
-#table3 {
-  position: absolute;
-  top: 100px;
-  left: 300px;
-
-}
-
-#table4 {
-  position: absolute;
-  top: 100;
-  left: 400;
-}
-
-#table5 {
-  position: absolute;
-  top: 100;
-  left: 500;
-}*/
-
-</style>
-
 
 </head>
  
@@ -186,22 +75,19 @@ p{
  <div id="save_status"></div>
  <button id='save'>Save Coordinates</button>
   <div id="layout-area">
-
     <div id="table1" class="square resize"> </div>
     <div id="table2" class="square resize"> </div>
     <div id="table3" class="round resize"> </div>
     <div id="table4" class="round resize"> </div>
     <div id="table5" class="square resize"> </div>
   </div>
-  <div id="start">Waiting for dragging the image get started...</div>
-  <div id="start">Waiting for dragging the image get started...</div>
-  <div id="current">Waiting image getting dropped...</div>
-
 
 
 <script>
   
   function updateCoords() {
+    // Gets coordinates from positions table in DB, so gaming stations are in same place when user returns to page later
+    
     $.get('/get-coords', function (result) {
       result = JSON.parse(result);
       console.log(result);
@@ -260,12 +146,11 @@ p{
 
         // Show start dragged position of image.
         var Startpos = $(this).position();
-        $("div#start").text("START: \nX: "+ Startpos.left + "\nY: " + Startpos.top);
+        // $("d fiv#start").text("START: \nX: "+ Startpos.left + "\nY: " + Startpos.op);
       },
         drag: function(event, ui){
             var Startpos = $(this).position();
-            var Parentpos = $(this).parent().position();
-            $("div#current").text("Current: \nX: "+ Startpos.left + "\nY: " + Startpos.top);
+            // $("div#current").text("Current: \nX: "+ Startpos.left + "\nY: " + Startpos.top);
             showPos();
         },
       // Find position where image is dropped.
@@ -273,7 +158,7 @@ p{
 
         // Show dropped position.
         var Stoppos = $(this).position();
-        $("div#stop").text("CURRENT: \nX: "+ Stoppos.left + "\nY: " + Stoppos.top) ;
+        // $("div#stop").text("CURRENT: \nX: "+ Stoppos.left + "\nY: " + Stoppos.top) ;
       }
 
   });

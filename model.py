@@ -40,7 +40,7 @@ class Match(db.Model):
     __tablename__ = 'matches'
 
     match_id = db.Column(db.Integer, primary_key=True)
-    tournament_id = db.Column(db.Integer)
+    tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.tournament_id'))
     round_num = db.Column(db.Integer)
     player_1 = db.Column(db.String(20))
     player_2 = db.Column(db.String(20))
@@ -53,13 +53,14 @@ class Position(db.Model):
 
     __tablename__ = 'positions'
 
+    tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.tournament_id'), primary_key=True)
     table_id = db.Column(db.String(10), primary_key=True)
     left = db.Column(db.String(10))
     top = db.Column(db.String(10))
 
     def __repr__(self):
             """Provide helpful representation when printed"""
-            return "<Position station_id=%s >" % (self.station_id)
+            return "<Position tournament_id=%s table_id=%s >" % (self.tournament_id, self.table_id)
 
 
 

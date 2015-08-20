@@ -102,7 +102,7 @@ def index():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-	"""Signs user in if username and pw match; flashes '...invalid' if not"""
+	"""Registers user if username not already in DB; if user in database, flash error."""
 	if request.method == 'POST':
 		username = request.form.get('username')
 		email = request.form.get('email')
@@ -281,10 +281,20 @@ def map():
 def map2():
 
 	tables = 16
-	rounds = [['a vs b', 'c vs d', 'e vs f', 'g vs h'], ['a vs c', 'e vs g'], ['a vs e']]
+	username = 'meowchi'
+	all_players = get_all_players(participant_data)
+	url = 'alphacpu'
+	stream = 'http://twitch.tv'
 
-
-	return render_template('maps2.html', tables=json.dumps(tables), rounds=json.dumps(rounds), all_matches=json.dumps(all_matches))
+	return render_template('maps2.html', 
+							tables=json.dumps(tables), 
+							all_matches=json.dumps(all_matches), 
+							username=username,
+							all_players=all_players,
+							max_stations=max_stations,
+							url=url,
+							stream=stream,
+							)
 
 @app.route('/untitled')
 def untitled():
