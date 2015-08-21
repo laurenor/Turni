@@ -1,6 +1,7 @@
 body {
 	font-family: 'Titillium Web', sans-serif;
 	padding: 0 10px 0 10px;
+	font-size: 16px;
 }
 
 label {
@@ -156,5 +157,31 @@ background:#84f784;
 
 .width1000 {
 	width:1000px;
+}
+
+.intro-header {
+  background-color: #808080;
+  background: no-repeat center center;
+  background-attachment: scroll;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+  margin-bottom: 50px;
+}
+.intro-header .site-heading,
+.intro-header .post-heading,
+.intro-header .page-heading {
+  padding: 100px 0 50px;
+  color: white;
+}
+
+.modal-body {
+  height: 300px;
+  margin-bottom:10px;
+}
+
+.modal-body h3{
+	margin-top: 5px;
 }
 

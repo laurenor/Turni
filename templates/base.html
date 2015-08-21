@@ -4,10 +4,12 @@
 		<title>Turni - Your Online Esports Tournament Organizer</title>
 
 		<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-		<!-- <link href='http://fonts.googleapis.com/css?family=Permanent+Marker' rel='stylesheet' type='text/css'> -->
 		<link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,700' rel='stylesheet' type='text/css'>
-		<!-- <link rel="stylesheet" href="http://code.jquery.com/resources/demos/style.css"> -->
+		<link rel="stylesheet" href="/static/css/bootstrap.css">
 		<link rel="stylesheet" href="/static/css/main.css">
+
+		<script src="/static/js/bootstrap.js"></script>
+		<script src="/static/js/npm.js"></script>
 		<script src="/static/js/jquery.js"></script>
 		<script src="/static/js/jquery-1.10.2.js"></script>
 		<script src="/static/js/jquery-ui.js"></script>
@@ -15,42 +17,154 @@
 
 	</head>
 	<body>
-		<!-- certain list items appear / don't appear depending on user login state -->
-		<nav>
-			<ul>
-				<li><a href='/'><span id='logo'>turni</span></a></li>			
-				<li><a href='/about'>About</a></li>
-				<li><a href='/features'>Features</a></li>
-				{% if 'username' not in session %}
-				<li><a href='/login'>Login</a></li>
-				<li><a href='/register'>Register</a></li>
-				{% endif %}
-				{% if 'username' in session %}
-				<li><a href='/create-map'>Create Venue Map</a></li>
-				<li><a href='/logout'>Logout</a></li>
-				<li><a href='/profile/{{ username }}'>user: <b>{{ username }}</b></a></li>
-				{% endif %}
+		<div class="container">
+			<nav class="navbar navbar-default navbar-fixed-top">
+		      <div class="container">
+		        <div class="navbar-header">
+		          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+		            <span class="sr-only">Toggle navigation</span>
+		            <span class="icon-bar"></span>
+		            <span class="icon-bar"></span>
+		            <span class="icon-bar"></span>
+		          </button>
+		          <a class="navbar-brand" href="/">Turni</a>
+		        </div>
+		        <div id="navbar" class="navbar-collapse collapse">
+		          <ul class="nav navbar-nav">
+		            <li><a href="/">Home</a></li>
+		            <li><a href="/about">About</a></li>
+		            <li><a href="/features">Features</a></li>
+		            {% if 'username' in session %}
+		            <li><a href="/create-map">Create Venue Map</a></li>
+		            {% endif %}
+		            <li class="dropdown">
+		              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+		              <ul class="dropdown-menu">
+		                <li><a href="#">Action</a></li>
+		                <li><a href="#">Another action</a></li>
+		                <li><a href="#">Something else here</a></li>
+		                <li role="separator" class="divider"></li>
+		                <li class="dropdown-header">Nav header</li>
+		                <li><a href="#">Separated link</a></li>
+		                <li><a href="#">One more separated link</a></li>
+		              </ul>
+		            </li>
+		          </ul>
+		          <ul class="nav navbar-nav navbar-right">
+		            {% if 'username' not in session %}
+		            <li><a href="#" data-toggle="modal" data-target="#myModal">Login</a></li>
+		            <li><a href="/register">Register</a></li>
+		            {% endif %}
+		            {% if 'username' in session %}
+		            <li><a href='/profile/{{ username }}'>user: <b>{{ username }}</b></a></li>
+		            {% endif %}
+		          </ul>
+		        </div><!--/.nav-collapse -->
+		      </div>
+		    </nav>
 
-			</ul>
-		</nav>
-
-		{% with messages = get_flashed_messages() %}
-  			{% if messages %}
-    			<ul>
-    			{% for message in messages %}
-      				<li class='flashes'>{{ message }}</li>
-    			{% endfor %}
-    			</ul>
-  			{% endif %}
-		{% endwith %}
 
 
-	<!-- This is where the main content goes. -->
-	  {% block body %}
-	      BODY OF PAGE GOES HERE VIA INHERITANCE
-	  {% endblock %}
 
 
+			<nav>
+				<ul>
+					<li><a href='/'><span id='logo'>turni</span></a></li>			
+					<li><a href='/about'>About</a></li>
+					<li><a href='/features'>Features</a></li>
+					{% if 'username' not in session %}
+					<li><a href='/login'>Login</a></li>
+					<li><a href='/register'>Register</a></li>
+					{% endif %}
+					{% if 'username' in session %}
+					<li><a href='/create-map'>Create Venue Map</a></li>
+					<li><a href='/logout'>Logout</a></li>
+					<li><a href='/profile/{{ username }}'>user: <b>{{ username }}</b></a></li>
+					{% endif %}
+
+				</ul>
+			</nav>
+
+			{% with messages = get_flashed_messages() %}
+	  			{% if messages %}
+	    			<ul>
+	    			{% for message in messages %}
+	      				<li class='flashes'>{{ message }}</li>
+	    			{% endfor %}
+	    			</ul>
+	  			{% endif %}
+			{% endwith %}
+
+
+		<!-- This is where the main content goes. -->
+		  {% block body %}
+		      BODY OF PAGE GOES HERE VIA INHERITANCE
+		  {% endblock %}
+
+
+
+
+
+			<!-- Modal -->
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4 class="modal-title" id="myModalLabel">Login or Register</h4>
+			      </div>
+				      <div class="modal-body">
+					      <div class="row-fluid">	
+					      	<div class="col-md-6">
+					      		<h3>Login</h3>
+								<form action='/login' method='post' name='login'>
+								    <label>
+								    <input type="text" name="username" placeholder="Username / Email" required> </label>
+								    <br>
+								    <label>
+								    <input type="password" name="password" placeholder="Password" required> </label>
+								    <br>
+								    <input type="submit" value="Login">
+								</form>
+							</div>
+					    
+						    <div class="col-md-6">
+						    	<h3>Register</h3>
+					            <form action='/register' method='POST'>
+					                <label>
+					                <input type="text" name="username" placeholder="challonge username" required> </label>
+					                <br>
+					                <label>
+					                <input type="email" name="email" placeholder="email" required> </label>
+					                <br>
+					                <input type="phone" name="phone" placeholder="phone number" required> </label>
+					                <br>
+					                <label>
+					                Organizer <input type="radio" name="user_type" value="Organizer">
+					                Pariticipant<input type="radio" name="user_type" value="Participant">
+					                </label>
+					                <br>
+					                <label>
+					                <input type="password" name="password" placeholder="password" required> </label>
+					                <br>
+					                <label>
+					                <input type="password" name="confirm" placeholder="verify password" required></label>
+					                <br>
+					                <input type="submit" value="Register">
+					            </form>
+					        </div>
+					    </div>
+				    </div>
+			     	<div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+   					</div>
+			      </div>
+			    </div>
+			  </div>
+			
+			</div>  
+
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 	<script>
 	  $(function() {
 	    $( document ).tooltip();
