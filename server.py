@@ -26,9 +26,6 @@ challonge.set_credentials('lencat', 'CHALLONGE_API_KEY')
 ##############################################################################
 
 
-r3 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu/matches.json', auth=('lencat', CHALLONGE_API_KEY))
-match_data = r3.json()
-
 r2 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu/participants.json', auth=('lencat', CHALLONGE_API_KEY))
 participant_data = r2.json()
 
@@ -57,9 +54,9 @@ for j in range(6):
 						mylist[i] = players[key]
 			match_list.append(' vs. '.join(map(str, mylist)))
 	all_matches.append(match_list)
-	print "Round ", j+1, ": ", match_list
+	# print "Round ", j+1, ": ", match_list
 
-print "***all_matches: ", all_matches
+# print "***all_matches: ", all_matches
 
 
 
@@ -68,7 +65,7 @@ rounds = []
 for i in range(len(match_data)-1):
 	if match_data[i]['match']['round'] not in rounds:
 		rounds.append(match_data[i]['match']['round'])
-print "ROUNDS: ", rounds
+# print "ROUNDS: ", rounds
 
 round_count = {}
 for num in rounds:
@@ -77,13 +74,13 @@ for num in rounds:
 			round_count[num] = 1
 		elif (match_data[i]['match']['round'] == num) and (match_data[i]['match']['round'] in round_count):
 			round_count[num] += 1
-	print "**round count: ", round_count 
+	# print "**round count: ", round_count 
 	highest = round_count[rounds[0]]
 	most_round = rounds[0]
 	if round_count[num] > highest :
 		highest = round_count[num]
 		most_round = num
-print "**Round with most matches: ", most_round
+# print "**Round with most matches: ", most_round
 
 # used in /map
 max_stations = highest
@@ -179,10 +176,10 @@ def user_profile(username):
 
 	if session:
 		user = User.query.filter_by(username=username).first()
-		print "******user.username", user.username
+		# print "******user.username", user.username
 
 		tournaments = db.session.query(Tournament.tournament_name).join(User).filter(user.user_id==Tournament.user_id).all()
-		print "***list of tournaments: ", tournaments
+		# print "***list of tournaments: ", tournaments
 
 		# removes unicode formatting on tournament names 
 		str_tournaments = []
@@ -219,6 +216,7 @@ def map():
 		url = 'alphacpu'
 		stream = request.form.get('stream')
 		tournament_name = request.form.get('tournament_name')
+		print tournament_name
 
 		# puts all player names on page
 		all_players = get_all_players(participant_data)
@@ -226,7 +224,7 @@ def map():
 		# adds new tournament info if tournament is not yet in database
 		user = User.query.filter_by(username=session['username']).first()
 		tournament = Tournament.query.filter(tournament_name==tournament_name).first()
-		print "***user!! :", user
+
 		if not tournament:
 			# user = User.query.filter_by(username=session['username']).first()
 			tournament = Tournament(tournament_name=tournament_name, max_stations=max_stations, user_id=user.user_id)
@@ -277,24 +275,60 @@ def map():
 		# 							max_stations=max_stations,
 		# 							username=username)
 
-@app.route('/map2')
+@app.route('/map2', methods=['GET', 'POST'])
 def map2():
+	if 'username' in session:
+		username = session['username']
 
-	tables = 16
-	username = 'meowchi'
-	all_players = get_all_players(participant_data)
-	url = 'alphacpu'
-	stream = 'http://twitch.tv'
+	if request.method == 'POST':
+		tables = 16
+		all_players = get_all_players(participant_data)
+		url = 'alphacpu'
+		stream = 'http://twitch.tv'
+		tournament_name = request.form.get('tournament_name')
+		print "***tournament_name: ", tournament_name
 
-	return render_template('maps2.html', 
-							tables=json.dumps(tables), 
-							all_matches=json.dumps(all_matches), 
-							username=username,
-							all_players=all_players,
-							max_stations=max_stations,
-							url=url,
-							stream=stream,
-							)
+		user = User.query.filter_by(username=session['username']).first()
+		tournament = Tournament.query.filter_by(tournament_name=tournament_name).first() # URLs need to be unqiue, because you can't make multiple maps for the same tournament
+		print "***tournament: ", tournament
+
+		if not tournament:
+			print "***not tournament"
+			tournament = Tournament(tournament_name=tournament_name, max_stations=max_stations, user_id=user.user_id, url=url)
+			db.session.add(tournament)
+		db.session.commit()
+
+		return render_template('maps2.html', 
+						tables=json.dumps(tables), 
+						all_matches=json.dumps(all_matches), 
+						username=username,
+						all_players=all_players,
+						max_stations=max_stations,
+						url=url,
+						stream=stream,
+						tournament_name=tournament_name
+						)
+
+	elif request.method == 'GET':
+		tables = 16
+		user = User.query.filter_by(username=session['username']).first()
+		all_players = get_all_players(participant_data)
+		tournament_name = request.args.get('tournament_name')
+		print "**TOURNAMENT NAME: ", tournament_name
+		url = 'alphacpu'
+		stream = 'http://twitch.tv'
+
+
+		return render_template('maps2.html', 
+								tables=json.dumps(tables), 
+								all_matches=json.dumps(all_matches), 
+								username=username,
+								all_players=all_players,
+								max_stations=max_stations,
+								url=url,
+								stream=stream,
+								tournament_name=tournament_name
+								)
 
 @app.route('/untitled')
 def untitled():
@@ -313,13 +347,20 @@ def add_coords():
 	left = request.form.get('left')
 	top = request.form.get('top')
 	table_id = request.form.get('table_id')
+	tournament_name = request.form.get('tournament_name')
 
-	position = Position.query.filter_by(table_id=table_id).first()
+	user = User.query.filter_by(username=session['username']).first()
+
+	tournament = Tournament.query.filter_by(tournament_name=tournament_name).first()
+	position = Position.query.filter(Position.table_id==table_id, Position.tournament_id==tournament.tournament_id).first()
+	print "***tournament: ", tournament.tournament_id
 
 	if not position:
-		coordinates = Position(table_id=table_id, left=left, top=top)
+		print "***not position: "
+		coordinates = Position(table_id=table_id, left=left, top=top, tournament_id=tournament.tournament_id)
 		db.session.add(coordinates)
 	else:
+		print "***else position"
 		position.table_id=table_id
 		position.left=left
 		position.top=top
@@ -330,8 +371,15 @@ def add_coords():
 
 @app.route('/get-coords')
 def get_coords():
-	positions = db.session.query(Position.table_id, Position.left, Position.top).all();
+	tournament_name = request.args.get('tournament_name')
+	print "***get_coords tourn name: ", tournament_name
+
+	tournament = Tournament.query.filter_by(tournament_name=tournament_name).first()
+	tournament_id = tournament.tournament_id
+
+	positions = db.session.query(Position.table_id, Position.left, Position.top).filter(Position.tournament_id==tournament_id).all();
 	posijson = json.dumps(positions)
+	print "****posijson: ", posijson
 	return posijson
 
 

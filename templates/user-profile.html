@@ -6,15 +6,12 @@
 
 <table>
 	<tr>
-		<th>#</th>
 		<th>Tournament Name</th>
 	</tr>
 {% for tournament in tournaments %}
 	<tr>
-	{% for num in amt_of_tourns %}
-		<td>{{ num }}</td>
-	{% endfor %}
-		<td><a href="/map?tournament=">{{ tournament }}</a></td>
+		<td><a href="/map2?tournament_name={{ tournament }}">{{ tournament }}</a></td>
+	</tr>
 {% endfor %}
 </table>
 

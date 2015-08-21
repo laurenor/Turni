@@ -27,7 +27,8 @@ class Tournament(db.Model):
     __tablename__ = 'tournaments'
 
     tournament_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    tournament_name = db.Column(db.String(20), nullable=False) 
+    tournament_name = db.Column(db.String(20), nullable=False, unique=True) 
+    url = db.Column(db.String(20), nullable=False)
     max_stations = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
 

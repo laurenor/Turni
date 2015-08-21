@@ -92,6 +92,18 @@ background:#84f784;
   background:#84f784;
 }
 
+#layout-area {
+  width:100%;
+  max-width:1000px;
+  height:550px;
+  background:#333;
+  border:3px solid #CCC;
+  margin:auto;
+  position:relative;
+  margin-top:100px;
+
+}
+
 .draggable { 
 	width: 100px; 
 	height: 100px; 
@@ -100,6 +112,7 @@ background:#84f784;
 	background: #ccc;
 	border:3px solid #eee;
 	text-align: center;
+	color: #3c3c3c;
 }
 
 .draggable:hover {
@@ -114,18 +127,34 @@ background:#84f784;
 
 .resizable h3 { 
 	text-align: center; 
-	margin: 0; 
+	margin: 0;
+	color: #000; 
 }
 
 #containment-wrapper { 
+	width: 1000px; 
 	height: 500px; 
-	width: 100%;
-	max-width: 1000px; 
+	background: #444;
 	border: 3px solid #ccc;
-	background: #333; 
+	/*margin: auto; */
 	padding: 10px; 
-	display: inline-block;
-	margin: auto;
+/*	display: inline-block;*/
 	position: relative;
+}
+
+#layout-area {
+  width:100%;
+  max-width:1000px;
+  height:550px;
+  background:#333;
+  border:3px solid #CCC;
+  margin:auto;
+  position:relative;
+  margin-top:100px;
+
+}
+
+.width1000 {
+	width:1000px;
 }
 

@@ -3,8 +3,7 @@
 {% block body %}
 
 <h2>Create Venue Map</h2>
-<p class='note'><i>Note: Venue maps cannot be created for completed tournaments or tournaments that have not yet started.</i></p>
-<form action='/map' method='post'>
+<form action='/map2' method='post'>
     <label>
     <input type="text" name="tournament_name" placeholder="Tournament Name" required> </label>
     <br>
@@ -12,18 +11,11 @@
     <input type="text" name="url" placeholder="Tournament URL" title="challonge.com/[url]" disabled> </label>
     <br>
     <label>
-    <input type="text" name="stream" placeholder="Stream link (optional)"> </label>
+    <input type="text" name="stream" placeholder="Stream link (optional)" disabled> </label>
     <br>   
     <input type="submit" value="Create">
 
 </form>
-<script src="http://code.jquery.com/jquery.js"></script>
-<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-<script>
-  $(function() {
-    $( document ).tooltip();
-  });
-</script>
 
 
 {% endblock %}
