@@ -1,7 +1,8 @@
 body {
 	font-family: 'Titillium Web', sans-serif;
-	padding: 0 10px 0 10px;
 	font-size: 16px;
+	margin-top: 50px;
+	background-color: #fff;
 }
 
 label {
@@ -106,8 +107,8 @@ background:#84f784;
 }
 
 .draggable { 
-	width: 100px; 
-	height: 100px; 
+	width: 120px; 
+	height: 120px; 
 	padding: 0.5em; 
 	display:inline-block;
 	background: #ccc;
@@ -121,8 +122,6 @@ background:#84f784;
 }
 
 .resizable { 
-	width: 100px; 
-	height: 100px; 
 	padding: 0.5em; 
 }
 
@@ -155,26 +154,6 @@ background:#84f784;
 
 }
 
-.width1000 {
-	width:1000px;
-}
-
-.intro-header {
-  background-color: #808080;
-  background: no-repeat center center;
-  background-attachment: scroll;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  background-size: cover;
-  -o-background-size: cover;
-  margin-bottom: 50px;
-}
-.intro-header .site-heading,
-.intro-header .post-heading,
-.intro-header .page-heading {
-  padding: 100px 0 50px;
-  color: white;
-}
 
 .modal-body {
   height: 300px;
@@ -185,3 +164,80 @@ background:#84f784;
 	margin-top: 5px;
 }
 
+#containment-wrapper h3 {
+	font-size: 19px;
+	font-weight: bold;
+	margin-bottom: 8px;
+	margin-top: 5px;
+}
+
+.site-header {
+	width: 100%;
+	height: 500px;
+}
+
+/*kafjl*/
+
+.wide {
+  width: 100%;
+  height: 400px;
+  min-height: 100px;
+  background-image: url('https://placekitten.com/g/1280/500');
+  background-size: cover;
+}
+
+.wide img {
+  width: 100%;
+}
+
+.logo {
+  color: #fff;
+  font-weight: 800;
+  font-size: 14pt;
+  padding: 25px;
+  text-align: center;
+}
+
+.line {
+  padding-top:20px;
+  white-space:no-wrap;
+  overflow:hidden;
+  text-align:center;
+}
+
+#about {
+	height: 300px;
+	background-color: #ccc;
+	width: 100%;
+	padding: 20px 50px 20px 50px;
+}
+
+#features {
+	height: 500px;
+	background-color: #333;
+	color: #fff;
+	width: 100%;
+	padding: 20px 50px 20px 50px;
+}
+
+.navbar {
+	background: #333;
+	color: #fff;
+}
+
+
+
+
+/*Media*/
+
+@media screen and (max-width: 400px) {
+    .wide {
+        height: 100px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .wide {
+        height: 300px;
+    }
+}

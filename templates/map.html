@@ -2,83 +2,169 @@
 
 {% block body %}
 
-<style>
-.draggable { width: 100px; height: 100px; padding: 0.5em; display:inline-block;}
-.resizable { width: 100px; height: 100px; padding: 0.5em; }
-.resizable h3 { text-align: center; margin: 0; }
-#containment-wrapper { height:500px; width:1000px; border:2px solid #ccc; padding: 10px; display:inline-block;}
-#table-selecter-wrapper { height:200px; width:1000px; border:2px solid #ccc; padding: 10px; display:inline-block; margin-top:10px;}
-
-</style>
-
-		<h2>Tournament Info</h2>
-		<ul>
-			<li><b>Tournament URL</b>: {{ url }}</li>
-			<br>
-			<li><b>Number of stations</b>: {{ max_stations }}</li>
-			<br>
-			<b>Participants</b>:
-			{% for player in all_players %}
-				<li><span id="player_info">{{ player }}</span> </li> 
-			{% endfor %}
-			{% if stream %}
-				<li><a href="{{ stream }}">Watch on stream</a></li>
-				<br>
-			{% endif %}
-		</ul>
-
-		<!-- Lists all players -->
-
-		<h2>Map of {% if tournament_name %} {{ tournament_name }} {% else %}Tournament{% endif %}</h2>  
-		<button id="round1">Round 1</button><button id="round2">Round 2</button><button id="round3">Round 3</button><button id="round4">Round 4</button><button id="round5">Round 5</button><button id="round6">Round 6</button>
+<div class='width1000'>
+	<h2>Tournament Info</h2>
+	<ul>
+		<li><b>Tournament Name</b>: {{ tournament_name }}</a></li>
 		<br>
+		<li><b>Tournament URL</b>: <a href="http://www.challonge.com/{{ url }}">{{ url }}</a></li>
+		<br>
+		<li><b>Number of stations</b>: {{ max_stations }}</li>
+		<br>
+		<b>Participants</b>:
+		{% for player in all_players %}
+			{% if player == all_players[-1] %}
+				<li><span id="player_info">{{ player }}</span> </li> 
+			{% else %}
+				<li><span id="player_info">{{ player }}, </span> </li> 
+			{% endif %}
+		{% endfor %}
+		{% if stream %}
+			<br>
+			<a class="embedly-card" href="http://www.twitch.tv/s2jfalcon">s2jfalcon</a>
+			<script async src="//cdn.embedly.com/widgets/platform.js" charset="UTF-8" width="50%"></script>
+			<br>
+		{% endif %}
+	</ul>
+</width>
 
 
-		<!-- Stations -->
-
-		<div id="containment-wrapper">
-			{% for match in match_list %}
-				<div class="draggable resizable draggable3 ui-widget-content">
-					<h3 class="ui-widget-header">Station {{ match_list.index(match) + 1}}
-						</h3>
-						{{ match }}
-				</div>
-			{% endfor %}
-		</div>
-		<div id="table-selecter-wrapper">
-			<b>Choose Your Tables</b>
-			<p>SVG tables will be placed here later</p>
-		</div>
 
 
-		<h2>Brackets</h2>
-		<iframe src="http://challonge.com/{{ url }}/module" width="90%" height="500" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
-	</div>
-</div>
 
+<!-- save coordinates button -->
+<div id="save_status"></div>
+<button id="save">Save Coordinates</button>
+<!-- round buttons  -->
+<button id="round1">Round 1</button><button id="round2">Round 2</button><button id="round3">Round 3</button><button id="round4">Round 4</button><button id="round5">Round 5</button><button id="round6">Round 6</button>
+
+<br>
+
+<!-- where tables and match info goes -->
+<div id="containment-wrapper"></div>
+
+<!-- challonge jquery plugin -->
+
+<h2>Brackets</h2>
+<iframe src="http://challonge.com/{{ url }}/module" width="90%" height="500" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
+
+
+<!-- script -->
 <script src="static/js/challonge_brackets.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
 <script>
+
 $(function() {
   $( ".draggable" ).draggable();
   $( ".resizable" ).resizable();
   $( ".draggable3" ).draggable({ containment: "#containment-wrapper", scroll: false });
 });
 </script>
+
+
+<!-- saving coordinates script -->
+
 <script>
-	var tables = {{ tables|safe }}
-	console.log(tables)
-	var rounds = {{ rounds|safe }}
+  
+  function updateCoords() {
+    // Gets coordinates from positions table in DB, so gaming stations are in same place when user returns to page later
+    tournament_name = '{{ tournament_name }}'
+    console.log(tournament_name)
+    $.get('/get-coords', { tournament_name: tournament_name }, function (result) {
+      result = JSON.parse(result);
+      console.log(result);
+      for (var i = 0; i < max_stations; i++) {       
+	        $('#'+result[i][0]).css({'position': 'absolute', 'left': result[i][1]+'px', 'top': result[i][2]+'px'});
+	        // console.log(result[i][1]+'px');
+	        // console.log(result[i][2]+'px');     
+
+      }
+
+    }
+    )
+
+  };
+
+  updateCoords();
+
+  max_stations = 5
+  var positions = [];
+  
+  function showPos() {
+    // Shows dynamic coordinates of tables as they are dragged.
+
+    for (var i = 1; i <= max_stations; i++) {  
+      positions[i] = $('#table'+i).position();
+      $('#table'+i).text('Left: ' + positions[i].left + '; Top: ' + positions[i].top);
+    }
+    };
+
+
+
+  function saveToDb() {
+    // Adds/updates table coordinates to database.
+
+ 
+    for (var i = 1; i <= max_stations; i++) {
+
+      pos = $('#table'+i).position();
+      var positions = { left: pos.left, top: pos.top, table_id: "table"+i, tournament_name: '{{ tournament_name }}' };
+      console.log("Saving positions: "+ pos.left + " " + pos.top + " " + positions.table_id + " " + tournament_name)
+      $.post("/add-coords", positions, function (result) {
+          $('#save_status').text(result);
+      }
+      );
+    };
+
+  };
+
+
+  $('#save').on('click', saveToDb);
+
+</script>
+<script>
+  $( init );
+  function init() {
+    $('.square, .round').draggable({
+      containment: '#layout-area',  start: function(event, ui) {
+
+        // Show start dragged position of image.
+        var Startpos = $(this).position();
+        // $("d fiv#start").text("START: \nX: "+ Startpos.left + "\nY: " + Startpos.op);
+      },
+        drag: function(event, ui){
+            var Startpos = $(this).position();
+            // $("div#current").text("Current: \nX: "+ Startpos.left + "\nY: " + Startpos.top);
+            showPos();
+        },
+      // Find position where image is dropped.
+      stop: function(event, ui) {
+
+        // Show dropped position.
+        var Stoppos = $(this).position();
+        // $("div#stop").text("CURRENT: \nX: "+ Stoppos.left + "\nY: " + Stoppos.top) ;
+      }
+
+  });
+  };
+</script>
+
+<!-- ################### -->
+
+<script>
+	var tables = {{ max_stations|safe }}
 	var matches = {{ all_matches|safe }}
-	console.log(rounds)
 	var current_round = 0
 
 	function updateTables(current_round) {
 		for (var i = 0; i < matches[current_round].length; i++) {
-			$('#table' + i + ' .match').text(matches[current_round][i]);
+			$('#table' + (i+1) + ' .match').text(matches[current_round][i]);
 		};
 
 		for (var i = matches[current_round].length; i < tables; i++) {
-			$('#table' + i + ' .match').text('OPEN');
+			$('#table' + (i+1) + ' .match').text('OPEN');
 		};
 	};
 
@@ -113,8 +199,8 @@ $(function() {
 	max_stations = 16
 
 	function addTables(max_stations) {
-		for (var i = 0; i < max_stations ; i++) {
-			$('#containment-wrapper').append("<div class='draggable resizable draggable3 ui-widget-content' id='table" +i+ "'><h3 class='ui-widget-header'>Station " + (i+1) + "</h3><span class='match'></span><br><span class='pos"+i+"'></span></div>");
+		for (var i = 1; i <= max_stations ; i++) {
+			$('#containment-wrapper').append("<div class='draggable resizable draggable3 ui-widget-content' id='table" +i+ "'><h3>Station " + i + "</h3><span class='match'></span></div>");
 		};
 
 	};
@@ -126,8 +212,6 @@ $(function() {
 	$( "p:last" ).text( "left: " + position.left + ", top: " + position.top );
 
 </script>
-
-
 
 
 

@@ -137,7 +137,6 @@ def login():
 
 		if user:
 			session['username'] = user.username
-			flash('Successfully Logged In')
 			return redirect('/profile/%s' % user.username)
 		else:
 			flash('Username and/or password is invalid.')
@@ -149,7 +148,6 @@ def login():
 def logout_user():
     """Log out the user"""
     session.clear()
-    flash('Successfully logged out.')
     return redirect('/')
 
 @app.route('/about')
@@ -207,75 +205,7 @@ def features():
 	else:
 		return render_template('features.html')
 
-@app.route('/map', methods=['GET','POST'])
-def map():
-	if 'username' in session:
-		username = session['username']
-
-	if request.method == 'POST':
-		url = 'alphacpu'
-		stream = request.form.get('stream')
-		tournament_name = request.form.get('tournament_name')
-		print tournament_name
-
-		# puts all player names on page
-		all_players = get_all_players(participant_data)
-
-		# adds new tournament info if tournament is not yet in database
-		user = User.query.filter_by(username=session['username']).first()
-		tournament = Tournament.query.filter(tournament_name==tournament_name).first()
-
-		if not tournament:
-			# user = User.query.filter_by(username=session['username']).first()
-			tournament = Tournament(tournament_name=tournament_name, max_stations=max_stations, user_id=user.user_id)
-			db.session.add(tournament)
-		db.session.commit()
-
-		open_stations = create_open_stations(tournament)
-
-		for i in range(len(match_data)):
-			match_id = match_data[i]['match']['id']
-			round_num = match_data[i]['match']['round']
-			player_1 = match_data[i]['match']['player1_id']
-			player_2 = match_data[i]['match']['player2_id']
-			tournament_id = tournament.tournament_id
-
-			match = Match(tournament_id=tournament_id, match_id=match_id, round_num=round_num, player_1=player_1, player_2=player_2)
-			db.session.add(match)
-		db.session.commit()
-		print len(match_data)
-
-		return render_template('map.html', 
-							all_players=all_players, 
-							tournament_name=tournament_name, 
-							stream=stream, 
-							match_list=match_list,
-							max_stations=max_stations,
-							username=username,
-							url=url,
-							open_stations=open_stations)
-
-		# else:
-		# 	user = User.query.filter_by(username=session['username']).first()
-
-		# 	all_players = 
-		# 	tournament_name = 
-		# 	url =
-		# 	stream = 
-		# 	match_list = 
-		# 	max_stations =
-		# 	username = 
-
-		# 	return render_template('map.html', 
-		# 							all_players=all_players, 
-		# 							tournament_name=tournament_name, 
-		# 							url=url, 
-		# 							stream=stream, 
-		# 							match_list=match_list,
-		# 							max_stations=max_stations,
-		# 							username=username)
-
-@app.route('/map2', methods=['GET', 'POST'])
+@app.route('/map', methods=['GET', 'POST'])
 def map2():
 	if 'username' in session:
 		username = session['username']
@@ -298,7 +228,7 @@ def map2():
 			db.session.add(tournament)
 		db.session.commit()
 
-		return render_template('maps2.html', 
+		return render_template('map.html', 
 						tables=json.dumps(tables), 
 						all_matches=json.dumps(all_matches), 
 						username=username,
@@ -319,7 +249,7 @@ def map2():
 		stream = 'http://twitch.tv'
 
 
-		return render_template('maps2.html', 
+		return render_template('map.html', 
 								tables=json.dumps(tables), 
 								all_matches=json.dumps(all_matches), 
 								username=username,

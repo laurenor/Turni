@@ -2,6 +2,7 @@
 
 {% block body %}
 
+<div class="container">
 <h2>{{ username }}</h2>
 
 <table>
@@ -10,7 +11,7 @@
 	</tr>
 {% for tournament in tournaments %}
 	<tr>
-		<td><a href="/map2?tournament_name={{ tournament }}">{{ tournament }}</a></td>
+		<td><a href="/map?tournament_name={{ tournament }}">{{ tournament }}</a></td>
 	</tr>
 {% endfor %}
 </table>
