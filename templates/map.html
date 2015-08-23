@@ -1,54 +1,70 @@
 {% extends 'base.html' %}
 
 {% block body %}
+<style>
+	.navbar {
+		border-color: #666;
+	}
 
-<div class="container">
 
-<div class='container'>
-	<h2>Tournament Info</h2>
-	<ul>
-		<li><b>Tournament Name</b>: {{ tournament_name }}</a></li>
-		<br>
-		<li><b>Tournament URL</b>: <a href="http://www.challonge.com/{{ url }}">{{ url }}</a></li>
-		<br>
-		<li><b>Number of stations</b>: {{ max_stations }}</li>
-		<br>
-		<b>Participants</b>:
-		{% for player in all_players %}
-			{% if player == all_players[-1] %}
-				<li><span id="player_info">{{ player }}</span> </li> 
-			{% else %}
-				<li><span id="player_info">{{ player }}, </span> </li> 
-			{% endif %}
-		{% endfor %}
-		{% if stream %}
+</style>
+<div id="main_wrap">
+
+
+		<div id="sidebar">
+			<center>
+				<h2>Tournament Info</h2>
+			</center>
+			<ul>
+				<li><b>Tournament Name</b>: {{ tournament_name }}</a></li>
+				<br>
+				<li><b>Tournament URL</b>: <a href="http://www.challonge.com/{{ url }}">{{ url }}</a></li>
+				<br>
+				<li><b>Number of stations</b>: {{ max_stations }}</li>
+				<br>
+				<br>
+				<center>
+				<b>Participants</b>:
+				<br>
+				{% for player in all_players %}
+
+						<li><span id="player_info">{{ player }}</span></li><br>
+
+				{% endfor %}
+			</center>
+			</ul>
+		</div>
+
+
+
+
+		<div id="content">
+<!-- 				{% if stream %}
+					<br>
+					<a class="embedly-card" href="http://www.twitch.tv/s2jfalcon">s2jfalcon</a>
+					<script async src="//cdn.embedly.com/widgets/platform.js" charset="UTF-8" width="50%"></script>
+					<br>
+				{% endif %} -->
+			<!-- save coordinates button -->
+			<h2>Map of {{ tournament_name }}</h2>
+			<div id="save_status"></div>
+			<button id="save">Save Coordinates</button>
+			<!-- round buttons  -->
+			<button id="round1">Round 1</button><button id="round2">Round 2</button><button id="round3">Round 3</button><button id="round4">Round 4</button><button id="round5">Round 5</button><button id="round6">Round 6</button>
+
 			<br>
-			<a class="embedly-card" href="http://www.twitch.tv/s2jfalcon">s2jfalcon</a>
-			<script async src="//cdn.embedly.com/widgets/platform.js" charset="UTF-8" width="50%"></script>
-			<br>
-		{% endif %}
-	</ul>
-</width>
+
+			<!-- where tables and match info goes -->
+			<div id="containment-wrapper"></div>
+
+			<!-- challonge jquery plugin -->
+
+			<h2>Brackets</h2>
+			<iframe src="http://challonge.com/{{ url }}/module" width="90%" height="500" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
+		</div>
+	</div>
 
 
-
-
-
-<!-- save coordinates button -->
-<div id="save_status"></div>
-<button id="save">Save Coordinates</button>
-<!-- round buttons  -->
-<button id="round1">Round 1</button><button id="round2">Round 2</button><button id="round3">Round 3</button><button id="round4">Round 4</button><button id="round5">Round 5</button><button id="round6">Round 6</button>
-
-<br>
-
-<!-- where tables and match info goes -->
-<div id="containment-wrapper"></div>
-
-<!-- challonge jquery plugin -->
-
-<h2>Brackets</h2>
-<iframe src="http://challonge.com/{{ url }}/module" width="90%" height="500" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
 
 
 <!-- script -->

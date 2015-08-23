@@ -25,13 +25,14 @@
 		          <ul class="nav navbar-nav">
 		            <li><a href="/#about">About</a></li>
 		            <li><a href="/#features">Features</a></li>
+		            <li><a href="/contact">Contact</a></li>
 		            {% if 'username' in session %}
 		            <li><a href="#" data-toggle="modal" data-target="#createMap">Create Venue Map</a></li>
 		            {% endif %}
 		          </ul>
 		          <ul class="nav navbar-nav navbar-right">
 		            {% if 'username' not in session %}
-		            <li><span id="logmsg">Create an interactive map in seconds!</span><a href="#" data-toggle="modal" data-target="#myModal">>>  Log in or sign up  <<</a></li>
+		            <li><span id="logmsg">Create an interactive map in seconds!</span><a href="#" data-toggle="modal" data-target="#myModal">Log in or Sign Up</a></li>
 		            {% endif %}
 		            {% if 'username' in session %}
 
@@ -68,7 +69,10 @@
 		  {% block body %}
 		      BODY OF PAGE GOES HERE VIA INHERITANCE
 		  {% endblock %}
-	
+	</div>
+
+
+
 
 		<!-- Login/Register Modal -->
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -169,11 +173,11 @@
 		
 		</div>
 
-
+	<script src="/static/js/bootstrap.js"></script>
 	<script src="/static/js/jquery.js"></script>
 	<script src="/static/js/jquery-1.10.2.js"></script>
 	<script src="/static/js/jquery-ui.js"></script>
-	<script src="/static/js/bootstrap.js"></script>
+
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 
 	</body>

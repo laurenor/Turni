@@ -3,19 +3,26 @@
 {% block body %}
 
 <div class="container">
-	
+
 <h2>{{ username }}</h2>
 
-<table>
-	<tr>
-		<th>Tournament Name</th>
-	</tr>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Tournament Name</th>
+			<th>Participants</th>
+			<th>Created On</th>
+		</tr>
+	</thead>
 {% for tournament in tournaments %}
 	<tr>
 		<td><a href="/map?tournament_name={{ tournament }}">{{ tournament }}</a></td>
+		<td><a href="/map?tournament_name={{ tournament }}">10</a></td>
+		<td><a href="/map?tournament_name={{ tournament }}">August 23, 2015</a></td>
 	</tr>
 {% endfor %}
 </table>
 
-
 {% endblock %}
+
+
