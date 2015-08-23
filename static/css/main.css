@@ -20,8 +20,18 @@ b, thead {
 	text-shadow: 2px 2px 3px rgba(0,0,0,0.3)
 }
 
-h1, h2 {
+
+h1, h2, h4 {
 	text-shadow: 2px 2px 3px rgba(0,0,0,0.3)
+}
+
+h4 {
+	color: #84f784;
+}
+
+.modal h1, .modal h2, .modal h3, .modal h4 {
+	color: #333;
+	text-shadow: none;
 }
 
 .table-striped > tbody > tr:nth-of-type(odd) {

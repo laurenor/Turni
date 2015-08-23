@@ -66,6 +66,10 @@
  -->
 
 		<!-- This is where the main content goes. -->
+
+	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 		  {% block body %}
 		      BODY OF PAGE GOES HERE VIA INHERITANCE
 		  {% endblock %}
@@ -146,6 +150,7 @@
 				      	<div class="col-md-12">
 							<h2>Create Venue Map</h2>
 							<p>Input your <a href="http://www.challonge.com">Challonge</a> tournament information in the following fields.</p>
+							<br>
 							<form action='/map' method='post'>
 							    <label>
 							    <input type="text" name="tournament_name" placeholder="Tournament Name" required> </label>
@@ -173,12 +178,6 @@
 		
 		</div>
 
-	<script src="/static/js/bootstrap.js"></script>
-	<script src="/static/js/jquery.js"></script>
-	<script src="/static/js/jquery-1.10.2.js"></script>
-	<script src="/static/js/jquery-ui.js"></script>
-
-	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 
 	</body>
 </html>

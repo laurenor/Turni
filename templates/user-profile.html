@@ -2,6 +2,12 @@
 
 {% block body %}
 
+<style>
+	#deco {
+		text-decoration: underline;
+	}
+</style>
+
 <div class="container">
 
 <h2>{{ username }}</h2>
@@ -12,16 +18,28 @@
 			<th>Tournament Name</th>
 			<th>Participants</th>
 			<th>Created On</th>
+			<th>Delete?</th>
 		</tr>
 	</thead>
 {% for tournament in tournaments %}
 	<tr>
-		<td><a href="/map?tournament_name={{ tournament }}">{{ tournament }}</a></td>
-		<td><a href="/map?tournament_name={{ tournament }}">10</a></td>
-		<td><a href="/map?tournament_name={{ tournament }}">August 23, 2015</a></td>
+		<td><a href="/map?tournament_name={{ tournament }}" id='deco'>{{ tournament }}</a></td>
+		<td>10</td>
+		<td>August 23, 2015</td>
+		<td><a href="#" id="delete"><b>x</b></a></td>
 	</tr>
 {% endfor %}
 </table>
+
+<script>
+
+function confirmDel(evt) {
+	evt.preventDefault();
+	alert('Are you sure you want to delete the Turni?');
+}
+
+	$('#delete').on('click', confirmDel);
+</script>
 
 {% endblock %}
 

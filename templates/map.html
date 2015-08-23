@@ -1,13 +1,26 @@
 {% extends 'base.html' %}
 
 {% block body %}
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
 <style>
 	.navbar {
 		border-color: #666;
 	}
 
+	h2 {
+		padding-bottom: 15px;
+	}
+
+	#sidebar a {
+		text-decoration: underline;
+	}
+
 
 </style>
+
 <div id="main_wrap">
 
 
@@ -16,16 +29,15 @@
 				<h2>Tournament Info</h2>
 			</center>
 			<ul>
-				<li><b>Tournament Name</b>: {{ tournament_name }}</a></li>
+				<li><h4>Tournament Name</b></h4> {{ tournament_name }}</li>
 				<br>
-				<li><b>Tournament URL</b>: <a href="http://www.challonge.com/{{ url }}">{{ url }}</a></li>
+				<li><h4>Tournament URL</h4><a href="http://www.challonge.com/{{ url }}">{{ url }}</a></li>
 				<br>
-				<li><b>Number of stations</b>: {{ max_stations }}</li>
+				<li><h4>Number of stations</h4> {{ max_stations }}</li>
 				<br>
-				<br>
+				<hr>
 				<center>
-				<b>Participants</b>:
-				<br>
+				<h4>Participants</h4>
 				{% for player in all_players %}
 
 						<li><span id="player_info">{{ player }}</span></li><br>
@@ -34,7 +46,6 @@
 			</center>
 			</ul>
 		</div>
-
 
 
 
@@ -68,9 +79,13 @@
 
 
 <!-- script -->
-<script src="static/js/challonge_brackets.js"></script>
+
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="static/js/challonge_brackets.js"></script>
+
 
 <script>
 
