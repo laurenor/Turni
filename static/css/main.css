@@ -5,6 +5,19 @@ body {
 	background-color: #fff;
 }
 
+body a {
+	text-decoration: none;
+}
+
+.modal a {
+	color: #333;
+	text-decoration: underline;
+}
+
+body a:hover {
+	text-decoration: none;
+}
+
 label {
 	display: inline-block;
 	font-weight: normal;
@@ -181,7 +194,8 @@ background:#84f784;
 	height: 400px;
 	min-height: 100px;
 	background-image: url('https://placekitten.com/g/1280/500');
-	background-size: cover;  width: 100%;
+	background-size: cover;  
+	width: 100%;
 }
 
 .wide img {
@@ -218,10 +232,23 @@ background:#84f784;
 	color: #fff;
 	width: 100%;
 	padding: 20px 50px 20px 50px;
+	border-top: 1px solid #666;
+}
+
+#features a {
+	color: #84f784;
+}
+
+#features a:hover {
+	text-decoration: underline;
+}
+
+#features h3 {
+	color: #84f784;
 }
 
 #footer {
-	text-align: center;
+	text-align: left;
 	background-color: #333;
 	color: #666;
 	width: 100%;
@@ -230,10 +257,28 @@ background:#84f784;
 	padding: 20px 50px 20px 50px;
 }
 
+#footer img {
+	height: 25px;
+	opacity: 0.3;
+	margin: 5px 8px 0 0;
+}
+
+#footer img:hover {
+	opacity: 1.0;
+}
+
+#footer a {
+	color: #666;
+}
+
+#footer a:hover {
+	color: #fff;
+}
+
 .navbar {
 	background: #333;
 	color: #fff;
-	border-color: #fff;
+	border-color: #333;
 }
 
 .navbar-default .navbar-nav > li > a {
@@ -309,6 +354,19 @@ input {
 	display: inline-block;
 }
 
+#logmsg {
+	color: #84f784;
+	font-style: italic;
+	font-weight: 100;
+	font-size: 12px;
+}
+
+#headertxt {
+	color:#84f784;
+}
+
+
+
 /*Media*/
 
 @media screen and (max-width: 400px) {
@@ -324,6 +382,11 @@ input {
 	color: #fff;
 }
 
+.dropdown-menu > li > a:hover {
+	background-color: #84f784;
+}
+
+
 @media screen and (max-width: 767px) {
     .wide {
         height: 300px;
@@ -334,6 +397,13 @@ input {
 	.navbar-default .navbar-nav .open .dropdown-menu > li > a:hover {
 		color: #84f784;
 	}
+
+	.modal-body {
+		height: 100%;
+	}
+}
+
+@media screen and (max-width: 991px) {
 
 	.modal-body {
 		height: 100%;

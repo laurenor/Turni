@@ -31,7 +31,7 @@
 		          </ul>
 		          <ul class="nav navbar-nav navbar-right">
 		            {% if 'username' not in session %}
-		            <li><a href="#" data-toggle="modal" data-target="#myModal">Log in or sign up.</a></li>
+		            <li><span id="logmsg">Create an interactive map in seconds!</span><a href="#" data-toggle="modal" data-target="#myModal">>>  Log in or sign up  <<</a></li>
 		            {% endif %}
 		            {% if 'username' in session %}
 
@@ -79,7 +79,7 @@
 		        <h4 class="modal-title" id="myModalLabel">Log in or Register</h4>
 		      </div>
 			      <div class="modal-body">
-				      <div class="row-fluid">	
+				      <div class="row">	
 				      	<div class="col-md-6 col-lg-6">
 				      		<h3>Login</h3>
 							<form action='/login' method='post' name='login'>
@@ -138,9 +138,10 @@
 		        <h4 class="modal-title" id="myModalLabel">Create a New Venue Map</h4>
 		      </div>
 			      <div class="modal-body">
-				      <div class="row-fluid">	
+				      <div class="row">	
 				      	<div class="col-md-12">
 							<h2>Create Venue Map</h2>
+							<p>Input your <a href="http://www.challonge.com">Challonge</a> tournament information in the following fields.</p>
 							<form action='/map' method='post'>
 							    <label>
 							    <input type="text" name="tournament_name" placeholder="Tournament Name" required> </label>
@@ -169,49 +170,11 @@
 		</div>
 
 
-
-
-
-	<script src="/static/js/bootstrap.js"></script>
 	<script src="/static/js/jquery.js"></script>
 	<script src="/static/js/jquery-1.10.2.js"></script>
 	<script src="/static/js/jquery-ui.js"></script>
-	<script src="/static/js/npm.js"></script>
+	<script src="/static/js/bootstrap.js"></script>
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-
-	 <script>
-	// 	function alertLogin() {
-	// 		$.get("/login", function (data){
-	// 		    $('#login').document.write(data);
-	// 		});
-	// 	};
-
-	// 	function alertRegister() {
-	// 		$.get("/register", function (data){
-	// 		    $('#register').document.write(data);
-	// 		});
-	// 	};
-
-	// </script>
-
-	 <script>
-	// $(document).on('submit', function(evt) {
-	//     evt.preventDefault();
-	//     $.ajax({
-	//         type: "POST",
-	//         url: $(".form").attr('action'),
-	//         data: $(".form").serialize(),
-	//         success: function(response) {
-	//              if (response === "success") {
-	//                   window.reload;
-	//              } else {
-	//                    alert("invalid username/password.  Please try again");
-	//              }
-	//         }
-	//     });
-	// });
-	// </script>
-
 
 	</body>
 </html>
