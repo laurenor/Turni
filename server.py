@@ -137,6 +137,7 @@ def login():
 
 		if user:
 			session['username'] = user.username
+			flash('Successfully Logged In')
 			return redirect('/profile/%s' % user.username)
 		else:
 			flash('Username and/or password is invalid.')
@@ -148,6 +149,7 @@ def login():
 def logout_user():
     """Log out the user"""
     session.clear()
+    flash('Successfully logged out.')
     return redirect('/')
 
 @app.route('/about')
