@@ -10,6 +10,8 @@
 
 	</head>
 	<body>
+
+		<div class="page-wrap">
 			<nav class="navbar navbar-default navbar-fixed-top">
 		      <div class="container">
 		        <div class="navbar-header">
@@ -65,17 +67,41 @@
 			{% endwith %}
  -->
 
-		<!-- This is where the main content goes. -->
-
 	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
 		  {% block body %}
 		      BODY OF PAGE GOES HERE VIA INHERITANCE
 		  {% endblock %}
 	</div>
+</div>
+<!-- <footer class="site-footer">
+  I'm the Sticky Footer.
+</footer> -->
 
-
+	<div id="footer-body">
+		<div id="footer">
+			<row>
+				<div class="col-xs-6 col-sm-3 col-md-3 col-lg-3">
+					© Turni 2015
+					<br>
+					<a href="http://www.github.com/laurenor" target="_blank"><img src="/static/img/github.png"></a>
+					<a href="https://www.linkedin.com/in/laurenortencio" target="_blank"><img src="/static/img/linkedin.png"></a>
+					<a href="http://www.twitter.com/lortencio" target="_blank"><img src="/static/img/twitter.png"></a>
+				</div>
+				<div class="col-xs-6 col-sm-3 col-md-3 col-lg-3">
+					<ul>
+						<li><a href="#">About</a></li>
+						<br>
+						<li><a href="#">Contact</a></li>
+						<br>
+						<li><a href="http://lortencio.tumblr.com" target="_blank">Blog</a></li>
+					</ul>
+				</div>
+			</row>
+		</div>
+	</div>
 
 
 		<!-- Login/Register Modal -->
@@ -88,7 +114,7 @@
 		      </div>
 			      <div class="modal-body">
 				      <div class="row">	
-				      	<div class="col-md-6 col-lg-6">
+				      	<div class="col-sm-6 col-md-6 col-lg-6 login">
 				      		<h3>Login</h3>
 							<form action='/login' method='post' name='login'>
 							    <label>
@@ -104,8 +130,9 @@
 							<span id="register"></span>
 
 						</div>
+
 				    
-					    <div class="col-md-6 col-lg-6">
+					    <div class="col-sm-6 col-md-6 col-lg-6 register">
 					    	<h3>Register</h3>
 				            <form action='/register' method='POST' name="register">
 				                <label>
@@ -156,10 +183,10 @@
 							    <input type="text" name="tournament_name" placeholder="Tournament Name" required> </label>
 							    <br>
 							    <label>
-							    <input type="text" name="url" placeholder="Tournament URL" title="challonge.com/[url]" disabled> </label>
+							    <input type="text" name="url" placeholder="Tournament URL" title="challonge.com/[url]" required> </label>
 							    <br>
 							    <label>
-							    <input type="text" name="stream" placeholder="Stream link (optional)" disabled> </label>
+							    <input type="text" name="stream" placeholder="twitch.tv/[url] (optional)"> </label>
 							    <br>   
 							    <input type="submit" value="Create">
 

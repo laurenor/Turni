@@ -18,6 +18,45 @@
 		text-decoration: underline;
 	}
 
+	.page-wrap:after {
+		content: none;
+	  	display: none;
+	}
+
+	.sidebar-social {
+		text-align: center;
+		color: #666;
+	}
+
+	.sidebar-social img {
+		height: 25px;
+		opacity: 0.3;
+		margin: 10px 8px 0 5px;
+	}
+
+	.icons {
+		/*margin-left: 10px;*/
+	}
+
+
+	.sidebar-social img:hover {
+		opacity: 1.0;
+	}
+
+	#test {
+		float: right;
+		background-color: red;
+		width: 100%;
+	}
+
+	#player {
+		margin-right: 15px;
+	}
+
+	#content {
+		padding-bottom: 50px;
+	}
+
 
 </style>
 
@@ -43,6 +82,18 @@
 						<li><span id="player_info">{{ player }}</span></li><br>
 
 				{% endfor %}
+
+				<br>
+				<div class="sidebar-social">
+					© Turni 2015
+					<br>
+					<div class="icons">
+						<a href="http://www.github.com/laurenor" target="_blank"><img src="/static/img/github.png"></a>
+						<a href="https://www.linkedin.com/in/laurenortencio" target="_blank"><img src="/static/img/linkedin.png"></a>
+						<a href="http://www.twitter.com/lortencio" target="_blank"><img src="/static/img/twitter.png"></a>
+					</div>
+				</div>
+				<br>
 			</center>
 			</ul>
 		</div>
@@ -50,12 +101,9 @@
 
 
 		<div id="content">
-<!-- 				{% if stream %}
-					<br>
-					<a class="embedly-card" href="http://www.twitch.tv/s2jfalcon">s2jfalcon</a>
-					<script async src="//cdn.embedly.com/widgets/platform.js" charset="UTF-8" width="50%"></script>
-					<br>
-				{% endif %} -->
+
+
+
 			<!-- save coordinates button -->
 			<h2>Map of {{ tournament_name }}</h2>
 			<div id="save_status"></div>
@@ -68,10 +116,20 @@
 			<!-- where tables and match info goes -->
 			<div id="containment-wrapper"></div>
 
+			<!-- twitch stream -->
+			<h2>Stream</h2>
+			<iframe id="player" type="text/html" width="620" height="378"
+			  src="http://www.twitch.tv/ZeRo/embed"
+			  frameborder="0"></iframe>
+
+			<!-- twitch chat -->
+			<iframe frameborder="0" scrolling="no" id="chat_embed" src="http://www.twitch.tv/ZeRo/chat" height="378" width="365"></iframe>
+
 			<!-- challonge jquery plugin -->
 
 			<h2>Brackets</h2>
-			<iframe src="http://challonge.com/{{ url }}/module" width="90%" height="500" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
+			<iframe src="http://challonge.com/{{ url }}/module" width="1000px" height="500" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
+
 		</div>
 	</div>
 
@@ -89,12 +147,21 @@
 
 <script>
 
+$(function(){
+    $("#footer-body").hide();
+});
+
+
+
+
+
 $(function() {
   $( ".draggable" ).draggable();
   $( ".resizable" ).resizable();
   $( ".draggable3" ).draggable({ containment: "#containment-wrapper", scroll: false });
 });
 </script>
+
 
 
 <!-- saving coordinates script -->
@@ -139,12 +206,11 @@ $(function() {
   function saveToDb() {
     // Adds/updates table coordinates to database.
 
- 
     for (var i = 1; i <= max_stations; i++) {
 
       pos = $('#table'+i).position();
       var positions = { left: pos.left, top: pos.top, table_id: "table"+i, tournament_name: '{{ tournament_name }}' };
-      console.log("Saving positions: "+ pos.left + " " + pos.top + " " + positions.table_id + " " + tournament_name)
+      console.log("Saving positions: "+ Math.round(pos.left) + " " + Math.round(pos.top) + " " + positions.table_id + " " + tournament_name)
       $.post("/add-coords", positions, function (result) {
           $('#save_status').text(result);
       }
@@ -185,6 +251,8 @@ $(function() {
 </script>
 
 <!-- ################### -->
+
+<script src="/static/js/mock.js"></script>
 
 <script>
 	var tables = {{ max_stations|safe }}

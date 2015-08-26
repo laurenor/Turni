@@ -3,7 +3,7 @@
 {% block body %}
 
 <style>
-	#deco {
+	.deco {
 		text-decoration: underline;
 	}
 </style>
@@ -23,23 +23,33 @@
 	</thead>
 {% for tournament in tournaments %}
 	<tr>
-		<td><a href="/map?tournament_name={{ tournament }}" id='deco'>{{ tournament }}</a></td>
+		<td><a href="/map?tournament_name={{ tournament }}" class='deco' id='{{ tournament }}'>{{ tournament }}</a></td>
 		<td>10</td>
 		<td>August 23, 2015</td>
-		<td><a href="#" id="delete"><b>x</b></a></td>
+		<td><a href="#" class="delete"><b>x</b></a></td>
 	</tr>
 {% endfor %}
 </table>
+
 
 <script>
 
 function confirmDel(evt) {
 	evt.preventDefault();
-	alert('Are you sure you want to delete the Turni?');
-}
+	// confirm('Are you sure you want to delete the Turni?');
+	if (confirm('Are you sure you want to delete the Turni?') ==  true) {
+		$.post("/delete-tourn", { tournament_name:'Turni 1'} , function (result) {
+	          alert(result);
+	      }
+	      );
+	};
+};
+$(".delete").on('click', confirmDel);
 
-	$('#delete').on('click', confirmDel);
+	// $('.delete').on('click', confirmDel);
+
 </script>
+
 
 {% endblock %}
 

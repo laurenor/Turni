@@ -27,8 +27,9 @@ class Tournament(db.Model):
     __tablename__ = 'tournaments'
 
     tournament_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    tournament_name = db.Column(db.String(20), nullable=False, unique=True) 
-    url = db.Column(db.String(20), nullable=False)
+    tournament_name = db.Column(db.String(50), nullable=False, unique=True) 
+    url = db.Column(db.String(50), nullable=False)
+    stream = db.Column(db.String(50), nullable=False)
     max_stations = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
 
@@ -56,8 +57,8 @@ class Position(db.Model):
 
     tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.tournament_id'), primary_key=True)
     table_id = db.Column(db.String(10), primary_key=True)
-    left = db.Column(db.String(10))
-    top = db.Column(db.String(10))
+    left = db.Column(db.String(20))
+    top = db.Column(db.String(20))
 
     def __repr__(self):
             """Provide helpful representation when printed"""

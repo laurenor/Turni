@@ -4,6 +4,11 @@ body {
 	margin-top: 50px;
 	background-color: #4d4d4d;
 	color: #fff;
+	height: 100%;
+}
+
+html {
+	height: 100%;
 }
 
 body a {
@@ -177,7 +182,7 @@ background:#84f784;
 	width: 1000px; 
 	height: 500px; 
 	background: #444;
-	border: 3px solid #ccc;
+	border: 3px solid #666;
 	/*margin: auto; */
 	padding: 10px; 
 /*	display: inline-block;*/
@@ -419,7 +424,7 @@ input {
 }
 
 #sidebar {
-	border-right: 1px solid #666;
+	/*border-right: 1px solid #666;*/
     background-color: #333;
     min-width: 200px;
     display: table-cell;
@@ -437,17 +442,33 @@ button {
 	/*border-radius: 10px;*/
 }
 
+/* sticky footer */
+
+* {
+  margin: 0;
+}
+html, body {
+  height: 100%;
+}
+.page-wrap {
+  min-height: 100%;
+  /* equal to footer height */
+  margin-bottom: -50px; 
+  position: relative;
+}
+
+.page-wrap:after {
+  content: '';
+  display: block;
+}
+
+.site-footer, .page-wrap:after {
+  height: 50px; 
+
+}
+
 
 /*Media*/
-
-@media screen and (max-width: 400px) {
-    .wide {
-        height: 100px;
-    }
-    .modal-body {
-		height: 100%;
-	}
-}
 
 .navbar-default .navbar-nav > li > a {
 	color: #fff;
@@ -472,6 +493,22 @@ button {
 	.modal-body {
 		height: 100%;
 	}
+	.login {
+		border-bottom: 1px solid #e5e5e5;
+		padding-bottom: 20px;
+	}
+
+	.register {
+		padding-top: 10px;
+	}
+}
+
+@media screen and (min-width: 768px) {
+	.login {
+		/*border-right: 1px solid #e5e5e5;*/
+		height: 270px;
+	}
+
 }
 
 @media screen and (max-width: 991px) {

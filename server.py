@@ -25,67 +25,8 @@ challonge.set_credentials('lencat', 'CHALLONGE_API_KEY')
 
 ##############################################################################
 
-
-r2 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu/participants.json', auth=('lencat', CHALLONGE_API_KEY))
-participant_data = r2.json()
-
-r3 = requests.get('https://api.challonge.com/v1/tournaments/alphacpu/matches.json', auth=('lencat', CHALLONGE_API_KEY))
-match_data = r3.json()
-
-players = {}
-for i in range(len(participant_data)):
-	challonge_id = participant_data[i]['participant']['id']
-	player_name = participant_data[i]['participant']['name']
-	players[challonge_id] = player_name
-
-# print "*** DICT OF PLAYERS **: ", pprint.pprint(players)
-
-all_matches = []
-
-
-for j in range(6):
-	match_list = []
-	for i in range(len(match_data)):
-		if match_data[i]['match']['round'] == j+1:
-			mylist = [ match_data[i]['match']['player1_id'], match_data[i]['match']['player2_id'] ]
-			for i in range(len(mylist)):
-				for key in players:
-					if mylist[i] == key:
-						mylist[i] = players[key]
-			match_list.append(' vs. '.join(map(str, mylist)))
-	all_matches.append(match_list)
-	# print "Round ", j+1, ": ", match_list
-
-# print "***all_matches: ", all_matches
-
-
-
-
-rounds = []
-for i in range(len(match_data)-1):
-	if match_data[i]['match']['round'] not in rounds:
-		rounds.append(match_data[i]['match']['round'])
-# print "ROUNDS: ", rounds
-
-round_count = {}
-for num in rounds:
-	for i in range(len(match_data)):
-		if (match_data[i]['match']['round'] == num) and (match_data[i]['match']['round'] not in round_count):
-			round_count[num] = 1
-		elif (match_data[i]['match']['round'] == num) and (match_data[i]['match']['round'] in round_count):
-			round_count[num] += 1
-	# print "**round count: ", round_count 
-	highest = round_count[rounds[0]]
-	most_round = rounds[0]
-	if round_count[num] > highest :
-		highest = round_count[num]
-		most_round = num
-# print "**Round with most matches: ", most_round
-
-# used in /map
-max_stations = highest
-
-
+# json_data = open(os.path.join('/', "json2", "1.json"), "r")
+# print json_data.pprint.pprint
 
 @app.route('/')
 def index():
@@ -208,27 +149,82 @@ def features():
 		return render_template('features.html')
 
 @app.route('/map', methods=['GET', 'POST'])
-def map2():
+def map():
 	if 'username' in session:
 		username = session['username']
 
+
 	if request.method == 'POST':
-		tables = 16
-		all_players = get_all_players(participant_data)
-		url = 'alphacpu'
-		stream = 'http://twitch.tv'
+
+		url = request.form.get('url')
+		stream = request.form.get('stream')
 		tournament_name = request.form.get('tournament_name')
-		print "***tournament_name: ", tournament_name
+
+		# API calls #######################################################################################
+
+		r2 = requests.get('https://api.challonge.com/v1/tournaments/'+url+'/participants.json', auth=('lencat', CHALLONGE_API_KEY))
+		participant_data = r2.json()
+
+		r3 = requests.get('https://api.challonge.com/v1/tournaments/'+url+'/matches.json', auth=('lencat', CHALLONGE_API_KEY))
+		match_data = r3.json()
+
+		players = {}
+		for i in range(len(participant_data)):
+			challonge_id = participant_data[i]['participant']['id']
+			player_name = participant_data[i]['participant']['name']
+			players[challonge_id] = player_name
+
+		all_matches = []
+
+
+		for j in range(6):
+			match_list = []
+			for i in range(len(match_data)):
+				if match_data[i]['match']['round'] == j+1:
+					mylist = [ match_data[i]['match']['player1_id'], match_data[i]['match']['player2_id'] ]
+					for i in range(len(mylist)):
+						for key in players:
+							if mylist[i] == key:
+								mylist[i] = players[key]
+					match_list.append(' vs. '.join(map(str, mylist)))
+			all_matches.append(match_list)
+
+		rounds = []
+		for i in range(len(match_data)-1):
+			if match_data[i]['match']['round'] not in rounds:
+				rounds.append(match_data[i]['match']['round'])
+
+		round_count = {}
+		for num in rounds:
+			for i in range(len(match_data)):
+				if (match_data[i]['match']['round'] == num) and (match_data[i]['match']['round'] not in round_count):
+					round_count[num] = 1
+				elif (match_data[i]['match']['round'] == num) and (match_data[i]['match']['round'] in round_count):
+					round_count[num] += 1
+
+			highest = round_count[rounds[0]]
+			most_round = rounds[0]
+			if round_count[num] > highest :
+				highest = round_count[num]
+				most_round = num
+
+		max_stations = highest
+
+		####################################################################################################
+
+
+		all_players = get_all_players(participant_data)
 
 		user = User.query.filter_by(username=session['username']).first()
-		tournament = Tournament.query.filter_by(tournament_name=tournament_name).first() # URLs need to be unqiue, because you can't make multiple maps for the same tournament
-		print "***tournament: ", tournament
+		tournament = Tournament.query.filter_by(tournament_name=tournament_name).first() 
+
 
 		if not tournament:
-			print "***not tournament"
-			tournament = Tournament(tournament_name=tournament_name, max_stations=max_stations, user_id=user.user_id, url=url)
+			tournament = Tournament(tournament_name=tournament_name, max_stations=max_stations, user_id=user.user_id, url=url, stream=stream)
 			db.session.add(tournament)
 		db.session.commit()
+
+		tables = tournament.max_stations
 
 		return render_template('map.html', 
 						tables=json.dumps(tables), 
@@ -242,13 +238,44 @@ def map2():
 						)
 
 	elif request.method == 'GET':
-		tables = 16
-		user = User.query.filter_by(username=session['username']).first()
-		all_players = get_all_players(participant_data)
+
 		tournament_name = request.args.get('tournament_name')
-		print "**TOURNAMENT NAME: ", tournament_name
-		url = 'alphacpu'
-		stream = 'http://twitch.tv'
+		print "***tournament: ", tournament_name
+		tournament = Tournament.query.filter_by(tournament_name=tournament_name).first()
+		print "***tournament: ", tournament
+		tables = tournament.max_stations
+		user = User.query.filter_by(username=session['username']).first()
+		url = tournament.url
+		stream = tournament.stream
+		max_stations = tournament.max_stations
+
+		r2 = requests.get('https://api.challonge.com/v1/tournaments/'+url+'/participants.json', auth=('lencat', CHALLONGE_API_KEY))
+		participant_data = r2.json()
+
+		r3 = requests.get('https://api.challonge.com/v1/tournaments/'+url+'/matches.json', auth=('lencat', CHALLONGE_API_KEY))
+		match_data = r3.json()
+
+		players = {}
+		for i in range(len(participant_data)):
+			challonge_id = participant_data[i]['participant']['id']
+			player_name = participant_data[i]['participant']['name']
+			players[challonge_id] = player_name
+
+		all_matches = []
+
+		for j in range(6):
+			match_list = []
+			for i in range(len(match_data)):
+				if match_data[i]['match']['round'] == j+1:
+					mylist = [ match_data[i]['match']['player1_id'], match_data[i]['match']['player2_id'] ]
+					for i in range(len(mylist)):
+						for key in players:
+							if mylist[i] == key:
+								mylist[i] = players[key]
+					match_list.append(mylist)
+			all_matches.append(match_list)
+
+		all_players = get_all_players(participant_data)
 
 
 		return render_template('map.html', 
@@ -313,6 +340,56 @@ def get_coords():
 	posijson = json.dumps(positions)
 	print "****posijson: ", posijson
 	return posijson
+
+@app.route('/delete-tourn', methods=['POST'])
+def delete_tourn():
+	tournament_name = request.form.get('tournament_name')
+	print "***Tournament_name: ", tournament_name
+
+	tournament = Tournament.query.filter_by(tournament_name=tournament_name).first()
+	print "***Tournament: ", tournament
+	
+	matches = Match.query.filter(Match.tournament_id == tournament.tournament_id).all()
+	positions = Position.query.filter(Position.tournament_id == tournament.tournament_id).all()
+	tournaments = Tournament.query.filter(Tournament.tournament_id == tournament.tournament_id).all()
+
+	for position in positions:
+		db.session.delete(position)	
+	db.session.commit()
+
+	for tournament in tournaments:
+		db.session.delete(tournament)
+	db.session.commit()
+
+
+	print "***Tournament_id: ", tournament.tournament_id
+
+	return "Tournament has been deleted."
+
+@app.route('/contact')
+def contact():
+
+	if 'username' in session:
+		username = session['username']
+	
+		return render_template('contact.html', username=username)
+
+	else: 
+		return render_template('contact.html')
+
+@app.route('/mock-json')
+def mock():
+	# js1 = requests.get('/static/json2/1.json', auth=('lencat', CHALLONGE_API_KEY))
+	# json1 = js1.json()
+
+	json_data = open(os.path.join('./json2/', "1.json"), "r")
+	read_file = json_data.read()
+	json_file = json.loads(read_file)
+	print "OUTPUT:", type(read_file)
+	print "test: ", json_file[0]['match']
+	print "json_file: ", type(json_file)
+
+
 
 
 
@@ -393,4 +470,4 @@ if __name__ == "__main__":
     # Use the DebugToolbar
     # DebugToolbarExtension(app)
 
-    app.run()
+    # app.run()
