@@ -1,6 +1,46 @@
 {% extends 'base.html' %}
 
 {% block body %}
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+
+<p>Click "Try it". Wait 3 seconds. Your page will alert "Hello".</p>
+
+<p>When you close the alert box, an new alert box will appear in 3 seconds.</p>
+
+<p>This will go on forever, until you close the window.</p>
+
+<button onclick="setInterval(function(){alert('Hello')},3000);">Try it</button>
+
+<br>
+<br>
+
+<button id="append_hello">Append</button>
+
+
+<span class="append"></span>
+
+</body>
+</html>
+
+
+<script>
+
+function appendHello() {
+  setInterval(function(){ 
+    $('.append').append('hello')   
+  },2000);
+};
+
+$('#append_hello').on('click', appendHello)
+
+
+
+</script>
+
+
 
 <!-- <!doctype html>
 <html lang="en">
@@ -67,7 +107,7 @@
 <!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++ comment +++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
 
-
+<!-- 
 </head>
  
 <body>
@@ -164,5 +204,5 @@
   });
   }
 </script>
-
+ -->
 {% endblock %}

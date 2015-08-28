@@ -8,20 +8,29 @@ from flask_debugtoolbar import DebugToolbarExtension
 from flask.ext.login import LoginManager, UserMixin, login_required
 import hashlib # for email hashing
 import pprint
+from twilio import twiml
+from twilio.rest import TwilioRestClient
 
 app = Flask(__name__)
-login_manager = LoginManager()
-login_manager.init_app(app)
 
 app.secret_key = 'ABC'
 app.jinja_env.undefined = StrictUndefined
 
 
 ##############################################################################
-# **** CHALLONGE API CALLS **** 
+# **** CHALLONGE **** 
 
 CHALLONGE_API_KEY = os.environ.get('CHALLONGE_API_KEY')
 challonge.set_credentials('lencat', 'CHALLONGE_API_KEY')
+
+##############################################################################
+# **** Twilio **** 
+
+account_sid = os.environ['TWILIO_ACCOUNT_SID']
+auth_token = os.environ['TWILIO_AUTH_TOKEN']
+client = TwilioRestClient(account_sid, auth_token)
+to_number= os.environ['TWILIO_TO_NUMBER']
+TWILIO_NUMBER = os.environ['TWILIO_NUMBER']
 
 ##############################################################################
 
@@ -159,6 +168,7 @@ def map():
 		url = request.form.get('url')
 		stream = request.form.get('stream')
 		tournament_name = request.form.get('tournament_name')
+		open_stations = request.form.get('open_stations')
 
 		# API calls #######################################################################################
 
@@ -170,24 +180,24 @@ def map():
 
 		players = {}
 		for i in range(len(participant_data)):
-			challonge_id = participant_data[i]['participant']['id']
+			challonge_id = str(participant_data[i]['participant']['id'])
 			player_name = participant_data[i]['participant']['name']
 			players[challonge_id] = player_name
 
 		all_matches = []
 
 
-		for j in range(6):
-			match_list = []
-			for i in range(len(match_data)):
-				if match_data[i]['match']['round'] == j+1:
-					mylist = [ match_data[i]['match']['player1_id'], match_data[i]['match']['player2_id'] ]
-					for i in range(len(mylist)):
-						for key in players:
-							if mylist[i] == key:
-								mylist[i] = players[key]
-					match_list.append(' vs. '.join(map(str, mylist)))
-			all_matches.append(match_list)
+		# for j in range(6):
+		# 	match_list = []
+		# 	for i in range(len(match_data)):
+		# 		if match_data[i]['match']['round'] == j+1:
+		# 			mylist = [ match_data[i]['match']['player1_id'], match_data[i]['match']['player2_id'] ]
+		# 			for i in range(len(mylist)):
+		# 				for key in players:
+		# 					if mylist[i] == key:
+		# 						mylist[i] = players[key]
+		# 			match_list.append(' vs. '.join(mylist))
+		# 	all_matches.append(match_list)
 
 		rounds = []
 		for i in range(len(match_data)-1):
@@ -214,6 +224,7 @@ def map():
 
 
 		all_players = get_all_players(participant_data)
+		# print "***all_players: ", all_players
 
 		user = User.query.filter_by(username=session['username']).first()
 		tournament = Tournament.query.filter_by(tournament_name=tournament_name).first() 
@@ -225,6 +236,7 @@ def map():
 		db.session.commit()
 
 		tables = tournament.max_stations
+		length_all_players = len(all_players)
 
 		return render_template('map.html', 
 						tables=json.dumps(tables), 
@@ -234,7 +246,10 @@ def map():
 						max_stations=max_stations,
 						url=url,
 						stream=stream,
-						tournament_name=tournament_name
+						tournament_name=tournament_name,
+						players=json.dumps(players),
+						length_all_players=length_all_players,
+						open_stations=open_stations
 						)
 
 	elif request.method == 'GET':
@@ -248,6 +263,7 @@ def map():
 		url = tournament.url
 		stream = tournament.stream
 		max_stations = tournament.max_stations
+		open_stations = 5
 
 		r2 = requests.get('https://api.challonge.com/v1/tournaments/'+url+'/participants.json', auth=('lencat', CHALLONGE_API_KEY))
 		participant_data = r2.json()
@@ -257,7 +273,7 @@ def map():
 
 		players = {}
 		for i in range(len(participant_data)):
-			challonge_id = participant_data[i]['participant']['id']
+			challonge_id = str(participant_data[i]['participant']['id'])
 			player_name = participant_data[i]['participant']['name']
 			players[challonge_id] = player_name
 
@@ -276,6 +292,7 @@ def map():
 			all_matches.append(match_list)
 
 		all_players = get_all_players(participant_data)
+		length_all_players = len(all_players)
 
 
 		return render_template('map.html', 
@@ -286,7 +303,10 @@ def map():
 								max_stations=max_stations,
 								url=url,
 								stream=stream,
-								tournament_name=tournament_name
+								tournament_name=tournament_name,
+								players=json.dumps(players),
+								length_all_players=length_all_players,
+								open_stations=open_stations
 								)
 
 @app.route('/untitled')
@@ -382,30 +402,53 @@ def mock():
 	# js1 = requests.get('/static/json2/1.json', auth=('lencat', CHALLONGE_API_KEY))
 	# json1 = js1.json()
 
-	json_data = open(os.path.join('./json2/', "1.json"), "r")
+	json_data = open(os.path.join('./json/', "turni.json"), "r")
 	read_file = json_data.read()
 	json_file = json.loads(read_file)
-	print "OUTPUT:", type(read_file)
-	print "test: ", json_file[0]['match']
-	print "json_file: ", type(json_file)
 
 
+	matches = sorted(json_file, key=lambda k: k['match']['updated_at'])
 
 
+	matches_list = []
+	for match in matches:
+		matches_list.append(match['match'])
+
+	matches_json = json.dumps(matches_list)
+
+	return matches_json
+
+######################################################## twilio
+
+@app.route('/twilio', methods=['POST'])
+def twilio():
+	text_message = request.form.get('text_message')
+	message=client.messages.create(from_=TWILIO_NUMBER, to=to_number, body=text_message)
+
+	print message.sid
+
+	return text_message 
 
 ###########################################
 # helper functions
 def get_all_players(participant_data):
 	"""Creates list of all players in tournament"""
 	all_players = []
-	for i in range(len(participant_data)-1):
+	for i in range(len(participant_data)):
 		challonge_id = participant_data[i]['participant']['username']
 		if challonge_id is not None:
 			all_players.append(challonge_id)
 		else:
 			challonge_id = participant_data[i]['participant']['name']
 			all_players.append(challonge_id)
-	return all_players
+
+	dict_all_players = {}
+
+	count = 0
+	for player in all_players:
+			dict_all_players[player] = count
+			count += 1
+	return dict_all_players
 
 def set_match_info(match_data):
 	"""Creates list of all matches in tournament"""
@@ -470,4 +513,4 @@ if __name__ == "__main__":
     # Use the DebugToolbar
     # DebugToolbarExtension(app)
 
-    # app.run()
+    app.run()
