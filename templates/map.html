@@ -4,80 +4,9 @@
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-
-<style>
-	.navbar {
-		border-color: #666;
-	}
-
-	h2 {
-		padding-bottom: 15px;
-	}
-
-	#sidebar a {
-		text-decoration: underline;
-	}
-
-	.page-wrap:after {
-		content: none;
-	  	display: none;
-	}
-
-	.sidebar-social {
-		text-align: center;
-		color: #666;
-	}
-
-	.sidebar-social img {
-		height: 25px;
-		opacity: 0.3;
-		margin: 10px 8px 0 5px;
-	}
-
-	.icons {
-		/*margin-left: 10px;*/
-	}
-
-
-	.sidebar-social img:hover {
-		opacity: 1.0;
-	}
-
-	#test {
-		float: right;
-		background-color: red;
-		width: 100%;
-	}
-
-	#player {
-		margin-right: 15px;
-	}
-
-	#content {
-		padding-bottom: 50px;
-	}
-
-	.live-tournament {
-		font-weight: bold;
-		float: right;
-		top: 0;
-		margin-left: 10px;
-
-	}
-
-	.circle {
-		border-radius: 30px;
-		float: right;
-		top: 0;
-		background-color: red;
-		height: 5px;
-	}
-
-
-</style>
+<link rel="stylesheet" href="/static/css/map.css">
 
 <div id="main_wrap">
-
 
 		<div id="sidebar">
 			<center>
@@ -93,13 +22,11 @@
 				<hr>
 				<center>
 				<h4>Participants</h4>
-				
 					
 					{% for player in all_players %}
 						<li><span id="player_info{{ all_players[player] }}">{{ player }}</span></li><br>
 						<!-- make id the id number -->
 					{% endfor %}
-				
 
 				<br>
 				<div class="sidebar-social">
@@ -120,16 +47,11 @@
 
 		<div id="content">
 
-
-
 			<!-- save coordinates button -->
 			<h2>Map of {{ tournament_name }}</h2>
 			<div id="save_status"></div>
 			<button id="save">Save Coordinates</button>
 			<button id="demo">Start Demo</button>
-			<!-- round buttons  -->
-			<!-- <button id="round1">Round 1</button><button id="round2">Round 2</button><button id="round3">Round 3</button><button id="round4">Round 4</button><button id="round5">Round 5</button><button id="round6">Round 6</button> -->
-
 			<br>
 
 			<!-- where tables and match info goes -->
@@ -145,7 +67,6 @@
 <!-- 			<iframe frameborder="0" scrolling="no" id="chat_embed" src="http://www.twitch.tv/nakat973/chat" height="378" width="365"></iframe> -->
 
 			<!-- challonge jquery plugin -->
-
 			<h2>Brackets</h2>
 			<iframe src="http://challonge.com/{{ url }}/module" width="1000px" height="500" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
 
@@ -247,11 +168,9 @@ $(function() {
 
         // Show start dragged position of image.
         var Startpos = $(this).position();
-        // $("d fiv#start").text("START: \nX: "+ Startpos.left + "\nY: " + Startpos.op);
       },
         drag: function(event, ui){
             var Startpos = $(this).position();
-            // $("div#current").text("Current: \nX: "+ Startpos.left + "\nY: " + Startpos.top);
             showPos();
         },
       // Find position where image is dropped.
@@ -259,7 +178,6 @@ $(function() {
 
         // Show dropped position.
         var Stoppos = $(this).position();
-        // $("div#stop").text("CURRENT: \nX: "+ Stoppos.left + "\nY: " + Stoppos.top) ;
       }
 
   });
@@ -429,6 +347,10 @@ $(function() {
 		playing_players[(table_id-1)*2+1] = player2_name;
 	};
 
+	function grayOutLoser() {
+
+	}
+
 	function updateTables(matches) {
 		for (var i = 0; i < OPEN_STATIONS; i++) {
 			var player1 = players_dict[matches[i]['player1_id']];
@@ -451,64 +373,6 @@ $(function() {
 			};
 		};
 	};
-
-	// function updateNext(matches) {
-	// 	for (var i = 0; i < OPEN_STATIONS; i++) {
-	// 		var player1 = players_dict[matches[i]['player1_id']];
-	// 		var player2 = players_dict[matches[i]['player2_id']];
-	// 		if ($('#table' + (i+1) + ' .match').text() === 'OPEN') {
-	// 			$('#table' + (i+1) + ' .match').text(player1 + " vs. " + player2);
-	// 		};
-	// 	};
-	// };
-
-	// creates a losers list and greys out name in sidebar when they are added to losers list
-	// function addLosers() {
-	// 	for (var i=0; i<something; i++) {
-	// 		if (matches[i]['player1_id'] === matches[i]['loser_id']) {
-	// 			losers.append(players_dict[matches[i]['player1_id']]);
-
-	// 		};
-	// 		else if (matches[i]['player2_id'] === matches[i]['loser_id']){
-	// 			losers.append(players_dict[matches[i]['player2_id']]);
-	// 		};
-	// 	};		
-
-	// 	for player in participants_list:
-	// 		if player in losers_list:
-	// 			grey out player name with jquery
-	// };
-
-
-	// #demo on click remove first 2 from CURRENT_STATIONS
-
-	// num_tables_open = 0
-	// visited_players = set()
-
-
-	// $('#round1').on('click', function() {
-	// 	updateTables(0)
-	// });
-
-	// $('#round2').on('click', function() {
-	// 	updateTables(1)
-	// });	
-
-	// $('#round3').on('click', function() {
-	// 	updateTables(2)
-	// });
-
-	// $('#round4').on('click', function() {
-	// 	updateTables(3)
-	// });
-
-	// $('#round5').on('click', function() {
-	// 	updateTables(4)
-	// });
-
-	// $('#round6').on('click', function() {
-	// 	updateTables(5)
-	// });
 
 
 	function addTables(max_stations) {

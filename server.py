@@ -34,9 +34,6 @@ TWILIO_NUMBER = os.environ['TWILIO_NUMBER']
 
 ##############################################################################
 
-# json_data = open(os.path.join('/', "json2", "1.json"), "r")
-# print json_data.pprint.pprint
-
 @app.route('/')
 def index():
 	"""Return index page"""
@@ -126,10 +123,8 @@ def user_profile(username):
 
 	if session:
 		user = User.query.filter_by(username=username).first()
-		# print "******user.username", user.username
 
 		tournaments = db.session.query(Tournament.tournament_name).join(User).filter(user.user_id==Tournament.user_id).all()
-		# print "***list of tournaments: ", tournaments
 
 		# removes unicode formatting on tournament names 
 		str_tournaments = []
@@ -186,19 +181,6 @@ def map():
 
 		all_matches = []
 
-
-		# for j in range(6):
-		# 	match_list = []
-		# 	for i in range(len(match_data)):
-		# 		if match_data[i]['match']['round'] == j+1:
-		# 			mylist = [ match_data[i]['match']['player1_id'], match_data[i]['match']['player2_id'] ]
-		# 			for i in range(len(mylist)):
-		# 				for key in players:
-		# 					if mylist[i] == key:
-		# 						mylist[i] = players[key]
-		# 			match_list.append(' vs. '.join(mylist))
-		# 	all_matches.append(match_list)
-
 		rounds = []
 		for i in range(len(match_data)-1):
 			if match_data[i]['match']['round'] not in rounds:
@@ -224,7 +206,6 @@ def map():
 
 
 		all_players = get_all_players(participant_data)
-		# print "***all_players: ", all_players
 
 		user = User.query.filter_by(username=session['username']).first()
 		tournament = Tournament.query.filter_by(tournament_name=tournament_name).first() 
@@ -399,8 +380,6 @@ def contact():
 
 @app.route('/mock-json')
 def mock():
-	# js1 = requests.get('/static/json2/1.json', auth=('lencat', CHALLONGE_API_KEY))
-	# json1 = js1.json()
 
 	json_data = open(os.path.join('./json/', "turni.json"), "r")
 	read_file = json_data.read()
@@ -431,6 +410,7 @@ def twilio():
 
 ###########################################
 # helper functions
+
 def get_all_players(participant_data):
 	"""Creates list of all players in tournament"""
 	all_players = []
