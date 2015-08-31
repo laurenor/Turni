@@ -2,12 +2,11 @@ import requests
 import os
 from flask import Flask, flash, render_template, redirect, json, request, session, url_for, jsonify
 from jinja2 import StrictUndefined
-import challonge
 from model import User, Tournament, Match, Position, connect_to_db, db
 from flask_debugtoolbar import DebugToolbarExtension
-from flask.ext.login import LoginManager, UserMixin, login_required
 import hashlib # for email hashing
 import pprint
+import challonge
 from twilio import twiml
 from twilio.rest import TwilioRestClient
 
@@ -294,8 +293,6 @@ def map():
 def untitled():
 	"""testing page"""
 	username = "meowchi"
-
-
 
 	return render_template('untitled.html', username=username)
 
