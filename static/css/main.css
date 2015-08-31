@@ -179,7 +179,7 @@ background:#84f784;
 }
 
 #containment-wrapper { 
-	width: 1000px; 
+	width: 750px; 
 	height: 400px; 
 	background: #444;
 	border: 3px solid #666;
@@ -224,7 +224,7 @@ background:#84f784;
 }
 
 .wide {
-	height: 400px;
+	height: 500px;
 	min-height: 100px;
 	background: url('/static/img/turni2.png') ;
 	background-size: cover;  
@@ -432,6 +432,14 @@ input {
     padding: 0 20px;
 }
 
+#right-sidebar {
+    background-color: transparent;
+    min-width: 300px;
+    display: table-cell;
+    padding-right: 50px;
+    margin-right: 20px;
+}
+
 #content {
     display: table-cell;
     width: 100%;
@@ -448,9 +456,11 @@ button {
 * {
   margin: 0;
 }
+
 html, body {
   height: 100%;
 }
+
 .page-wrap {
   min-height: 100%;
   /* equal to footer height */
@@ -477,6 +487,30 @@ html, body {
 
 .dropdown-menu > li > a:hover {
 	background-color: #84f784;
+}
+
+.indiv-table {
+	width: 100%;
+	height: 120px;
+	background-color: transparent;
+	border: 3px solid #666;
+	border-radius: 15px;
+	color: #fff;
+	padding: 15px;
+	font-size: 18px;
+	box-shadow: 2px 2px 2px rgba(0,0,0,0.3);
+	margin-bottom: 10px;
+	vertical-align: middle;
+}
+
+.indiv-head {
+	color: #84f784;
+	text-shadow: 2px 2px 2px rgba(0,0,0,0.3);
+	font-size: 20px;
+}
+
+.prev {
+	font-size: 12px;
 }
 
 
@@ -517,4 +551,5 @@ html, body {
 	.modal-body {
 		height: 100%;
 	}
+
 }

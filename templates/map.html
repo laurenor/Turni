@@ -8,6 +8,7 @@
 
 <div id="main_wrap">
 
+		<!-- left bar -->
 		<div id="sidebar">
 			<center>
 				<h2>Tournament Info</h2>
@@ -59,19 +60,65 @@
 
 			<!-- twitch stream -->
 			<h2>Stream</h2>
-<!-- 			<iframe id="player" type="text/html" width="620" height="378"
+			<iframe id="player" type="text/html" width="400" height="244"
 			  src="http://www.twitch.tv/nakat973/embed"
-			  frameborder="0"></iframe> -->
+			  frameborder="0"></iframe>
 
 			<!-- twitch chat -->
-<!-- 			<iframe frameborder="0" scrolling="no" id="chat_embed" src="http://www.twitch.tv/nakat973/chat" height="378" width="365"></iframe> -->
+			<iframe frameborder="0" scrolling="no" id="chat_embed" src="http://www.twitch.tv/nakat973/chat" height="244" width="325"></iframe>
 
 			<!-- challonge jquery plugin -->
 			<h2>Brackets</h2>
-			<iframe src="http://challonge.com/{{ url }}/module" width="1000px" height="500" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
+			<iframe src="http://challonge.com/{{ url }}/module" width="750px" height="500" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
 
 		</div>
+
+		<!-- right bar -->
+		<div id="right-sidebar">
+			<center>
+				<h2>Current Seatings</h2>	
+					<div class="current-seatings">
+						<div class="indiv-table">
+							<span class="indiv-head">Station 1</span>
+							<br>
+							ZeRo vs. Mew2king
+							<br>
+							<span class="prev">Previous: A vs. B</span>
+						</div>
+						<div class="indiv-table">
+							<span class="indiv-head">Station 2</span>
+							<br>
+							Mang0 vs. Leffen
+							<br>
+							<span class="prev">Previous: A vs. B</span>
+						</div>
+						<div class="indiv-table">
+							<span class="indiv-head">Station 3</span>
+							<br>
+							Hungrybox vs. PPMD
+							<br>
+							<span class="prev">Previous: A vs. B</span>
+						</div>
+						<div class="indiv-table">
+							<span class="indiv-head">Station 4</span>
+							<br>
+							Druggedfox vs. Sharkboi
+							<br>
+							<span class="prev">Previous: A vs. B</span>
+						</div>
+						<div class="indiv-table">
+							<span class="indiv-head">Station 5</span>
+							<br>
+							HugS vs. Lucky
+							<br>
+							<span class="prev">Previous: A vs. B</span>
+						</div>
+					</div>
+			</center>
+		</div>
+
 	</div>
+
 
 
 
@@ -83,6 +130,18 @@
 
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script src="static/js/challonge_brackets.js"></script>
+
+<script>
+    $().ready(function() {
+        var $scrollingDiv = $("#right-sidebar");
+
+        $(window).scroll(function(){            
+            $scrollingDiv
+                .stop()
+                .animate({"marginTop": ($(window).scrollTop() )}, "slow" );         
+        });
+    });
+</script>
 
 
 <script>
