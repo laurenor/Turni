@@ -79,38 +79,38 @@
 			<center>
 				<h2>Current Seatings</h2>	
 					<div class="current-seatings">
-						<div class="indiv-table">
+						<div id="indiv-table1" class="current-seat">
 							<span class="indiv-head">Station 1</span>
 							<br>
-							ZeRo vs. Mew2king
+							<span class="match">ZeRo vs. Mew2king</span>
 							<br>
 							<span class="prev">Previous: A vs. B</span>
 						</div>
-						<div class="indiv-table">
+						<div id="indiv-table2" class="current-seat">
 							<span class="indiv-head">Station 2</span>
 							<br>
-							Mang0 vs. Leffen
+							<span class="match">Mang0 vs. Leffen</span>
 							<br>
 							<span class="prev">Previous: A vs. B</span>
 						</div>
-						<div class="indiv-table">
+						<div id="indiv-table3" class="current-seat">
 							<span class="indiv-head">Station 3</span>
 							<br>
-							Hungrybox vs. PPMD
+							<span class="match">Hungrybox vs. PPMD</span>
 							<br>
 							<span class="prev">Previous: A vs. B</span>
 						</div>
-						<div class="indiv-table">
+						<div id="indiv-table4" class="current-seat">
 							<span class="indiv-head">Station 4</span>
 							<br>
-							Druggedfox vs. Sharkboi
+							<span class="match">Druggedfox vs. Sharkboi</span>
 							<br>
 							<span class="prev">Previous: A vs. B</span>
 						</div>
-						<div class="indiv-table">
+						<div id="indiv-table5" class="current-seat">
 							<span class="indiv-head">Station 5</span>
 							<br>
-							HugS vs. Lucky
+							<span class="match">HugS vs. Lucky</span>
 							<br>
 							<span class="prev">Previous: A vs. B</span>
 						</div>
@@ -332,10 +332,10 @@ $(function() {
 	// function addLosers() {
 
 	// };
-
+	var i = 0;
+	var table_id;
 	function clearAndUpdateTables() {
-		var i = 0;
-		var table_id;
+		
 
 		var demo_interval = setInterval(function () {
 			if (list_of_matches.length > 0) { 
@@ -353,7 +353,7 @@ $(function() {
 				
 			} 
 
-			}, 1500);
+			}, 2000);
 
 
 	};
@@ -422,6 +422,10 @@ $(function() {
 		// end Twilio SMS
 
 		$('#table' + table_id + ' .match').text(players_dict[match['player1_id']] + ' vs. ' + players_dict[match['player2_id']]);
+
+		// current seatings
+		$('#indiv-table' + table_id + ' .match').text(players_dict[match['player1_id']] + ' vs. ' + players_dict[match['player2_id']]);
+
 		playing_players[(table_id-1)*2] = player1_name;
 		playing_players[(table_id-1)*2+1] = player2_name;
 	};
