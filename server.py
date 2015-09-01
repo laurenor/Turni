@@ -36,7 +36,6 @@ TWILIO_NUMBER = os.environ['TWILIO_NUMBER']
 @app.route('/')
 def index():
 	"""Return index page"""
-
 	if 'username' in session:
 		username = session['username']
 		return render_template('index.html', username=username)
@@ -45,7 +44,7 @@ def index():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-	"""Registers user if username not already in DB; if user in database, flash error."""
+	"""Registers user if username not already in DB"""
 	if request.method == 'POST':
 		username = request.form.get('username')
 		email = request.form.get('email')
@@ -71,7 +70,7 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-	"""Signs user in if username and pw match; flashes '...invalid' if not"""
+	"""Signs user in if username and pw match"""
 	if request.method == 'POST':	
 		username = request.form.get('username')
 		email = request.form.get('email')
@@ -93,14 +92,14 @@ def login():
 
 @app.route('/logout')
 def logout_user():
-    """Log out the user"""
+    """Logs out the user"""
     session.clear()
     flash('Successfully logged out.')
     return redirect('/')
 
 @app.route('/about')
 def about():
-	"""Return about page"""
+	"""Returns about page"""
 	if 'username' in session:
 		username = session['username']
 		return render_template('about.html', username=username)
@@ -118,8 +117,7 @@ def create_map():
 
 @app.route('/profile/<string:username>')
 def user_profile(username):
-	"""Show user's details and list of maps or tournaments participated in"""
-
+	"""Show user's details and list of maps created"""
 	if session:
 		user = User.query.filter_by(username=username).first()
 
@@ -142,17 +140,9 @@ def user_profile(username):
 		return render_template('login.html', user=user.username)
 
 
-@app.route('/features')
-def features():
-	"""Shows features page"""
-	if 'username' in session:
-		username = session['username']
-		return render_template('features.html', username=username)
-	else:
-		return render_template('features.html')
-
 @app.route('/map', methods=['GET', 'POST'])
 def map():
+	"""Shows tournament info, interactive map, Twitch stream/chat, and Challonge brackets"""
 	if 'username' in session:
 		username = session['username']
 
@@ -298,9 +288,7 @@ def untitled():
 
 @app.route('/add-coords', methods=['POST'])
 def add_coords():
-
-	from sqlalchemy import update
-
+	"""Adds left and top coordinates info to DB"""
 	left = request.form.get('left')
 	top = request.form.get('top')
 	table_id = request.form.get('table_id')
@@ -328,6 +316,7 @@ def add_coords():
 
 @app.route('/get-coords')
 def get_coords():
+	"""Sends coordinate info from DB to client side"""
 	tournament_name = request.args.get('tournament_name')
 	print "***get_coords tourn name: ", tournament_name
 
@@ -341,6 +330,7 @@ def get_coords():
 
 @app.route('/delete-tourn', methods=['POST'])
 def delete_tourn():
+	"""Deletes tournament when user clicks 'x' on user profile page"""
 	tournament_name = request.form.get('tournament_name')
 	print "***Tournament_name: ", tournament_name
 
@@ -359,14 +349,11 @@ def delete_tourn():
 		db.session.delete(tournament)
 	db.session.commit()
 
-
-	print "***Tournament_id: ", tournament.tournament_id
-
 	return "Tournament has been deleted."
 
 @app.route('/contact')
 def contact():
-
+	"""Renders contact page"""
 	if 'username' in session:
 		username = session['username']
 	
@@ -377,7 +364,7 @@ def contact():
 
 @app.route('/mock-json')
 def mock():
-
+	"""Provides json from sample tournament"""
 	json_data = open(os.path.join('./json/', "turni.json"), "r")
 	read_file = json_data.read()
 	json_file = json.loads(read_file)
@@ -398,6 +385,7 @@ def mock():
 
 @app.route('/twilio', methods=['POST'])
 def twilio():
+	"""Sends text to participant using Twilio"""
 	text_message = request.form.get('text_message')
 	message=client.messages.create(from_=TWILIO_NUMBER, to=to_number, body=text_message)
 
