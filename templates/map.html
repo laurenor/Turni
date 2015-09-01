@@ -25,8 +25,7 @@
 				<h4>Participants</h4>
 					
 					{% for player in all_players %}
-						<li><span id="player_info{{ all_players[player] }}">{{ player }}</span></li><br>
-						<!-- make id the id number -->
+						<li><span id="{{ player }}">{{ player }}</span></li><br>
 					{% endfor %}
 
 				<br>
@@ -61,12 +60,12 @@
 
 			<!-- twitch stream -->
 			<h2>Stream</h2>
-			<iframe id="player" type="text/html" width="450" height="275"
+<!-- 			<iframe id="player" type="text/html" width="450" height="275"
 			  src="http://www.twitch.tv/nakat973/embed"
-			  frameborder="0"></iframe>
+			  frameborder="0"></iframe> -->
 
 			<!-- twitch chat -->
-			<iframe frameborder="0" scrolling="no" id="chat_embed" src="http://www.twitch.tv/nakat973/chat" height="275" width="275"></iframe>
+<!-- 			<iframe frameborder="0" scrolling="no" id="chat_embed" src="http://www.twitch.tv/nakat973/chat" height="275" width="275"></iframe> -->
 
 			<!-- challonge jquery plugin -->
 			<h2>Brackets</h2>
@@ -84,35 +83,40 @@
 							<br>
 							<span class="match">ZeRo vs. Mew2king</span>
 							<br>
-							<span class="prev">Previous: A vs. B</span>
+							<span class="prev">Previous:</span>
+							<span id="prev1" class="prev"> A vs. B</span>
 						</div>
 						<div id="indiv-table2" class="current-seat">
 							<span class="indiv-head">Station 2</span>
 							<br>
 							<span class="match">Mang0 vs. Leffen</span>
 							<br>
-							<span class="prev">Previous: A vs. B</span>
+							<span class="prev">Previous:</span>
+							<span id="prev2" class="prev"> A vs. B</span>
 						</div>
 						<div id="indiv-table3" class="current-seat">
 							<span class="indiv-head">Station 3</span>
 							<br>
 							<span class="match">Hungrybox vs. PPMD</span>
 							<br>
-							<span class="prev">Previous: A vs. B</span>
+							<span class="prev">Previous:</span>
+							<span id="prev3" class="prev"> A vs. B</span>
 						</div>
 						<div id="indiv-table4" class="current-seat">
 							<span class="indiv-head">Station 4</span>
 							<br>
 							<span class="match">Druggedfox vs. Sharkboi</span>
 							<br>
-							<span class="prev">Previous: A vs. B</span>
+							<span class="prev">Previous:</span>
+							<span id="prev4" class="prev"> A vs. B</span>
 						</div>
 						<div id="indiv-table5" class="current-seat">
 							<span class="indiv-head">Station 5</span>
 							<br>
 							<span class="match">HugS vs. Lucky</span>
 							<br>
-							<span class="prev">Previous: A vs. B</span>
+							<span class="prev">Previous:</span>
+							<span id="prev5" class="prev"> A vs. B</span>
 						</div>
 					</div>
 			</center>
@@ -135,7 +139,6 @@
 <script>
     $().ready(function() {
         var $scrollingDiv = $("#right-sidebar");
-
         $(window).scroll(function(){            
             $scrollingDiv
                 .stop()
@@ -146,14 +149,9 @@
 
 
 <script>
-
 $(function(){
     $("#footer-body").hide();
 });
-
-
-
-
 
 $(function() {
   $( ".draggable" ).draggable();
@@ -177,16 +175,11 @@ $(function() {
       result = JSON.parse(result);
       for (var i = 0; i < max_stations; i++) {       
 	        $('#'+result[i][0]).css({'position': 'absolute', 'left': result[i][1]+'px', 'top': result[i][2]+'px'});
-
       }
-
     }
     )
-
   };
-
   updateCoords();
-
   max_stations = 5
   var positions = [];
 
@@ -197,25 +190,19 @@ $(function() {
   	$("#table4").css({'position': 'absolute', 'left': '309px', 'top': '227px', 'width': '120px', 'height':'120px'});
   	$("#table5").css({'position': 'absolute', 'left': '495px', 'top': '227px', 'width': '120px', 'height':'120px'});
   }
-
   $('#reset').on('click', reset);
   
   function showPos() {
     // Shows dynamic coordinates of tables as they are dragged.
-
     for (var i = 1; i <= max_stations; i++) {  
       positions[i] = $('#table'+i).position();
       $('#table'+i).text('Left: ' + positions[i].left + '; Top: ' + positions[i].top);
     }
     };
 
-
-
   function saveToDb() {
     // Adds/updates table coordinates to database.
-
     for (var i = 1; i <= max_stations; i++) {
-
       pos = $('#table'+i).position();
       var positions = { left: pos.left, top: pos.top, table_id: "table"+i, tournament_name: '{{ tournament_name }}' };
       console.log("Saving positions: "+ Math.round(pos.left) + " " + Math.round(pos.top) + " " + positions.table_id + " " + tournament_name)
@@ -224,19 +211,14 @@ $(function() {
       }
       );
     };
-
   };
-
-
   $('#save').on('click', saveToDb);
-
 </script>
 <script>
   $( init );
   function init() {
     $('.square, .round').draggable({
       containment: '#layout-area',  start: function(event, ui) {
-
         // Show start dragged position of image.
         var Startpos = $(this).position();
       },
@@ -246,11 +228,9 @@ $(function() {
         },
       // Find position where image is dropped.
       stop: function(event, ui) {
-
         // Show dropped position.
         var Stoppos = $(this).position();
       }
-
   });
   };
 </script>
@@ -267,8 +247,6 @@ $(function() {
 	var losers = []
 	var open_tables = [];
 	var playing_players = [];
-
-
 	var CURRENT_MATCHES = []
 	var list_of_matches = []
 
@@ -283,8 +261,6 @@ $(function() {
 			var loser_id = data[i]['loser_id'];
 			var match = { match_id: match_id, player1_id: player1_id, player2_id: player2_id, winner_id: winner_id, loser_id: loser_id };
 			CURRENT_MATCHES.push(match);
-
-
 		};
 		for (var i=0; i < data.length; i++) {
 			var player1_id = data[i]['player1_id'];
@@ -296,11 +272,8 @@ $(function() {
 			list_of_matches.push(match);
 		};
 	};
-
-
-
-	$('#demo').on('click', startDemo)
-	$('#demo').on('click', live)
+	$('#demo').on('click', startDemo);
+	$('#demo').on('click', live);
 
 	function live() {
 		$('.live-tournament').html('');
@@ -308,40 +281,31 @@ $(function() {
 		$('.live-tournament').show();
 	};
 
-
-
 	function startDemo() {
 		$.get('/mock-json', function(data) {
 			CURRENT_MATCHES = [];
 			startFirst(JSON.parse(data));
-
 				updateTableByTableId(1);
 				updateTableByTableId(2);
 				updateTableByTableId(3);
 				updateTableByTableId(4);
 				updateTableByTableId(5);
 				clearAndUpdateTables();
-
 			
 		} 
 		);
 	};
-
-
 	// need to make this to gray out names in sidebar when people lose
 	// function addLosers() {
-
 	// };
-	var i = 0;
-	var table_id;
-	function clearAndUpdateTables() {
-		
 
+	function clearAndUpdateTables() {
+		var i = 0;
+		var table_id;		
 		var demo_interval = setInterval(function () {
 			if (list_of_matches.length > 0) { 
 				table_id = (i%5)+1;
 				clearTableByTableId(table_id);
-
 				updateTableByTableId(table_id);
 				i++;
 			}
@@ -349,31 +313,31 @@ $(function() {
 				clearInterval(demo_interval);
 				$('.live-tournament').hide();
 				$('#table1 .match').text('OPEN');
+				$('#indiv-table1 .match').text('OPEN');
 				$('#containment-wrapper').append("<center>Congratulations, ZeRo!</center>")
 				
 			} 
-
 			}, 2000);
-
-
 	};
 
-
-	function clearTableByMatchId(match_id) {
-		for (var i=0; i<OPEN_STATIONS; i++) {
-			if ($('#table'+(i+1)).attr('matchid') == match_id) {
-				$('#table'+(i+1)+' .match').text('OPEN');
-				$('#table'+(i+1)).attr('matchid', '0');
-				return $('#table'+(i+1));
-			};
-		};
-
-	};
+	// function clearTableByMatchId(match_id) {
+	// 	for (var i=0; i<OPEN_STATIONS; i++) {
+	// 		if ($('#table'+(i+1)).attr('matchid') == match_id) {
+	// 			$('#table'+(i+1)+' .match').text('OPEN');
+	// 			$('#table'+(i+1)).attr('matchid', '0');
+	// 			return $('#table'+(i+1));
+	// 		};
+	// 	};
+	// };
 
 	function clearTableByTableId(table_id) {
 		for (var i=0; i<OPEN_STATIONS; i++) {
 			if (($('#table'+(i+1)).attr('id')) == ('table'+table_id)) {
+				if ($('#table'+(i+1)+' .match').text() != "OPEN") {
+					$('#prev'+(i+1)).text(($('#table'+(i+1)+' .match').text()));
+				}
 				$('#table'+(i+1)+' .match').text('OPEN');
+				$('#indiv-table'+(i+1)+' .match').text('OPEN');
 				$('#table'+(i+1)).attr('matchid', '0');
 				return (i+1);
 			};
@@ -387,7 +351,6 @@ $(function() {
 		var player2_name = players_dict[match['player2_id']];
 		var player1_position = playing_players.indexOf(player1_name);
 		var player2_position = playing_players.indexOf(player2_name);
-
 		if ((player1_position > -1) && (player2_position > -1)) {
 			clearTableByTableId(Math.floor(player1_position/2)+1);
 			clearTableByTableId(Math.floor(player2_position/2)+1);
@@ -398,31 +361,26 @@ $(function() {
 		}
 		
 		// Twilio SMS
-		if (player1_name == "ZeRo" ) {
-			text_message = { text_message: "" + player1_name + ", you're up against " + player2_name + " at Station " + table_id}
-			console.log(text_message);
-
-
-			$.post("/twilio", text_message, function (result) {
-				console.log(result)
-			}
-			);
-		}
-
-		else if (player2_name == "ZeRo" ) {
-			text_message = { text_message: "" + player2_name + ", you're up against " + player1_name + " at Station " + table_id}
-			console.log(text_message);
-
-
-			$.post("/twilio", text_message, function (result) {
-				console.log(result)
-			}
-			);
-		}
+		// if (player1_name == "ZeRo" ) {
+		// 	text_message = { text_message: "" + player1_name + ", you're up against " + player2_name + " at Station " + table_id}
+		// 	console.log(text_message);
+		// 	$.post("/twilio", text_message, function (result) {
+		// 		console.log(result)
+		// 	}
+		// 	);
+		// }
+		// else if (player2_name == "ZeRo" ) {
+		// 	text_message = { text_message: "" + player2_name + ", you're up against " + player1_name + " at Station " + table_id}
+		// 	console.log(text_message);
+		// 	$.post("/twilio", text_message, function (result) {
+		// 		console.log(result)
+		// 	}
+		// 	);
+		// }
 		// end Twilio SMS
-
 		$('#table' + table_id + ' .match').text(players_dict[match['player1_id']] + ' vs. ' + players_dict[match['player2_id']]);
 
+		$('#'+players_dict[match['loser_id']]).css({'color':'#666'});
 		// current seatings
 		$('#indiv-table' + table_id + ' .match').text(players_dict[match['player1_id']] + ' vs. ' + players_dict[match['player2_id']]);
 
@@ -430,47 +388,37 @@ $(function() {
 		playing_players[(table_id-1)*2+1] = player2_name;
 	};
 
-	function grayOutLoser() {
+	// function updateTables(matches) {
+	// 	for (var i = 0; i < OPEN_STATIONS; i++) {
+	// 		var player1 = players_dict[matches[i]['player1_id']];
+	// 		console.log("player1 " + player1);
+	// 		var player2 = players_dict[matches[i]['player2_id']];
+	// 		$('#table' + (i+1) + ' .match').text(player1 + " vs. " + player2);
+	// 		$('#table' + (i+1)).attr('matchid', ""+matches[i]['match_id']);
+	// 	};
+	// 	for (var i = matches[current_round].length; i < tables; i++) {
+	// 		$('#table' + (i+1) + ' .match').text('OPEN');
+	// 	};
+	// };
 
-	}
-
-	function updateTables(matches) {
-		for (var i = 0; i < OPEN_STATIONS; i++) {
-			var player1 = players_dict[matches[i]['player1_id']];
-			console.log("player1 " + player1);
-			var player2 = players_dict[matches[i]['player2_id']];
-			$('#table' + (i+1) + ' .match').text(player1 + " vs. " + player2);
-			$('#table' + (i+1)).attr('matchid', ""+matches[i]['match_id']);
-
-		};
-
-		for (var i = matches[current_round].length; i < tables; i++) {
-			$('#table' + (i+1) + ' .match').text('OPEN');
-		};
-	};
-
-	function addToTables() {
-		for (var i=0; i<tables; i++) {
-			if ($('#table'+(i+1)+' .match').text() === "OPEN") {
-				$('#table'+(i+1)+' .match').text('hello');
-			};
-		};
-	};
-
+	// function addToTables() {
+	// 	for (var i=0; i<tables; i++) {
+	// 		if ($('#table'+(i+1)+' .match').text() === "OPEN") {
+	// 			$('#table'+(i+1)+' .match').text('hello');
+	// 		};
+	// 	};
+	// };
 
 	function addTables(max_stations) {
 		for (var i = 1; i <= max_stations ; i++) {
 			$('#containment-wrapper').append("<div class='draggable resizable draggable3 ui-widget-content' id='table" +i+ "'><h3>Station " + i + "</h3><span class='match'></span></div>");
 		};
-
 	};
 
 	addTables(max_stations);
-
 	var p = $( "#table1:first");
 	var position = p.position();
 	$( "p:last" ).text( "left: " + position.left + ", top: " + position.top );
-
 </script>
 
 
