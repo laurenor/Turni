@@ -53,6 +53,7 @@
 			<div id="save_status"></div>
 			<button id="save">Save Coordinates</button>
 			<button id="demo">Start Demo</button>
+			<button id="reset">Reset</button>
 			<br>
 
 			<!-- where tables and match info goes -->
@@ -60,12 +61,12 @@
 
 			<!-- twitch stream -->
 			<h2>Stream</h2>
-			<iframe id="player" type="text/html" width="400" height="244"
+			<iframe id="player" type="text/html" width="450" height="275"
 			  src="http://www.twitch.tv/nakat973/embed"
 			  frameborder="0"></iframe>
 
 			<!-- twitch chat -->
-			<iframe frameborder="0" scrolling="no" id="chat_embed" src="http://www.twitch.tv/nakat973/chat" height="244" width="325"></iframe>
+			<iframe frameborder="0" scrolling="no" id="chat_embed" src="http://www.twitch.tv/nakat973/chat" height="275" width="275"></iframe>
 
 			<!-- challonge jquery plugin -->
 			<h2>Brackets</h2>
@@ -188,6 +189,16 @@ $(function() {
 
   max_stations = 5
   var positions = [];
+
+  function reset() {
+  	$("#table1").css({'position': 'absolute', 'left': '72px', 'top': '50px', 'width': '162px', 'height':'303px'});
+  	$("#table2").css({'position': 'absolute', 'left': '309px', 'top': '50px', 'width': '120px', 'height':'120px'});
+  	$("#table3").css({'position': 'absolute', 'left': '495px', 'top': '50px', 'width': '120px', 'height':'120px'});
+  	$("#table4").css({'position': 'absolute', 'left': '309px', 'top': '227px', 'width': '120px', 'height':'120px'});
+  	$("#table5").css({'position': 'absolute', 'left': '495px', 'top': '227px', 'width': '120px', 'height':'120px'});
+  }
+
+  $('#reset').on('click', reset);
   
   function showPos() {
     // Shows dynamic coordinates of tables as they are dragged.
@@ -325,7 +336,8 @@ $(function() {
 	function clearAndUpdateTables() {
 		var i = 0;
 		var table_id;
-		setInterval(function () {
+
+		var demo_interval = setInterval(function () {
 			if (list_of_matches.length > 0) { 
 				table_id = (i%5)+1;
 				clearTableByTableId(table_id);
@@ -334,13 +346,18 @@ $(function() {
 				i++;
 			}
 			else {
+				clearInterval(demo_interval);
 				$('.live-tournament').hide();
+				$('#table1 .match').text('OPEN');
+				$('#containment-wrapper').append("<center>Congratulations, ZeRo!</center>")
+				
 			} 
 
 			}, 1500);
 
 
 	};
+
 
 	function clearTableByMatchId(match_id) {
 		for (var i=0; i<OPEN_STATIONS; i++) {
@@ -379,7 +396,8 @@ $(function() {
 			playing_players[player2_position] = "";
 			playing_players[player2_position-1] = "";
 		}
-
+		
+		// Twilio SMS
 		if (player1_name == "ZeRo" ) {
 			text_message = { text_message: "" + player1_name + ", you're up against " + player2_name + " at Station " + table_id}
 			console.log(text_message);
@@ -401,6 +419,7 @@ $(function() {
 			}
 			);
 		}
+		// end Twilio SMS
 
 		$('#table' + table_id + ' .match').text(players_dict[match['player1_id']] + ' vs. ' + players_dict[match['player2_id']]);
 		playing_players[(table_id-1)*2] = player1_name;

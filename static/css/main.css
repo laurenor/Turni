@@ -492,7 +492,7 @@ html, body {
 .indiv-table {
 	width: 100%;
 	height: 120px;
-	background-color: transparent;
+	background-color: #4d4d4d;
 	border: 3px solid #666;
 	border-radius: 15px;
 	color: #fff;

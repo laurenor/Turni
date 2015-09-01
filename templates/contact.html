@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<style>
+  .form1 {
+    margin-top: 50px;
+  }
+
+  img {
+    height: 25px;
+    margin: 5px 8px 0 0;
+  }
+  
+
+</style>
+
+<div class="container">
+  <div class="row">
+    <form role="form" action="" method="post" class="form1">
+      <div class="col-md-6 col-lg-6">
+        <div class="form-group">
+          <label for="InputName">Your Name</label>
+          <div class="input-group">
+            <input type="text" class="form-control" name="InputName" id="InputName" placeholder="Enter Name" required>
+            <span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span></div>
+        </div>
+        <div class="form-group">
+          <label for="InputEmail">Your Email</label>
+          <div class="input-group">
+            <input type="email" class="form-control" id="InputEmail" name="InputEmail" placeholder="Enter Email" required  >
+            <span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span></div>
+        </div>
+        <div class="form-group">
+          <label for="InputMessage">Message</label>
+          <div class="input-group"
+  >
+            <textarea name="InputMessage" id="InputMessage" class="form-control" rows="5" required></textarea>
+            <span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span></div>
+        </div>
+        <div class="form-group">
+          <label for="InputReal">What is 4+3? (Simple Spam Checker)</label>
+          <div class="input-group">
+            <input type="text" class="form-control" name="InputReal" id="InputReal" required>
+            <span class="input-group-addon"><i class="glyphicon glyphicon-ok form-control-feedback"></i></span></div>
+        </div>
+        <input type="submit" name="submit" id="submit" value="Submit" class="btn btn-info pull-right">
+      </div>
+    </form>
+    <div class="col-md-6 col-lg-5 col-md-push-1">
+      <address>
+      <h3>Turni</h3>
+      <p>
+          <a href="http://www.github.com/laurenor" target="_blank"><img src="/static/img/github.png"></a>
+          <a href="https://www.linkedin.com/in/laurenortencio" target="_blank"><img src="/static/img/linkedin.png"></a>
+          <a href="http://www.twitter.com/lortencio" target="_blank"><img src="/static/img/twitter.png"></a>
+      </address>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,71 @@
+body {
+/*	background: url('/static/img/bgrepeat.jpg');
+	background-attachment: fixed;*/
+}
+
+#table1 {
+	height: 303px;
+	width: 162px;
+}
+
+.navbar {
+	border-color: #666;
+}
+
+h2 {
+	padding-bottom: 15px;
+}
+
+#sidebar a {
+	text-decoration: underline;
+}
+
+.page-wrap:after {
+	content: none;
+  	display: none;
+}
+
+.sidebar-social {
+	text-align: center;
+	color: #666;
+}
+
+.sidebar-social img {
+	height: 25px;
+	opacity: 0.3;
+	margin: 10px 8px 0 5px;
+}
+
+.sidebar-social img:hover {
+	opacity: 1.0;
+}
+
+#test {
+	float: right;
+	background-color: red;
+	width: 100%;
+}
+
+#player {
+	margin-right: 15px;
+}
+
+#content {
+	padding-bottom: 50px;
+}
+
+.live-tournament {
+	font-weight: bold;
+	float: right;
+	top: 0;
+	margin-left: 10px;
+
+}
+
+.circle {
+	border-radius: 30px;
+	float: right;
+	top: 0;
+	background-color: red;
+	height: 5px;
+}
