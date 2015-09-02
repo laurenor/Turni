@@ -9,5 +9,8 @@ JavaScript, jQuery, HTML5, CSS3, Bootstrap, Python, Flask, Jinja, SQLAlchemy, Po
 ### APIs
 <a href="http://api.challonge.com/v1" target="_blank">Challonge</a>, <a href="https://www.twilio.com/sms" target="_blank">Twilio SMS</a>, <a href="http://dev.twitch.tv/" target="_blank">Twitch</a>
 
+##App
+<img src="/static/img/fullpage.png">
+
 ### About the Developer
 Turni was developed by <a href="http://www.github.com/laurenor" target="_blank">Lauren Ortencio</a>, a UCLA graduate and avid esports fan (Super Smash Bros. Melee / Smash4).  To learn more or connect with Lauren, send her a tweet <a href="http://twitter.com/lortencio" target="_blank">@LOrtencio</a> or a message on <a href="http://www.linkedin.com/in/laurenortencio" target="_blank">LinkedIn</a>. 
