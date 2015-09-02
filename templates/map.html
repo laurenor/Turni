@@ -25,7 +25,7 @@
 				<h4>Participants</h4>
 					
 					{% for player in all_players %}
-						<li><span id="{{ player }}">{{ player }}</span></li><br>
+						<li><span id="{{ player }}" class="all-players">{{ player }}</span></li><br>
 					{% endfor %}
 
 				<br>
@@ -60,12 +60,12 @@
 
 			<!-- twitch stream -->
 			<h2>Stream</h2>
-<!-- 			<iframe id="player" type="text/html" width="450" height="275"
-			  src="http://www.twitch.tv/nakat973/embed"
-			  frameborder="0"></iframe> -->
+			<iframe id="player" type="text/html" width="450" height="275"
+			  src="http://www.twitch.tv/vgbootcamp/embed"
+			  frameborder="0"></iframe>
 
 			<!-- twitch chat -->
-<!-- 			<iframe frameborder="0" scrolling="no" id="chat_embed" src="http://www.twitch.tv/nakat973/chat" height="275" width="275"></iframe> -->
+			<iframe frameborder="0" scrolling="no" id="chat_embed" src="http://www.twitch.tv/vgbootcamp/chat" height="275" width="275"></iframe>
 
 			<!-- challonge jquery plugin -->
 			<h2>Brackets</h2>
@@ -279,6 +279,8 @@ $(function() {
 		$('.live-tournament').html('');
 		$('#containment-wrapper').append("<span class='live-tournament'><span class='circle'></span><b>LIVE</b></span>");
 		$('.live-tournament').show();
+		$('#congrats').text('');
+		$('.all-players').css({'color':'white'});
 	};
 
 	function startDemo() {
@@ -314,7 +316,7 @@ $(function() {
 				$('.live-tournament').hide();
 				$('#table1 .match').text('OPEN');
 				$('#indiv-table1 .match').text('OPEN');
-				$('#containment-wrapper').append("<center>Congratulations, ZeRo!</center>")
+				$('#containment-wrapper').append("<span id='congrats'><center>Congratulations, ZeRo!</center></span>");
 				
 			} 
 			}, 2000);
@@ -329,7 +331,7 @@ $(function() {
 	// 		};
 	// 	};
 	// };
-
+	var to_be_cleared = [];
 	function clearTableByTableId(table_id) {
 		for (var i=0; i<OPEN_STATIONS; i++) {
 			if (($('#table'+(i+1)).attr('id')) == ('table'+table_id)) {
@@ -346,6 +348,7 @@ $(function() {
 
 	function updateTableByTableId(table_id) {
 		var match = list_of_matches.shift();
+		to_be_cleared.push(match);
 		console.log(playing_players);
 		var player1_name = players_dict[match['player1_id']];
 		var player2_name = players_dict[match['player2_id']];
@@ -387,27 +390,6 @@ $(function() {
 		playing_players[(table_id-1)*2] = player1_name;
 		playing_players[(table_id-1)*2+1] = player2_name;
 	};
-
-	// function updateTables(matches) {
-	// 	for (var i = 0; i < OPEN_STATIONS; i++) {
-	// 		var player1 = players_dict[matches[i]['player1_id']];
-	// 		console.log("player1 " + player1);
-	// 		var player2 = players_dict[matches[i]['player2_id']];
-	// 		$('#table' + (i+1) + ' .match').text(player1 + " vs. " + player2);
-	// 		$('#table' + (i+1)).attr('matchid', ""+matches[i]['match_id']);
-	// 	};
-	// 	for (var i = matches[current_round].length; i < tables; i++) {
-	// 		$('#table' + (i+1) + ' .match').text('OPEN');
-	// 	};
-	// };
-
-	// function addToTables() {
-	// 	for (var i=0; i<tables; i++) {
-	// 		if ($('#table'+(i+1)+' .match').text() === "OPEN") {
-	// 			$('#table'+(i+1)+' .match').text('hello');
-	// 		};
-	// 	};
-	// };
 
 	function addTables(max_stations) {
 		for (var i = 1; i <= max_stations ; i++) {
