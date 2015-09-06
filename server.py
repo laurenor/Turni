@@ -1,6 +1,6 @@
 import requests
 import os
-from flask import Flask, flash, render_template, redirect, json, request, session, url_for, jsonify
+from flask import Flask, render_template, redirect, json, request, session, jsonify
 from jinja2 import StrictUndefined
 from model import User, Tournament, Match, Position, connect_to_db, db
 from flask_debugtoolbar import DebugToolbarExtension
@@ -55,8 +55,6 @@ def register():
 		user = User.query.filter_by(username=username).first()
 
 		if user:
-			# session['username'] = user.username
-			flash('That username already exists!')
 			return render_template('register.html')
 
 		else:
@@ -82,10 +80,8 @@ def login():
 
 		if user:
 			session['username'] = user.username
-			flash('Successfully Logged In')
 			return redirect('/profile/%s' % user.username)
 		else:
-			flash('Username and/or password is invalid.')
 			return render_template('login.html')
 	else:
 		return render_template('login.html')
@@ -94,7 +90,6 @@ def login():
 def logout_user():
     """Logs out the user"""
     session.clear()
-    flash('Successfully logged out.')
     return redirect('/')
 
 @app.route('/about')

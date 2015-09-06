@@ -61,11 +61,11 @@
 			<!-- twitch stream -->
 			<h2>Stream</h2>
 			<iframe id="player" type="text/html" width="450" height="275"
-			  src="http://www.twitch.tv/vgbootcamp/embed"
+			  src="http://www.twitch.tv/nakat973/embed"
 			  frameborder="0"></iframe>
 
 			<!-- twitch chat -->
-			<iframe frameborder="0" scrolling="no" id="chat_embed" src="http://www.twitch.tv/vgbootcamp/chat" height="275" width="275"></iframe>
+			<iframe frameborder="0" scrolling="no" id="chat_embed" src="http://www.twitch.tv/nakat973/chat" height="275" width="275"></iframe>
 
 			<!-- challonge jquery plugin -->
 			<h2>Brackets</h2>
@@ -81,42 +81,42 @@
 						<div id="indiv-table1" class="current-seat">
 							<span class="indiv-head">Station 1</span>
 							<br>
-							<span class="match">ZeRo vs. Mew2king</span>
+							<span class="match">---</span>
 							<br>
 							<span class="prev">Previous:</span>
-							<span id="prev1" class="prev"> A vs. B</span>
+							<span id="prev1" class="prev"></span>
 						</div>
 						<div id="indiv-table2" class="current-seat">
 							<span class="indiv-head">Station 2</span>
 							<br>
-							<span class="match">Mang0 vs. Leffen</span>
+							<span class="match">---</span>
 							<br>
 							<span class="prev">Previous:</span>
-							<span id="prev2" class="prev"> A vs. B</span>
+							<span id="prev2" class="prev"></span>
 						</div>
 						<div id="indiv-table3" class="current-seat">
 							<span class="indiv-head">Station 3</span>
 							<br>
-							<span class="match">Hungrybox vs. PPMD</span>
+							<span class="match">---</span>
 							<br>
 							<span class="prev">Previous:</span>
-							<span id="prev3" class="prev"> A vs. B</span>
+							<span id="prev3" class="prev"></span>
 						</div>
 						<div id="indiv-table4" class="current-seat">
 							<span class="indiv-head">Station 4</span>
 							<br>
-							<span class="match">Druggedfox vs. Sharkboi</span>
+							<span class="match">---</span>
 							<br>
 							<span class="prev">Previous:</span>
-							<span id="prev4" class="prev"> A vs. B</span>
+							<span id="prev4" class="prev"></span>
 						</div>
 						<div id="indiv-table5" class="current-seat">
 							<span class="indiv-head">Station 5</span>
 							<br>
-							<span class="match">HugS vs. Lucky</span>
+							<span class="match">---</span>
 							<br>
 							<span class="prev">Previous:</span>
-							<span id="prev5" class="prev"> A vs. B</span>
+							<span id="prev5" class="prev"></span>
 						</div>
 					</div>
 			</center>
@@ -148,6 +148,7 @@
 </script>
 
 
+
 <script>
 $(function(){
     $("#footer-body").hide();
@@ -163,77 +164,49 @@ $(function() {
 
 
 <!-- saving coordinates script -->
-<!-- <script src="/static/js/positions.js"></script> -->
-
 <script>
-  
-  function updateCoords() {
-    // Gets coordinates from positions table in DB, so gaming stations are in same place when user returns to page later
-    tournament_name = '{{ tournament_name }}';
-    console.log(tournament_name);
-    $.get('/get-coords', { tournament_name: tournament_name }, function (result) {
-      result = JSON.parse(result);
-      for (var i = 0; i < max_stations; i++) {       
-	        $('#'+result[i][0]).css({'position': 'absolute', 'left': result[i][1]+'px', 'top': result[i][2]+'px'});
-      }
-    }
-    )
-  };
-  updateCoords();
-  max_stations = 5
-  var positions = [];
+max_stations = 5
 
-  function reset() {
-  	$("#table1").css({'position': 'absolute', 'left': '72px', 'top': '50px', 'width': '162px', 'height':'303px'});
-  	$("#table2").css({'position': 'absolute', 'left': '309px', 'top': '50px', 'width': '120px', 'height':'120px'});
-  	$("#table3").css({'position': 'absolute', 'left': '495px', 'top': '50px', 'width': '120px', 'height':'120px'});
-  	$("#table4").css({'position': 'absolute', 'left': '309px', 'top': '227px', 'width': '120px', 'height':'120px'});
-  	$("#table5").css({'position': 'absolute', 'left': '495px', 'top': '227px', 'width': '120px', 'height':'120px'});
+function updateCoords() {
+  // Gets coordinates from positions table in DB, so gaming stations are in same place when user returns to page later
+  tournament_name = '{{ tournament_name }}';
+  console.log(tournament_name);
+  $.get('/get-coords', { tournament_name: tournament_name }, function (result) {
+    result = JSON.parse(result);
+    for (var i = 0; i < max_stations; i++) {       
+        $('#'+result[i][0]).css({'position': 'absolute', 'left': result[i][1]+'px', 'top': result[i][2]+'px'});
+    }
   }
-  $('#reset').on('click', reset);
-  
-  function showPos() {
-    // Shows dynamic coordinates of tables as they are dragged.
-    for (var i = 1; i <= max_stations; i++) {  
-      positions[i] = $('#table'+i).position();
-      $('#table'+i).text('Left: ' + positions[i].left + '; Top: ' + positions[i].top);
-    }
-    };
+  )
+};
+updateCoords();
 
-  function saveToDb() {
-    // Adds/updates table coordinates to database.
-    for (var i = 1; i <= max_stations; i++) {
-      pos = $('#table'+i).position();
-      var positions = { left: pos.left, top: pos.top, table_id: "table"+i, tournament_name: '{{ tournament_name }}' };
-      console.log("Saving positions: "+ Math.round(pos.left) + " " + Math.round(pos.top) + " " + positions.table_id + " " + tournament_name)
-      $.post("/add-coords", positions, function (result) {
-          $('#save_status').text(result);
-      }
-      );
-    };
+
+function reset() {
+  // 
+  $("#table1").css({'position': 'absolute', 'left': '72px', 'top': '50px', 'width': '162px', 'height':'303px'});
+  $("#table2").css({'position': 'absolute', 'left': '309px', 'top': '50px', 'width': '120px', 'height':'120px'});
+  $("#table3").css({'position': 'absolute', 'left': '495px', 'top': '50px', 'width': '120px', 'height':'120px'});
+  $("#table4").css({'position': 'absolute', 'left': '309px', 'top': '227px', 'width': '120px', 'height':'120px'});
+  $("#table5").css({'position': 'absolute', 'left': '495px', 'top': '227px', 'width': '120px', 'height':'120px'});
+}
+$('#reset').on('click', reset);
+
+function saveToDb() {
+  // Adds/updates table coordinates to database.
+  for (var i = 1; i <= max_stations; i++) {
+    pos = $('#table'+i).position();
+    var positions = { left: pos.left, top: pos.top, table_id: "table"+i, tournament_name: '{{ tournament_name }}' };
+    console.log("Saving positions: "+ Math.round(pos.left) + " " + Math.round(pos.top) + " " + positions.table_id + " " + tournament_name)
+    $.post("/add-coords", positions, function (result) {
+        $('#save_status').text(result);
+    }
+    );
   };
-  $('#save').on('click', saveToDb);
+};
+$('#save').on('click', saveToDb);
 </script>
-<script>
-  $( init );
-  function init() {
-    $('.square, .round').draggable({
-      containment: '#layout-area',  start: function(event, ui) {
-        // Show start dragged position of image.
-        var Startpos = $(this).position();
-      },
-        drag: function(event, ui){
-            var Startpos = $(this).position();
-            showPos();
-        },
-      // Find position where image is dropped.
-      stop: function(event, ui) {
-        // Show dropped position.
-        var Stoppos = $(this).position();
-      }
-  });
-  };
-</script>
+
 <!-- adding and updating stations -->
 
 
@@ -297,9 +270,6 @@ $(function() {
 		} 
 		);
 	};
-	// need to make this to gray out names in sidebar when people lose
-	// function addLosers() {
-	// };
 
 	function clearAndUpdateTables() {
 		var i = 0;
@@ -364,22 +334,22 @@ $(function() {
 		}
 		
 		// Twilio SMS
-		// if (player1_name == "ZeRo" ) {
-		// 	text_message = { text_message: "" + player1_name + ", you're up against " + player2_name + " at Station " + table_id}
-		// 	console.log(text_message);
-		// 	$.post("/twilio", text_message, function (result) {
-		// 		console.log(result)
-		// 	}
-		// 	);
-		// }
-		// else if (player2_name == "ZeRo" ) {
-		// 	text_message = { text_message: "" + player2_name + ", you're up against " + player1_name + " at Station " + table_id}
-		// 	console.log(text_message);
-		// 	$.post("/twilio", text_message, function (result) {
-		// 		console.log(result)
-		// 	}
-		// 	);
-		// }
+		if (player1_name == "ZeRo" ) {
+			text_message = { text_message: "" + player1_name + ", you're up against " + player2_name + " at Station " + table_id}
+			console.log(text_message);
+			$.post("/twilio", text_message, function (result) {
+				console.log(result)
+			}
+			);
+		}
+		else if (player2_name == "ZeRo" ) {
+			text_message = { text_message: "" + player2_name + ", you're up against " + player1_name + " at Station " + table_id}
+			console.log(text_message);
+			$.post("/twilio", text_message, function (result) {
+				console.log(result)
+			}
+			);
+		}
 		// end Twilio SMS
 		$('#table' + table_id + ' .match').text(players_dict[match['player1_id']] + ' vs. ' + players_dict[match['player2_id']]);
 
