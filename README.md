@@ -4,7 +4,7 @@
 Turni is a web application for esports tournament organizers that creates interactive venue maps using data from <a href="http://api.challonge.com/v1" target="_blank">Challonge</a> and notifies participants via <a href="https://www.twilio.com/sms" target="_blank">Twilio SMS</a> of when and where they should go when it is their turn to play. With Turni, tournament organizers also have the option of having their Twitch stream, Twitch chat, and Challonge brackets embedded on their map page, so everything they need on tournament day will be available in a single browser window.
 
 ### Technology Stack
-JavaScript, jQuery, HTML5, CSS3, Bootstrap, Python, Flask, Jinja, SQLAlchemy, PostgreSQL, jQuery UI Draggable and Resizable, AJAX
+JavaScript, jQuery, HTML5, CSS3, Bootstrap, Python, Flask, Jinja2, SQLAlchemy, PostgreSQL, jQuery UI Draggable and Resizable, AJAX
 
 ### APIs
 <a href="http://api.challonge.com/v1" target="_blank">Challonge</a>, <a href="https://www.twilio.com/sms" target="_blank">Twilio SMS</a>, <a href="http://dev.twitch.tv/" target="_blank">Twitch</a>
