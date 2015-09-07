@@ -81,6 +81,7 @@ Copy the new ngrok forwarding URL (`http://example.ngrok.io`) and update the <a 
 
 Navigate to `localhost:5000` 
 
+___
 
 ### About the Developer
 Turni was developed by <a href="http://www.github.com/laurenor" target="_blank">Lauren Ortencio</a>, a UCLA graduate and avid esports fan (Super Smash Bros. Melee / Smash4).  To learn more or connect with Lauren, send her a tweet <a href="http://twitter.com/lortencio" target="_blank">@LOrtencio</a> or a message on <a href="http://www.linkedin.com/in/laurenortencio" target="_blank">LinkedIn</a>. 
