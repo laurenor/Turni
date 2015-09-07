@@ -12,14 +12,19 @@ JavaScript, jQuery, HTML5, CSS3, Bootstrap, Python, Flask, Jinja, SQLAlchemy, Po
 ##App
 <img src="/static/img/vid.gif">
 
-###Features
-- Automatically assigns players to tables
-- Players are texted after they are assigned to a table
-- List of all players is populated in left side bar, and names are grayed out once they have lost
-- Twitch stream and chat is embedded on page (optional)
-- Challonge brackets appear in an iframe at the bottom of the page
+###Sample tournament info to enter to create a tournament
+1. Tournament name: Turni International 2015
+2. Tournament url (Challonge Url): <a href="http://www.challonge.com/turni2015" target="_blank">turni2015</a>
+3. Twitch stream: <a href="http://www.challonge.com/nakat973" target="_blank">http://www.twitch.tv/nakat973</a>
 
-###Install Turni On Your Machine
+###Features
+- Automatically assigns players to tables.
+- Players are texted after they are assigned to a table.
+- List of all players is populated in left side bar, and names are grayed out once they have lost.
+- Twitch stream and chat is embedded on page (optional).
+- Challonge brackets appear in an iframe at the bottom of the page.
+
+##Install Turni On Your Machine
 Clone or fork this repo:
 ```
 https://github.com/laurenor/Turni.git
