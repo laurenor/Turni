@@ -12,5 +12,70 @@ JavaScript, jQuery, HTML5, CSS3, Bootstrap, Python, Flask, Jinja, SQLAlchemy, Po
 ##App
 <img src="/static/img/vid.gif">
 
+###Features
+- Automatically assigns players to tables
+- Players are texted after they are assigned to a table
+- List of all players is populated in left side bar, and names are grayed out once they have lost
+- Twitch stream and chat is embedded on page (optional)
+- Challonge brackets appear in an iframe at the bottom of the page
+
+###Install Turni On Your Machine
+Clone or fork this repo:
+```
+https://github.com/laurenor/Turni.git
+```
+
+Create and activate a virtual environment inside your project directory: 
+
+```
+virtualenv env
+
+source env/bin/activate
+```
+
+Install the requirements:
+
+```
+pip install -r requirements.txt
+```
+
+Get your own secret keys for <a href="https://challonge.com/settings/developer" target="_blank">Challonge</a>.
+
+Get your own secret keys for <a href="http://twilio.com" target="_blank">Twilio</a> and save them to a file `secrets.sh`. Your `secrets.sh` file should look something like this:
+
+```
+export CHALLONGE_API_KEY='YOURSECRETKEYIDHERE'
+export TWILIO_NUMBER='YOURTWILIOPHONENUMBER'
+export TWILIO_ACCOUNT_SID='YOURSECRETSIDHERE'
+export TWILIO_AUTH_TOKEN='YOURSECRETAUTHTOKENHERE'
+export TWILIO_TO_NUMBER='PARTICIPANTPHONENUMBERHERE'
+```
+
+##### Starting Up Your Server
+
+Source your secret keys:
+
+```
+source secrets.sh
+```
+
+Run the app:
+
+```
+python server.py
+```
+
+Download and unzip <a href="https://ngrok.com/" target="_blank">ngrok</a> to create a secure tunnel to your localhost to allow Twilio access for voice routes.
+
+Run ngrok:
+```
+./ngrok http 5000
+```
+
+Copy the new ngrok forwarding URL (`http://example.ngrok.io`) and update the <a href="https://www.twilio.com/user/account/phone-numbers/incoming" target="_blank">request URL for your Twilio number</a>.
+
+Navigate to `localhost:5000` 
+
+
 ### About the Developer
 Turni was developed by <a href="http://www.github.com/laurenor" target="_blank">Lauren Ortencio</a>, a UCLA graduate and avid esports fan (Super Smash Bros. Melee / Smash4).  To learn more or connect with Lauren, send her a tweet <a href="http://twitter.com/lortencio" target="_blank">@LOrtencio</a> or a message on <a href="http://www.linkedin.com/in/laurenortencio" target="_blank">LinkedIn</a>. 
