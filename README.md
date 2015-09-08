@@ -12,11 +12,6 @@ JavaScript, jQuery, HTML5, CSS3, Bootstrap, Python, Flask, Jinja2, SQLAlchemy, P
 ##App
 <img src="/static/img/vid.gif">
 
-###Sample Tournament Info to Enter to Create a Turni Page
-1. Tournament name: Turni International 2015
-2. Tournament url (Challonge URL): <a href="http://www.challonge.com/turni2015" target="_blank">turni2015</a>
-3. Twitch stream: <a href="http://www.challonge.com/nakat973" target="_blank">http://www.twitch.tv/nakat973</a>
-
 ###Features
 - Automatically assigns players to tables.
 - Players are texted after they are assigned to a table.
@@ -81,7 +76,21 @@ Copy the new ngrok forwarding URL (`http://example.ngrok.io`) and update the <a 
 
 Navigate to `localhost:5000` 
 
-#####Restore Database (PostgreSQL required)
+###Create a PostgreSQL Database or Restore Database
+
+####Create a Database
+```
+createdb turnidb
+```
+Populate your database
+```
+python -i model.py
+db.create_all()
+exit()
+```
+
+
+####Restore Database (PostgreSQL required)
 - Create database
 ```
 createdb turnidb
@@ -92,7 +101,14 @@ psql -f globals.sql
 psql -f db-schema.sql turnidb
 pg_restore -a -d turnidb -Fc full.dump
 ```
-
+###Sample Info to Enter to Create a Turni Page
+####User Login:
+Username: lencat
+Password: helloworld
+####Tournament Info:
+1. Tournament name: Turni International 2015
+2. Tournament url (Challonge URL): <a href="http://www.challonge.com/turni2015" target="_blank">turni2015</a>
+3. Twitch stream: <a href="http://www.challonge.com/nakat973" target="_blank">http://www.twitch.tv/nakat973</a>
 ___
 
 ### About the Developer
