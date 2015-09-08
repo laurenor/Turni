@@ -68,7 +68,7 @@ source secrets.sh
 ```
 createdb turnidb
 ```
-p
+
 Populate your database
 ```
 python -i model.py
@@ -85,7 +85,7 @@ createdb turnidb
 ```
 psql -f globals.sql
 psql -f db-schema.sql turnidb
-pg_restore -a -d turnidb -Fc full.dump
+pg_restore -a --disable-triggers -d turnidb -Fc full.dump
 ```
 
 Run the app:
