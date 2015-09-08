@@ -109,7 +109,7 @@ Password: helloworld
 1. Tournament name: Turni International 2015
 2. Tournament url (Challonge URL): <a href="http://www.challonge.com/turni2015" target="_blank">turni2015</a>
 3. Twitch stream: <a href="http://www.challonge.com/nakat973" target="_blank">http://www.twitch.tv/nakat973</a>
-___
 
+___
 ### About the Developer
 Turni was developed by <a href="http://www.github.com/laurenor" target="_blank">Lauren Ortencio</a>, a UCLA graduate and avid esports fan (Super Smash Bros. Melee / Smash4).  To learn more or connect with Lauren, send her a tweet <a href="http://twitter.com/lortencio" target="_blank">@LOrtencio</a> or a message on <a href="http://www.linkedin.com/in/laurenortencio" target="_blank">LinkedIn</a>. 
