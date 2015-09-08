@@ -78,7 +78,7 @@ Navigate to `localhost:5000`
 
 ###Create a PostgreSQL Database or Restore Database
 
-####Create a Database
+#####Create a Database
 ```
 createdb turnidb
 ```
@@ -90,7 +90,7 @@ exit()
 ```
 
 
-####Restore Database (PostgreSQL required)
+#####Restore Database (use prepopulated data)
 - Create database
 ```
 createdb turnidb
