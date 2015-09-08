@@ -39,6 +39,8 @@ Install the requirements:
 pip install -r requirements.txt
 ```
 
+***If psycopg2 is having issues installing, make sure that PostgreSQL's bin is added to the path*
+
 Get your own secret keys for <a href="https://challonge.com/settings/developer" target="_blank">Challonge</a>.
 
 Get your own secret keys for <a href="http://twilio.com" target="_blank">Twilio</a> and save them to a file `secrets.sh`. Your `secrets.sh` file should look something like this:
@@ -59,12 +61,14 @@ Source your secret keys:
 source secrets.sh
 ```
 
-###Create a PostgreSQL Database or Restore Database
+####Create a PostgreSQL Database or Restore Database
 
-#####Create a Database
+######Create a Database
+
 ```
 createdb turnidb
 ```
+p
 Populate your database
 ```
 python -i model.py
