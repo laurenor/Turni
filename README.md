@@ -86,7 +86,6 @@ Navigate to `localhost:5000`
 ```
 createdb turnidb
 ```
-
 2. Import database dump
 ```
 psql -f globals.sql
