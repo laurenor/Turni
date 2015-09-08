@@ -14,7 +14,7 @@ JavaScript, jQuery, HTML5, CSS3, Bootstrap, Python, Flask, Jinja2, SQLAlchemy, P
 
 ###Sample Tournament Info to Enter to Create a Turni Page
 1. Tournament name: Turni International 2015
-2. Tournament url (Challonge Url): <a href="http://www.challonge.com/turni2015" target="_blank">turni2015</a>
+2. Tournament url (Challonge URL): <a href="http://www.challonge.com/turni2015" target="_blank">turni2015</a>
 3. Twitch stream: <a href="http://www.challonge.com/nakat973" target="_blank">http://www.twitch.tv/nakat973</a>
 
 ###Features
