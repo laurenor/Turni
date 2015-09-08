@@ -8,6 +8,7 @@ JavaScript, jQuery, HTML5, CSS3, Bootstrap, Python, Flask, Jinja2, SQLAlchemy, P
 
 ### APIs
 <a href="http://api.challonge.com/v1" target="_blank">Challonge</a>, <a href="https://www.twilio.com/sms" target="_blank">Twilio SMS</a>, <a href="http://dev.twitch.tv/" target="_blank">Twitch</a>
+___
 
 ##App
 <img src="/static/img/vid.gif">
@@ -18,6 +19,8 @@ JavaScript, jQuery, HTML5, CSS3, Bootstrap, Python, Flask, Jinja2, SQLAlchemy, P
 - List of all players is populated in left side bar, and names are grayed out once they have lost.
 - Twitch stream and chat is embedded on page (optional).
 - Challonge brackets appear in an iframe at the bottom of the page.
+
+___
 
 ##Install Turni On Your Machine
 Clone this repo:
@@ -76,6 +79,8 @@ Copy the new ngrok forwarding URL (`http://example.ngrok.io`) and update the <a 
 
 Navigate to `localhost:5000` 
 
+___
+
 ###Create a PostgreSQL Database or Restore Database
 
 #####Create a Database
@@ -89,7 +94,6 @@ db.create_all()
 exit()
 ```
 
-
 #####Restore Database (use prepopulated data)
 - Create database
 ```
@@ -101,6 +105,8 @@ psql -f globals.sql
 psql -f db-schema.sql turnidb
 pg_restore -a -d turnidb -Fc full.dump
 ```
+___
+
 ###Sample Info to Enter to Create a Turni Page
 ####User Login:
 Username: lencat
