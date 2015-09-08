@@ -89,7 +89,7 @@ createdb turnidb
 - Import database dump
 ```
 psql -f globals.sql
-psql -f schema.sql turnidb
+psql -f db-schema.sql turnidb
 pg_restore -a -d turnidb -Fc full.dump
 ```
 
