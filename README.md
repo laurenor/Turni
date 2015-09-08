@@ -25,9 +25,9 @@ JavaScript, jQuery, HTML5, CSS3, Bootstrap, Python, Flask, Jinja2, SQLAlchemy, P
 - Challonge brackets appear in an iframe at the bottom of the page.
 
 ##Install Turni On Your Machine
-Clone or fork this repo:
+Clone this repo:
 ```
-https://github.com/laurenor/Turni.git
+git clone https://github.com/laurenor/Turni.git
 ```
 
 Create and activate a virtual environment inside your project directory: 
