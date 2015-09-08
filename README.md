@@ -81,6 +81,11 @@ Copy the new ngrok forwarding URL (`http://example.ngrok.io`) and update the <a 
 
 Navigate to `localhost:5000` 
 
+#####Restore Database Dump (PostgreSQL required)
+```
+psql turnidb < infile
+```
+
 ___
 
 ### About the Developer
