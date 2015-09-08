@@ -3,24 +3,21 @@
 ### What is Turni?
 Turni is a web application for esports tournament organizers that creates interactive venue maps using data from <a href="http://api.challonge.com/v1" target="_blank">Challonge</a> and notifies participants via <a href="https://www.twilio.com/sms" target="_blank">Twilio SMS</a> of when and where they should go when it is their turn to play. With Turni, tournament organizers also have the option of having their Twitch stream, Twitch chat, and Challonge brackets embedded on their map page, so everything they need on tournament day will be available in a single browser window.
 
-### Technology Stack
+#### Technology Stack
 JavaScript, jQuery, HTML5, CSS3, Bootstrap, Python, Flask, Jinja2, SQLAlchemy, PostgreSQL, jQuery UI Draggable and Resizable, AJAX
 
-### APIs
+#### APIs
 <a href="http://api.challonge.com/v1" target="_blank">Challonge</a>, <a href="https://www.twilio.com/sms" target="_blank">Twilio SMS</a>, <a href="http://dev.twitch.tv/" target="_blank">Twitch</a>
-___
 
 ##App
 <img src="/static/img/vid.gif">
 
-###Features
+####Features
 - Automatically assigns players to tables.
 - Players are texted after they are assigned to a table.
 - List of all players is populated in left side bar, and names are grayed out once they have lost.
 - Twitch stream and chat is embedded on page (optional).
 - Challonge brackets appear in an iframe at the bottom of the page.
-
-___
 
 ##Install Turni On Your Machine
 Clone this repo:
@@ -54,7 +51,7 @@ export TWILIO_AUTH_TOKEN='YOURSECRETAUTHTOKENHERE'
 export TWILIO_TO_NUMBER='PARTICIPANTPHONENUMBERHERE'
 ```
 
-##### Starting Up Your Server
+#### Starting Up Your Server
 
 Source your secret keys:
 
@@ -79,7 +76,6 @@ Copy the new ngrok forwarding URL (`http://example.ngrok.io`) and update the <a 
 
 Navigate to `localhost:5000` 
 
-___
 
 ###Create a PostgreSQL Database or Restore Database
 
@@ -105,7 +101,6 @@ psql -f globals.sql
 psql -f db-schema.sql turnidb
 pg_restore -a -d turnidb -Fc full.dump
 ```
-___
 
 ###Sample Info to Enter to Create a Turni Page
 ####User Login:
