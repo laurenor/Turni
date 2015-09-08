@@ -2,7 +2,7 @@ import requests
 import os
 from flask import Flask, render_template, redirect, json, request, session, jsonify
 from jinja2 import StrictUndefined
-from model import User, Tournament, Match, Position, connect_to_db, db
+from model import User, Tournament, Position, connect_to_db, db
 from flask_debugtoolbar import DebugToolbarExtension
 import hashlib # for email hashing
 import pprint
@@ -49,7 +49,6 @@ def register():
 		username = request.form.get('username')
 		email = request.form.get('email')
 		password = request.form.get('password')
-		user_type = request.form.get('user_type')
 		phone = request.form.get('phone')
 
 		user = User.query.filter_by(username=username).first()
@@ -58,7 +57,7 @@ def register():
 			return render_template('register.html')
 
 		else:
-			user = User(username=username, email=email, password=password, user_type=user_type, phone=phone)
+			user = User(username=username, email=email, password=password, phone=phone)
 			db.session.add(user)
 			db.session.commit()
 			session['username'] = user.username 
@@ -73,7 +72,6 @@ def login():
 		username = request.form.get('username')
 		email = request.form.get('email')
 		password = request.form.get('password')
-		user_type = request.form.get('user_type')
 		confirm = request.form.get('confirm')
 
 		user = User.query.filter_by(username=username, password=password).first()

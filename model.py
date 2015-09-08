@@ -15,7 +15,6 @@ class User(db.Model):
     username = db.Column(db.String(20), nullable=False) # how to make this unique?
     email = db.Column(db.String(64), nullable=False)
     password = db.Column(db.String(64), nullable=False)
-    user_type = db.Column(db.String(11), nullable=False)
     phone = db.Column(db.String(11))
 
     def __repr__(self):
@@ -36,20 +35,6 @@ class Tournament(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed"""
         return "<Tournament tournament_id=%s tournament_name=%s>" % (self.tournament_id, self.tournament_name)
-
-class Match(db.Model):
-
-    __tablename__ = 'matches'
-
-    match_id = db.Column(db.Integer, primary_key=True)
-    tournament_id = db.Column(db.Integer, db.ForeignKey('tournaments.tournament_id'))
-    round_num = db.Column(db.Integer)
-    player_1 = db.Column(db.String(20))
-    player_2 = db.Column(db.String(20))
-
-    def __repr__(self):
-            """Provide helpful representation when printed"""
-            return "<Match match_id=%s >" % (self.match_id)
 
 class Position(db.Model):
 
