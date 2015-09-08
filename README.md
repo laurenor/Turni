@@ -59,24 +59,6 @@ Source your secret keys:
 source secrets.sh
 ```
 
-Run the app:
-
-```
-python server.py
-```
-
-Download and unzip <a href="https://ngrok.com/" target="_blank">ngrok</a> to create a secure tunnel to your localhost to allow Twilio access for voice routes.
-
-Run ngrok:
-```
-./ngrok http 5000
-```
-
-Copy the new ngrok forwarding URL (`http://example.ngrok.io`) and update the <a href="https://www.twilio.com/user/account/phone-numbers/incoming" target="_blank">request URL for your Twilio number</a>.
-
-Navigate to `localhost:5000` 
-
-
 ###Create a PostgreSQL Database or Restore Database
 
 #####Create a Database
@@ -101,6 +83,23 @@ psql -f globals.sql
 psql -f db-schema.sql turnidb
 pg_restore -a -d turnidb -Fc full.dump
 ```
+
+Run the app:
+
+```
+python server.py
+```
+
+Download and unzip <a href="https://ngrok.com/" target="_blank">ngrok</a> to create a secure tunnel to your localhost to allow Twilio access for voice routes.
+
+Run ngrok:
+```
+./ngrok http 5000
+```
+
+Copy the new ngrok forwarding URL (`http://example.ngrok.io`) and update the <a href="https://www.twilio.com/user/account/phone-numbers/incoming" target="_blank">request URL for your Twilio number</a>.
+
+Navigate to `localhost:5000` 
 
 ###Sample Info to Enter to Create a Turni Page
 ####User Login:
