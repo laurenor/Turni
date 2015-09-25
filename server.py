@@ -5,7 +5,6 @@ from jinja2 import StrictUndefined
 from model import User, Tournament, Position, connect_to_db, db
 from flask_debugtoolbar import DebugToolbarExtension
 import hashlib # for email hashing
-import pprint
 import challonge
 from twilio import twiml
 from twilio.rest import TwilioRestClient
@@ -113,7 +112,6 @@ def user_profile(username):
 	"""Show user's details and list of maps created"""
 	if session:
 		user = User.query.filter_by(username=username).first()
-
 		tournaments = db.session.query(Tournament.tournament_name).join(User).filter(user.user_id==Tournament.user_id).all()
 
 		# removes unicode formatting on tournament names 
@@ -121,12 +119,10 @@ def user_profile(username):
 		for tourn in tournaments:
 			str_tournaments.append(tourn[0])
 
-
 		amt_of_tourns = []
 
 		for i in range(len(tournaments)):
 			amt_of_tourns.append(i+1)
-		print amt_of_tourns
 
 		return render_template('user-profile.html', username=user.username, tournaments=str_tournaments, amt_of_tourns=amt_of_tourns)
 	else:
@@ -216,11 +212,8 @@ def map():
 						)
 
 	elif request.method == 'GET':
-
 		tournament_name = request.args.get('tournament_name')
-		print "***tournament: ", tournament_name
 		tournament = Tournament.query.filter_by(tournament_name=tournament_name).first()
-		print "***tournament: ", tournament
 		tables = tournament.max_stations
 		user = User.query.filter_by(username=session['username']).first()
 		url = tournament.url
@@ -291,14 +284,11 @@ def add_coords():
 
 	tournament = Tournament.query.filter_by(tournament_name=tournament_name).first()
 	position = Position.query.filter(Position.table_id==table_id, Position.tournament_id==tournament.tournament_id).first()
-	print "***tournament: ", tournament.tournament_id
 
 	if not position:
-		print "***not position: "
 		coordinates = Position(table_id=table_id, left=left, top=top, tournament_id=tournament.tournament_id)
 		db.session.add(coordinates)
 	else:
-		print "***else position"
 		position.table_id=table_id
 		position.left=left
 		position.top=top
@@ -311,25 +301,18 @@ def add_coords():
 def get_coords():
 	"""Sends coordinate info from DB to client side"""
 	tournament_name = request.args.get('tournament_name')
-	print "***get_coords tourn name: ", tournament_name
-
 	tournament = Tournament.query.filter_by(tournament_name=tournament_name).first()
 	tournament_id = tournament.tournament_id
 
 	positions = db.session.query(Position.table_id, Position.left, Position.top).filter(Position.tournament_id==tournament_id).all();
 	posijson = json.dumps(positions)
-	print "****posijson: ", posijson
 	return posijson
 
 @app.route('/delete-tourn', methods=['POST'])
 def delete_tourn():
 	"""Deletes tournament when user clicks 'x' on user profile page"""
 	tournament_name = request.form.get('tournament_name')
-	print "***Tournament_name: ", tournament_name
-
 	tournament = Tournament.query.filter_by(tournament_name=tournament_name).first()
-	print "***Tournament: ", tournament
-	
 	matches = Match.query.filter(Match.tournament_id == tournament.tournament_id).all()
 	positions = Position.query.filter(Position.tournament_id == tournament.tournament_id).all()
 	tournaments = Tournament.query.filter(Tournament.tournament_id == tournament.tournament_id).all()
@@ -344,27 +327,13 @@ def delete_tourn():
 
 	return "Tournament has been deleted."
 
-@app.route('/contact')
-def contact():
-	"""Renders contact page"""
-	if 'username' in session:
-		username = session['username']
-	
-		return render_template('contact.html', username=username)
-
-	else: 
-		return render_template('contact.html')
-
 @app.route('/mock-json')
 def mock():
 	"""Provides json from sample tournament"""
 	json_data = open(os.path.join('./json/', "turni.json"), "r")
 	read_file = json_data.read()
 	json_file = json.loads(read_file)
-
-
 	matches = sorted(json_file, key=lambda k: k['match']['updated_at'])
-
 
 	matches_list = []
 	for match in matches:
@@ -413,7 +382,6 @@ def set_match_info(match_data):
 	match_list = []
 	for i in range(len(match_data)-1):
 		if match_data[i]['match']['round'] == "1":
-			print "***what is MD: ", match_data[i]['match']['round']
 			match_list.append(' vs. '.join((str(match_data[i]['match']['player1_id']), (str(match_data[i]['match']['player2_id'])))))
 	return match_list
 
@@ -423,7 +391,6 @@ def set_max_stations(match_data):
 	for i in range(len(match_data)-1):
 		if match_data[i]['match']['round'] not in rounds:
 			rounds.append(match_data[i]['match']['round'])
-	print "ROUNDS: ", rounds
 
 	round_count = {}
 	for num in rounds:
@@ -431,8 +398,7 @@ def set_max_stations(match_data):
 			if (match_data[i]['match']['round'] == num) and (match_data[i]['match']['round'] not in round_count):
 				round_count[num] = 1
 			elif (match_data[i]['match']['round'] == num) and (match_data[i]['match']['round'] in round_count):
-				round_count[num] += 1
-		print "**round count: ", round_count 
+				round_count[num] += 1 
 		highest = round_count[rounds[0]]
 		most_round = rounds[0]
 		if round_count[num] > highest :
@@ -445,7 +411,6 @@ def create_open_stations(tournament):
 	open_stations = []
 	for i in range(tournament.max_stations):
 		open_stations.append(i+1)
-	print "***OPEN STATIONS 1: ", open_stations
 	return open_stations
 
 def update_open_stations(open_stations):
@@ -459,16 +424,11 @@ def update_open_stations(open_stations):
 	for num in open_stations:
 		if num in list_ids:
 			open_stations.pop(num)
-	print "***OPEN STATIONS 2: ", open_stations
 	return open_stations
-	
 
 if __name__ == "__main__":
     app.debug = True
 
     connect_to_db(app)
-
-    # Use the DebugToolbar
-    # DebugToolbarExtension(app)
 
     app.run()
