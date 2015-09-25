@@ -43,8 +43,6 @@
 			</ul>
 		</div>
 
-
-
 		<div id="content">
 
 			<!-- save coordinates button -->
@@ -124,12 +122,6 @@
 
 	</div>
 
-
-
-
-
-<!-- script -->
-
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
@@ -146,8 +138,6 @@
     });
 </script>
 
-
-
 <script>
 $(function(){
     $("#footer-body").hide();
@@ -159,8 +149,6 @@ $(function() {
   $( ".draggable3" ).draggable({ containment: "#containment-wrapper", scroll: false });
 });
 </script>
-
-
 
 <!-- saving coordinates script -->
 <script>
@@ -178,7 +166,6 @@ function updateCoords() {
   )
 };
 updateCoords();
-
 
 function reset() {
   // 
@@ -205,7 +192,6 @@ $('#save').on('click', saveToDb);
 </script>
 
 <!-- adding and updating stations -->
-
 
 <script>
 	var tables = {{ max_stations|safe }}
@@ -261,7 +247,6 @@ $('#save').on('click', saveToDb);
 				updateTableByTableId(4);
 				updateTableByTableId(5);
 				clearAndUpdateTables();
-			
 		} 
 		);
 	};
