@@ -132,7 +132,6 @@
 
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script src="static/js/challonge_brackets.js"></script>
 
@@ -170,7 +169,6 @@ max_stations = 5
 function updateCoords() {
   // Gets coordinates from positions table in DB, so gaming stations are in same place when user returns to page later
   tournament_name = '{{ tournament_name }}';
-  console.log(tournament_name);
   $.get('/get-coords', { tournament_name: tournament_name }, function (result) {
     result = JSON.parse(result);
     for (var i = 0; i < max_stations; i++) {       
@@ -197,7 +195,6 @@ function saveToDb() {
   for (var i = 1; i <= max_stations; i++) {
     pos = $('#table'+i).position();
     var positions = { left: pos.left, top: pos.top, table_id: "table"+i, tournament_name: '{{ tournament_name }}' };
-    console.log("Saving positions: "+ Math.round(pos.left) + " " + Math.round(pos.top) + " " + positions.table_id + " " + tournament_name)
     $.post("/add-coords", positions, function (result) {
         $('#save_status').text(result);
     }
@@ -224,23 +221,21 @@ $('#save').on('click', saveToDb);
 	var list_of_matches = []
 
 	function startFirst(data) {
-		console.log("data length: " + data.length);
 		for (var i=0; i < OPEN_STATIONS; i++) {
-			console.log(typeof data);
-			var player1_id = data[i]['player1_id'];
-			var player2_id = data[i]['player2_id'];
-			var match_id = data[i]['id'];
-			var winner_id = data[i]['winner_id'];
-			var loser_id = data[i]['loser_id'];
+			var player1_id = data[i].player1_id;
+			var player2_id = data[i].player2_id;
+			var match_id = data[i].id;
+			var winner_id = data[i].winner_id;
+			var loser_id = data[i].loser_id;
 			var match = { match_id: match_id, player1_id: player1_id, player2_id: player2_id, winner_id: winner_id, loser_id: loser_id };
 			CURRENT_MATCHES.push(match);
 		};
 		for (var i=0; i < data.length; i++) {
-			var player1_id = data[i]['player1_id'];
-			var player2_id = data[i]['player2_id'];
-			var match_id = data[i]['id'];
-			var winner_id = data[i]['winner_id'];
-			var loser_id = data[i]['loser_id'];
+			var player1_id = data[i].player1_id;
+			var player2_id = data[i]player2_id;
+			var match_id = data[i].id;
+			var winner_id = data[i].winner_id;
+			var loser_id = data[i].loser_id;
 			var match = { match_id: match_id, player1_id: player1_id, player2_id: player2_id, winner_id: winner_id, loser_id: loser_id };
 			list_of_matches.push(match);
 		};
@@ -292,15 +287,6 @@ $('#save').on('click', saveToDb);
 			}, 2000);
 	};
 
-	// function clearTableByMatchId(match_id) {
-	// 	for (var i=0; i<OPEN_STATIONS; i++) {
-	// 		if ($('#table'+(i+1)).attr('matchid') == match_id) {
-	// 			$('#table'+(i+1)+' .match').text('OPEN');
-	// 			$('#table'+(i+1)).attr('matchid', '0');
-	// 			return $('#table'+(i+1));
-	// 		};
-	// 	};
-	// };
 	var to_be_cleared = [];
 	function clearTableByTableId(table_id) {
 		for (var i=0; i<OPEN_STATIONS; i++) {
@@ -319,7 +305,6 @@ $('#save').on('click', saveToDb);
 	function updateTableByTableId(table_id) {
 		var match = list_of_matches.shift();
 		to_be_cleared.push(match);
-		console.log(playing_players);
 		var player1_name = players_dict[match['player1_id']];
 		var player2_name = players_dict[match['player2_id']];
 		var player1_position = playing_players.indexOf(player1_name);
@@ -336,17 +321,13 @@ $('#save').on('click', saveToDb);
 		// Twilio SMS
 		if (player1_name == "ZeRo" ) {
 			text_message = { text_message: "" + player1_name + ", you're up against " + player2_name + " at Station " + table_id}
-			console.log(text_message);
 			$.post("/twilio", text_message, function (result) {
-				console.log(result)
 			}
 			);
 		}
 		else if (player2_name == "ZeRo" ) {
 			text_message = { text_message: "" + player2_name + ", you're up against " + player1_name + " at Station " + table_id}
-			console.log(text_message);
 			$.post("/twilio", text_message, function (result) {
-				console.log(result)
 			}
 			);
 		}

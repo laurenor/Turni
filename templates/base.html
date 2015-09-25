@@ -28,7 +28,6 @@
 		          <ul class="nav navbar-nav">
 		            <li><a href="/#about">About</a></li>
 		            <li><a href="/#features">Features</a></li>
-		            <li><a href="/contact">Contact</a></li>
 		            {% if 'username' in session %}
 		            <li><a href="#" data-toggle="modal" data-target="#createMap">Create Venue Map</a></li>
 		            {% endif %}
@@ -54,32 +53,15 @@
 		      </div>
 		    </nav>
 
-
-
-
-<!-- 			{% with messages = get_flashed_messages() %}
-	  			{% if messages %}
-	    			<ul>
-	    			{% for message in messages %}
-	      				<li class='flashes'>{{ message }}</li>
-	    			{% endfor %}
-	    			</ul>
-	  			{% endif %}
-			{% endwith %}
- -->
-
 	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 
 		  {% block body %}
-		      BODY OF PAGE GOES HERE VIA INHERITANCE
 		  {% endblock %}
+		  
 	</div>
 </div>
-<!-- <footer class="site-footer">
-  I'm the Sticky Footer.
-</footer> -->
 
 	<div id="footer-body">
 		<div id="footer">
