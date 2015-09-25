@@ -192,7 +192,6 @@ $('#save').on('click', saveToDb);
 
 <script>
 	var tables = {{ max_stations|safe }}
-	// var matches = {{ all_matches|safe }}
 	var current_round = 0
 	var players_dict = {{ players|safe }}
 	var OPEN_STATIONS = 5
@@ -215,7 +214,7 @@ $('#save').on('click', saveToDb);
 		};
 		for (var i=0; i < data.length; i++) {
 			var player1_id = data[i].player1_id;
-			var player2_id = data[i]player2_id;
+			var player2_id = data[i].player2_id;
 			var match_id = data[i].id;
 			var winner_id = data[i].winner_id;
 			var loser_id = data[i].loser_id;

@@ -80,9 +80,9 @@ def login():
 			session['username'] = user.username
 			return redirect('/profile/%s' % user.username)
 		else:
-			return render_template('login.html')
+			return render_template('/')
 	else:
-		return render_template('login.html')
+		return render_template('/')
 
 @app.route('/logout')
 def logout_user():
