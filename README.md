@@ -76,18 +76,6 @@ db.create_all()
 exit()
 ```
 
-#####Restore Database (use prepopulated data)
-- Create database
-```
-createdb turnidb
-```
-- Import database dump
-```
-psql -f globals.sql
-psql -f db-schema.sql turnidb
-pg_restore -a --disable-triggers -d turnidb -Fc full.dump
-```
-
 Run the app:
 
 ```
@@ -104,15 +92,6 @@ Run ngrok:
 Copy the new ngrok forwarding URL (`http://example.ngrok.io`) and update the <a href="https://www.twilio.com/user/account/phone-numbers/incoming" target="_blank">request URL for your Twilio number</a>.
 
 Navigate to `localhost:5000` 
-
-###Sample Info to Enter to Create a Turni Page
-####User Login:
-Username: lencat
-Password: helloworld
-####Tournament Info:
-1. Tournament name: Turni International 2015
-2. Tournament url (Challonge URL): <a href="http://www.challonge.com/turni2015" target="_blank">turni2015</a>
-3. Twitch stream: <a href="http://www.challonge.com/nakat973" target="_blank">http://www.twitch.tv/nakat973</a>
 
 ___
 ### About the Developer
