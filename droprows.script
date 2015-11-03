@@ -1,2 +1,0 @@
-DELETE FROM stations_players;
-DELETE FROM stations;

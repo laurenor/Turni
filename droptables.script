@@ -1,4 +1,0 @@
-DROP table users; 
-DROP table matches;
-DROP table positions;
-DROP table tournaments;
