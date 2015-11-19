@@ -1,6 +1,5 @@
 env/
 secrets.sh
 *.pyc
-lateruse
 ngrok
 *DS_Store*
